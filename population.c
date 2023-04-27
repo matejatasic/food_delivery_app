@@ -9,15 +9,23 @@ int main(void)
     int decrease = 0;
     int numberOfYears = 0;
 
-    while(startingPopulation < 9) {
+    // get starting population input
+    while (startingPopulation < 9)
+    {
         startingPopulation = get_int("Please type in the starting population size: ");
     }
 
-    while(endingPopulation < startingPopulation) {
+    // get ending population input
+    while (endingPopulation < startingPopulation)
+    {
         endingPopulation = get_int("Please type in the ending population size: ");
     }
 
-    while(startingPopulation < endingPopulation) {
+    // implement the formulas for chaning population
+    // until the population is bigger than or equal
+    // to the ending population size
+    while (startingPopulation < endingPopulation)
+    {
         increase = startingPopulation / 3;
         decrease = startingPopulation / 4;
 
