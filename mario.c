@@ -7,11 +7,12 @@ int main(void)
 
     // get the height that is
     // bigger than or equal to 1
+    // and less than 9
     do
     {
         height = get_int("Choose height: ");
     }
-    while (height < 1);
+    while (height < 1 || height > 8);
 
     for (int i = 0; i < height; i++)
     {
@@ -20,7 +21,6 @@ int main(void)
         {
             if (j >= height - i)
             {
-                // printf("%i\n", j);
                 printf("#");
             }
             else
