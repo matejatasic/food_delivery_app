@@ -153,6 +153,10 @@ string determineCardType(long number)
         {
             cardType = MASTERCARD;
         }
+        else if (startingDigits / 10 == 4)
+        {
+            cardType = VISA;
+        }
     }
 
     return cardType;
