@@ -140,6 +140,8 @@ int getStartingDigits(long number)
     }
 }
 
+// calculate the checksum by applying
+// the Luhn's algorithm
 int calculateChecksum(long number)
 {
     // get the largest divider according
