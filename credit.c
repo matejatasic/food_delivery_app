@@ -20,11 +20,7 @@ int main(void)
 {
     long number = 0;
 
-    do
-    {
-        number = get_long("Type you credit card number: ");
-    }
-    while (number < THIRTEEN_DIGIT_NUMBER);
+    number = get_long("Type your credit card number: ");
 
     string cardType = determineCardType(number);
 
@@ -67,7 +63,7 @@ int main(void)
 
         divider /= 10;
     }
-    printf("%i\n", checksum);
+    
     bool isLastDigitZero = checksum % 10 == 0;
 
     if (isLastDigitZero)
@@ -104,7 +100,7 @@ bool determineIsStartingDigitForMultiplication(long divider)
 {
     if (divider < FIFTEEN_DIGIT_NUMBER)
     {
-        return true;
+        return false;
     }
 
     else if (divider < SIXTEEN_DIGIT_NUMBER)
@@ -125,7 +121,11 @@ string determineCardType(long number)
     string cardType = INVALID;
     int startingDigits = getStartingDigits(number);
 
-    if (number < FIFTEEN_DIGIT_NUMBER)
+    if (number < THIRTEEN_DIGIT_NUMBER)
+    {
+
+    }
+    else if (number < FIFTEEN_DIGIT_NUMBER)
     {
         if (startingDigits == 4)
         {
