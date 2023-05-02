@@ -22,6 +22,8 @@ int main(void)
     int score1 = compute_score(word1);
     int score2 = compute_score(word2);
 
+    // Print the adequate message based
+    // on the scores
     if (score1 == score2)
     {
         printf("Tie!\n");
@@ -36,12 +38,14 @@ int main(void)
     }
 }
 
+// Return the score of the characters in the word
+// based on the points
 int compute_score(string word)
 {
     int score = 0;
     int charPoint = 0;
 
-    for(int i = 0, length = strlen(word); i < length; i++)
+    for (int i = 0, length = strlen(word); i < length; i++)
     {
         charPoint = getCharacterScore(word[i], ALPHABET_SIZE);
         score += charPoint;
@@ -50,9 +54,10 @@ int compute_score(string word)
     return score;
 }
 
+// Return the point for the character based on the points
 int getCharacterScore(char character, int alphabetSize)
 {
-    for(int i = 0; i < alphabetSize; i++)
+    for (int i = 0; i < alphabetSize; i++)
     {
         if (LETTERS[i] == tolower(character))
         {
