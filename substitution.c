@@ -12,6 +12,7 @@ string substituteLetters(string text, string key);
 
 int main(int argc, string argv[])
 {
+    // Print an error if the number of arguments is not 2
     if (argc != 2)
     {
         printf("Usage: ./subsitution key\n");
@@ -21,6 +22,8 @@ int main(int argc, string argv[])
 
     string key = argv[1];
 
+    // Print an error if the number of characters in key
+    // is less than 26
     if (strlen(key) != 26)
     {
         printf("Key must contain 26 characters.\n");
@@ -28,6 +31,8 @@ int main(int argc, string argv[])
         return 1;
     }
 
+    // Print an error if not all the characters
+    // are letters
     if (!isAllCharactersLetters(key))
     {
         printf("Key must only containe alphabetic characters.\n");
@@ -35,6 +40,7 @@ int main(int argc, string argv[])
         return 1;
     }
 
+    // Print an error if there are repeated characters
     if (!isAllLettersUnique(key))
     {
         printf("Key must not contain repeated characters.\n");
@@ -42,8 +48,10 @@ int main(int argc, string argv[])
         return 1;
     }
 
+    // Get the text to substitute
     string text = get_string("plaintext: ");
 
+    // Substitute the letters in the text according to the key
     string encryptedText = substituteLetters(text, key);
 
     printf("ciphertext: %s\n", encryptedText);
@@ -51,6 +59,7 @@ int main(int argc, string argv[])
     return 0;
 }
 
+// Check if all characters in the key are letters
 bool isAllCharactersLetters(string key)
 {
     for (int i = 0, length = strlen(key); i < length; i++)
@@ -64,6 +73,7 @@ bool isAllCharactersLetters(string key)
     return true;
 }
 
+// Check if all characters in the key are unique
 bool isAllLettersUnique(string key)
 {
     int lettersCount[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -75,7 +85,8 @@ bool isAllLettersUnique(string key)
 
         for (int j = 0; j < LETTERS_LENGTH; j++)
         {
-            if(lettersCount[j] > 1) {
+            if (lettersCount[j] > 1)
+            {
                 return false;
             }
 
@@ -89,6 +100,7 @@ bool isAllLettersUnique(string key)
     return true;
 }
 
+// Substitute the letters according to the key
 string substituteLetters(string text, string key)
 {
     char textLetter;
@@ -103,12 +115,13 @@ string substituteLetters(string text, string key)
             if (LETTERS[j] == tolower(textLetter))
             {
                 substituteLetter = key[j];
-                
+
                 if (islower(textLetter))
                 {
                     substituteLetter = tolower(key[j]);
                 }
-                else {
+                else
+                {
                     substituteLetter = toupper(key[j]);
                 }
 
