@@ -103,10 +103,13 @@ string substituteLetters(string text, string key)
             if (LETTERS[j] == tolower(textLetter))
             {
                 substituteLetter = key[j];
-
+                
                 if (islower(textLetter))
                 {
                     substituteLetter = tolower(key[j]);
+                }
+                else {
+                    substituteLetter = toupper(key[j]);
                 }
 
                 text[i] = substituteLetter;
