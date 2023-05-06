@@ -1,0 +1,13 @@
+sort1 uses: bubble sort
+
+How do you know?: Because it was slower than sort3 when sorting random and reversed list, but faster when sorting
+the sorted list, which suggests bubble sort because in best case it take n steps to complete
+
+sort2 uses: merge sort
+
+How do you know?: Because it showed the fastest execution for all three categories of values
+
+sort3 uses: selection sort
+
+How do you know?: Because it was faster than sort1 when sorting random and reversed list but slower when sorting
+the sorted list, which suggests selection sort because in best case it takes n^2 steps to complete
