@@ -90,7 +90,7 @@ void print_winner(void)
 
     for (int i = 0; i < MAX; i++)
     {
-        if(candidates[i].votes > max)
+        if (candidates[i].votes > max)
         {
             max = candidates[i].votes;
         }
@@ -98,7 +98,7 @@ void print_winner(void)
 
     for (int j = 0; j < MAX; j++)
     {
-        if(candidates[j].votes == max)
+        if (candidates[j].votes == max)
         {
             printf("%s\n", candidates[j].name);
         }
