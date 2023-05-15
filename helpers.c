@@ -1,16 +1,19 @@
 #include "helpers.h"
 #include <stdio.h>
 
+// This function changes the color of the black pixels
 void colorize(int height, int width, RGBTRIPLE image[height][width])
 {
     RGBTRIPLE pixel;
-    // Change all black pixels to a color of your choosing
+
+    // Iterate over the pixels
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
             pixel = image[i][j];
 
+            // If the pixel is black, change it to light blue
             if (
                 pixel.rgbtRed == 0
                 && pixel.rgbtGreen == 0
