@@ -9,12 +9,14 @@ void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE o
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
 {
     int average;
+    RGBTRIPLE pixel;
 
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            average = (image[i][j].rgbtRed + image[i][j].rgbtGreen + image[i][j].rgbtBlue) / 3.00;
+            pixel = image[i][j];
+            average = (pixel.rgbtRed + pixel.rgbtGreen + pixel.rgbtBlue) / 3.00;
             image[i][j].rgbtRed = round(average);
             image[i][j].rgbtGreen = round(average);
             image[i][j].rgbtBlue = round(average);
