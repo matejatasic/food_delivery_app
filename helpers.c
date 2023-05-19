@@ -1,6 +1,9 @@
 #include "helpers.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE oritiginalImage[height][width]);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -87,14 +90,82 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
     RGBTRIPLE copy[height][width];
+    RGBTRIPLE pixel;
+
+    copyImage(height, width, copy, image);
 
     for (int i = 0; i < height; i++)
     {
-        for (int j = 0; j < width; j++)
+        for (int l = 0; l < width; l++)
         {
+            int redSum = copy[i][l].rgbtRed;
+            int greenSum = copy[i][l].rgbtGreen;
+            int blueSum = copy[i][l].rgbtBlue;
+            int pixelsCounted = 0;
 
+            if (l > 0)
+            {
+                redSum += copy[i][l-1].rgbtRed;
+                greenSum += copy[i][l-1].rgbtGreen;
+                blueSum += copy[i][l-1].rgbtBlue;
+                pixelsCounted++;
+            }
+
+            if(l < width)
+            {
+                redSum += copy[i][l+1].rgbtRed;
+                greenSum += copy[i][l+1].rgbtGreen;
+                blueSum += copy[i][l+1].rgbtBlue;
+                pixelsCounted++;
+            }
+
+            if (i != 0)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if(abs(l - j) > 1)
+                    {
+                        break;
+                    }
+
+                    redSum += copy[i-1][j].rgbtRed;
+                    greenSum += copy[i-1][j].rgbtGreen;
+                    blueSum += copy[i-1][j].rgbtBlue;
+                    pixelsCounted++;
+                }
+            }
+
+            if (i != height) {
+                for (int k = 0; k < width; k++)
+                {
+                    if(abs(l - k) > 1)
+                    {
+                        break;
+                    }
+
+                    redSum += copy[i+1][k].rgbtRed;
+                    greenSum += copy[i+1][k].rgbtGreen;
+                    blueSum += copy[i+1][k].rgbtBlue;
+                    pixelsCounted++;
+                }
+            }
+
+            image[i][l].rgbtRed = redSum / pixelsCounted;
+            image[i][l].rgbtGreen = greenSum / pixelsCounted;
+            image[i][l].rgbtBlue = blueSum / pixelsCounted;
         }
     }
 
     return;
+}
+
+void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE oritiginalImage[height][width])
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            copy[i][j] = oritiginalImage[i][j];
+        }
+    }
 }
