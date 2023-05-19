@@ -15,9 +15,9 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++) // iterate through pixels
         {
-            RGBTRIPLE pixel = image[i][j];
+            pixel = image[i][j];
             // divide by 3.0 and then round in order to get a float that will round up if ending >= .5 (default for dividing integers by integers is rounding down)
-            int average = round((pixel.rgbtBlue + pixel.rgbtGreen + pixel.rgbtRed) / 3.0);
+            average = round((pixel.rgbtBlue + pixel.rgbtGreen + pixel.rgbtRed) / 3.0);
 
             image[i][j].rgbtBlue = average;
             image[i][j].rgbtGreen = average;
