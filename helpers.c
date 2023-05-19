@@ -11,12 +11,12 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     int average;
     RGBTRIPLE pixel;
 
-    for (int i = 0; i < height; i++) // iterate through rows
+    for (int i = 0; i < height; i++)
     {
-        for (int j = 0; j < width; j++) // iterate through pixels
+        for (int j = 0; j < width; j++)
         {
-            pixel = image[i][j];
             // divide by 3.0 and then round in order to get a float that will round up if ending >= .5 (default for dividing integers by integers is rounding down)
+            pixel = image[i][j];
             average = round((pixel.rgbtBlue + pixel.rgbtGreen + pixel.rgbtRed) / 3.0);
 
             image[i][j].rgbtBlue = average;
@@ -24,17 +24,6 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
             image[i][j].rgbtRed = average;
         }
     }
-    // for (int i = 0; i < height; i++)
-    // {
-    //     for (int j = 0; j < width; j++)
-    //     {
-    //         pixel = image[i][j];
-    //         average = (pixel.rgbtRed + pixel.rgbtGreen + pixel.rgbtBlue) / 3.00;
-    //         image[i][j].rgbtRed = round(average);
-    //         image[i][j].rgbtGreen = round(average);
-    //         image[i][j].rgbtBlue = round(average);
-    //     }
-    // }
 
     return;
 }
@@ -89,7 +78,18 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     {
         k = width;
 
-        for (int j = 0, length = width / 2; j < length; j++)
+        int length = 0;
+
+        if (width % 2 == 0)
+        {
+            length = width / 2;
+        }
+        else
+        {
+            length = ceil(width  / 2.0);
+        }
+
+        for (int j = 0; j < length; j++)
         {
             temp = image[i][j];
             image[i][j] = image[i][k];
