@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE originalImage[height][width]);
-void calculateAverageForColors(int red, int green, int blue, int height, int width, int rowInd, int columnInd, int i, float pixelsCounted, RGBTRIPLE image[height][width]);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
