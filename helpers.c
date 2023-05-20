@@ -78,18 +78,18 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     {
         k = width;
 
-        int length = 0;
+        // int length = 0;
 
-        if (width % 2 == 0)
-        {
-            length = width / 2;
-        }
-        else
-        {
-            length = ceil(width  / 2.0);
-        }
+        // if (width % 2 == 0)
+        // {
+        //     length = width / 2;
+        // }
+        // else
+        // {
+        //     length = ceil(width  / 2.0);
+        // }
 
-        for (int j = 0; j < length; j++)
+        for (int j = 0; j < width / 2; j++)
         {
             temp = image[i][j];
             image[i][j] = image[i][k];
@@ -97,6 +97,26 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
             k--;
         }
     }
+
+    // RGBTRIPLE reflection[height][width];
+
+    // for (int i = 0; i < height; i++)
+    // {
+    //     for (int j = 0, k = width - 1; j < width; j++, k--)
+    //     {
+    //         reflection[i][k] = image[i][j];
+    //     }
+    // }
+
+    // // copy reflection back to image variable
+
+    // for (int i = 0; i < height; i++)
+    // {
+    //     for (int j = 0; j < width; j++)
+    //     {
+    //         image[i][j] = reflection[i][j];
+    //     }
+    // }
 
     return;
 }
