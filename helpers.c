@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE oritiginalImage[height][width]);
+void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE originalImage[height][width]);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -41,7 +41,8 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
         for (int j = 0; j < width; j++)
         {
             pixel = image[i][j];
-            // use the formula for each color the get the sepia effect
+
+            // use the formula for each color to get the sepia effect
             red = round(.393 * pixel.rgbtRed + .769 * pixel.rgbtGreen + .189 * pixel.rgbtBlue);
             green = round(.349 * pixel.rgbtRed + .686 * pixel.rgbtGreen + .168 * pixel.rgbtBlue);
             blue = round(.272 * pixel.rgbtRed + .534 * pixel.rgbtGreen + .131 * pixel.rgbtBlue);
@@ -80,17 +81,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     {
         k = width - 1;
 
-        // int length = 0;
-
-        // if (width % 2 == 0)
-        // {
-        //     length = width / 2;
-        // }
-        // else
-        // {
-        //     length = ceil(width  / 2.0);
-        // }
-
+        // reverse each row to get the reflection effect
         for (int j = 0; j < width / 2; j++)
         {
             temp = image[i][j];
@@ -107,82 +98,75 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
     RGBTRIPLE copy[height][width];
-    RGBTRIPLE pixel;
+    float pixelsCounted;
+    int red;
+    int green;
+    int blue;
+    int currentRowInd;
+    int currentColumnInd;
 
     copyImage(height, width, copy, image);
 
-    for (int i = 0; i < height; i++)
+    for (int rowInd = 0; rowInd < height; rowInd++)
     {
-        for (int l = 0; l < width; l++)
+        red = 0;
+        green = 0;
+        blue = 0;
+        pixelsCounted = 0.00;
+
+        for (int columnInd = 0; columnInd < width; columnInd++)
         {
-            int redSum = copy[i][l].rgbtRed;
-            int greenSum = copy[i][l].rgbtGreen;
-            int blueSum = copy[i][l].rgbtBlue;
-            int pixelsCounted = 0;
-
-            if (l > 0)
+            for (int i = -1; i < 2; i++)
             {
-                redSum += copy[i][l-1].rgbtRed;
-                greenSum += copy[i][l-1].rgbtGreen;
-                blueSum += copy[i][l-1].rgbtBlue;
-                pixelsCounted++;
-            }
-
-            if(l < width)
-            {
-                redSum += copy[i][l+1].rgbtRed;
-                greenSum += copy[i][l+1].rgbtGreen;
-                blueSum += copy[i][l+1].rgbtBlue;
-                pixelsCounted++;
-            }
-
-            if (i != 0)
-            {
-                for (int j = 0; j < width; j++)
+                for (int j = -1; j < 2; j++)
                 {
-                    if(abs(l - j) > 1)
+                    currentRowInd = rowInd + i;
+                    currentColumnInd = columnInd + j;
+
+                    if (
+                        currentRowInd < 0
+                        || currentRowInd > (height - 1)
+                        || currentColumnInd < 0
+                        || currentColumnInd > (width - 1)
+                    )
                     {
-                        break;
+                        continue;
                     }
 
-                    redSum += copy[i-1][j].rgbtRed;
-                    greenSum += copy[i-1][j].rgbtGreen;
-                    blueSum += copy[i-1][j].rgbtBlue;
+                    red += image[currentRowInd][currentColumnInd].rgbtRed;
+                    green += image[currentRowInd][currentColumnInd].rgbtGreen;
+                    blue += image[currentRowInd][currentColumnInd].rgbtBlue;
+
                     pixelsCounted++;
                 }
+
+                copy[rowInd][columnInd].rgbtRed = round(red / pixelsCounted);
+                copy[rowInd][columnInd].rgbtGreen = round(green / pixelsCounted);
+                copy[rowInd][columnInd].rgbtBlue = round(blue / pixelsCounted);
             }
+        }
+    }
 
-            if (i != height) {
-                for (int k = 0; k < width; k++)
-                {
-                    if(abs(l - k) > 1)
-                    {
-                        break;
-                    }
-
-                    redSum += copy[i+1][k].rgbtRed;
-                    greenSum += copy[i+1][k].rgbtGreen;
-                    blueSum += copy[i+1][k].rgbtBlue;
-                    pixelsCounted++;
-                }
-            }
-
-            image[i][l].rgbtRed = redSum / pixelsCounted;
-            image[i][l].rgbtGreen = greenSum / pixelsCounted;
-            image[i][l].rgbtBlue = blueSum / pixelsCounted;
+    for(int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            image[i][j].rgbtRed = copy[i][j].rgbtRed;
+            image[i][j].rgbtGreen = copy[i][j].rgbtGreen;
+            image[i][j].rgbtBlue = copy[i][j].rgbtBlue;
         }
     }
 
     return;
 }
 
-void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE oritiginalImage[height][width])
+void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE originalImage[height][width])
 {
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            copy[i][j] = oritiginalImage[i][j];
+            copy[i][j] = originalImage[i][j];
         }
     }
 }
