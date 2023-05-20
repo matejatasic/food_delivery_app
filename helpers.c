@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE originalImage[height][width]);
+void calculateAverageForColors(int red, int green, int blue, int height, int width, int rowInd, int columnInd, int i, float pixelsCounted, RGBTRIPLE image[height][width]);
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -105,6 +106,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     int currentRowInd;
     int currentColumnInd;
 
+    // Create the copy of image
     copyImage(height, width, copy, image);
 
     for (int rowInd = 0; rowInd < height; rowInd++)
@@ -115,13 +117,17 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             green = 0;
             blue = 0;
             pixelsCounted = 0.00;
+
+            // Iterate over rows, previous, current and next
             for (int i = -1; i < 2; i++)
             {
+                // Iterate over columns, previous, current and next
                 for (int j = -1; j < 2; j++)
                 {
                     currentRowInd = rowInd + i;
                     currentColumnInd = columnInd + j;
 
+                    // Skip this iteration if pixel is at one of the edges
                     if (
                         currentRowInd < 0
                         || currentRowInd > (height - 1)
@@ -132,6 +138,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                         continue;
                     }
 
+                    // Add color values to the total
                     red += image[currentRowInd][currentColumnInd].rgbtRed;
                     green += image[currentRowInd][currentColumnInd].rgbtGreen;
                     blue += image[currentRowInd][currentColumnInd].rgbtBlue;
@@ -139,6 +146,8 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                     pixelsCounted++;
                 }
 
+                // Compute the average for each color from the colors from the neighbouring pixels
+                // and store it into the copy
                 copy[rowInd][columnInd].rgbtRed = round(red / pixelsCounted);
                 copy[rowInd][columnInd].rgbtGreen = round(green / pixelsCounted);
                 copy[rowInd][columnInd].rgbtBlue = round(blue / pixelsCounted);
@@ -146,19 +155,13 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 
-    for(int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            image[i][j].rgbtRed = copy[i][j].rgbtRed;
-            image[i][j].rgbtGreen = copy[i][j].rgbtGreen;
-            image[i][j].rgbtBlue = copy[i][j].rgbtBlue;
-        }
-    }
+    // Copy the copied image to the original image
+    copyImage(height, width, image, copy);
 
     return;
 }
 
+// Create the copy of image
 void copyImage(int height, int width, RGBTRIPLE copy[height][width], RGBTRIPLE originalImage[height][width])
 {
     for (int i = 0; i < height; i++)
