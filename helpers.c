@@ -15,7 +15,7 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++)
         {
-            // divide by 3.0 and then round in order to get a float that will round up if ending >= .5 (default for dividing integers by integers is rounding down)
+            // divide by 3.0 to get the float and round it to the nearest integer
             pixel = image[i][j];
             average = round((pixel.rgbtBlue + pixel.rgbtGreen + pixel.rgbtRed) / 3.0);
 
@@ -41,10 +41,12 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
         for (int j = 0; j < width; j++)
         {
             pixel = image[i][j];
+            // use the formula for each color the get the sepia effect
             red = round(.393 * pixel.rgbtRed + .769 * pixel.rgbtGreen + .189 * pixel.rgbtBlue);
             green = round(.349 * pixel.rgbtRed + .686 * pixel.rgbtGreen + .168 * pixel.rgbtBlue);
             blue = round(.272 * pixel.rgbtRed + .534 * pixel.rgbtGreen + .131 * pixel.rgbtBlue);
 
+            // if the value of any color is bigger than 255, set it to 255
             if (red > 255)
             {
                 red = 255;
@@ -76,7 +78,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 
     for (int i = 0; i < height; i++)
     {
-        k = width;
+        k = width - 1;
 
         // int length = 0;
 
@@ -97,26 +99,6 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
             k--;
         }
     }
-
-    // RGBTRIPLE reflection[height][width];
-
-    // for (int i = 0; i < height; i++)
-    // {
-    //     for (int j = 0, k = width - 1; j < width; j++, k--)
-    //     {
-    //         reflection[i][k] = image[i][j];
-    //     }
-    // }
-
-    // // copy reflection back to image variable
-
-    // for (int i = 0; i < height; i++)
-    // {
-    //     for (int j = 0; j < width; j++)
-    //     {
-    //         image[i][j] = reflection[i][j];
-    //     }
-    // }
 
     return;
 }
