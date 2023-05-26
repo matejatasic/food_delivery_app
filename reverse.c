@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     // TODO #5
     FILE *outputFile = fopen(argv[2], "w");
 
-    if(outputFile == NULL)
+    if (outputFile == NULL)
     {
         fclose(inputFile);
         printf("Could not create %s", argv[2]);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
     fseek(inputFile, blockSize, SEEK_END);
 
-    while(ftell(inputFile) - blockSize > WAV_HEADER_SIZE)
+    while (ftell(inputFile) - blockSize > WAV_HEADER_SIZE)
     {
         fseek(inputFile, -2 * blockSize, SEEK_CUR);
         fread(&audioBlock, blockSize, 1, inputFile);
@@ -85,7 +85,7 @@ int check_format(WAVHEADER header)
 {
     // TODO #4
     // char *format = header.format;
-    if(
+    if (
         header.format[0] == 'W'
         && header.format[1] == 'A'
         && header.format[2] == 'V'
