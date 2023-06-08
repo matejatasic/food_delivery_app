@@ -48,7 +48,6 @@ bool check(const char *word)
 // Hashes word to a number
 unsigned int hash(const char *word)
 {
-    printf("%s\n", word);
     // TODO: Improve this hash function
     int first_letter_index = toupper(word[0]) - 'A';
     int second_letter_index = toupper(word[1]) - 'A';
