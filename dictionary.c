@@ -121,6 +121,7 @@ unsigned int size(void)
 // Unloads dictionary from memory, returning true if successful, else false
 bool unload(void)
 {
+    printf("ok");
     for (int i = 0; i < N; i++)
     {
         node *row = table[i];
@@ -131,10 +132,10 @@ bool unload(void)
 
         while (row != NULL)
         {
-            if(isalpha(row->word[0]))
-            {
-                printf("%s ", row->word);
-            }
+            // if(isalpha(row->word[0]))
+            // {
+            //     printf("%s ", row->word);
+            // }
             tmp = row->next;
             free(row);
             row = tmp;
