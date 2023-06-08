@@ -129,6 +129,7 @@ bool unload(void)
         while (row != NULL)
         {
             tmp = row;
+            printf("%s\n", row->word);
             free(row);
             row = tmp->next;
         }
