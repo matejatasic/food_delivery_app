@@ -130,7 +130,7 @@ bool unload(void)
             if(isalnum(row->word[0]))
             {
                 printf("%i\n", i);
-                printf("%s\n", row->word);
+                // printf("%s\n", row->word);
             }
             node *tmp = row;
             row = tmp->next;
