@@ -105,7 +105,7 @@ bool load(const char *dictionary)
         list = n;
     }
 
-    free(word);
+    // free(word);
 
     fclose(dictionary_file);
 
