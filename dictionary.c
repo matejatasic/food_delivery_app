@@ -124,11 +124,10 @@ bool unload(void)
     for (int i = 0; i < N; i++)
     {
         node *row = table[i];
-        node *tmp = row;
 
         while (row != NULL)
         {
-            tmp = row;
+            node *tmp = row;
             row = tmp->next;
             free(row);
         }
