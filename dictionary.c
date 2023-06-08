@@ -125,6 +125,7 @@ bool unload(void)
     {
         node *row = table[i];
 
+        printf("%i\n", i);
         while (row != NULL)
         {
             if(isalnum(row->word[0]))
@@ -135,7 +136,6 @@ bool unload(void)
             row = tmp->next;
             free(row);
         }
-        printf("ok");
     }
 
     return true;
