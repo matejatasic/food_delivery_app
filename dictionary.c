@@ -31,7 +31,7 @@ bool check(const char *word)
     int hash_index = hash(word);
     node *pointer = table[hash_index];
 
-    while(pointer != NULL)
+    while (pointer != NULL)
     {
         if (strcasecmp(pointer->word, word) == 0)
         {
@@ -52,7 +52,7 @@ unsigned int hash(const char *word)
     int first_letter_index = toupper(word[0]) - 'A';
     int second_letter_index = toupper(word[1]) - 'A';
 
-    if(second_letter_index < 0)
+    if (second_letter_index < 0)
     {
         second_letter_index = 0;
     }
@@ -66,7 +66,7 @@ bool load(const char *dictionary)
     // TODO
     FILE *dictionary_file = fopen(dictionary, "r");
 
-    if(dictionary_file == NULL)
+    if (dictionary_file == NULL)
     {
         printf("Could not open %s\n", dictionary);
         return false;
@@ -75,7 +75,7 @@ bool load(const char *dictionary)
     node *list = NULL;
     char *word = malloc(LENGTH + 1);
 
-    while(fscanf(dictionary_file, "%s", word) != EOF)
+    while (fscanf(dictionary_file, "%s", word) != EOF)
     {
         words_in_dictionary++;
 
@@ -91,11 +91,12 @@ bool load(const char *dictionary)
 
         int hash_index = hash(word);
 
-        if(table[hash_index] == NULL)
+        if (table[hash_index] == NULL)
         {
             table[hash_index] = n;
         }
-        else {
+        else
+        {
             n->next = table[hash_index];
 
             table[hash_index] = n;
