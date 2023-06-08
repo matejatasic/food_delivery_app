@@ -104,7 +104,10 @@ bool load(const char *dictionary)
         n->next = list;
         list = n;
     }
-
+    if(isalnum(word[0]))
+    {
+        printf("%s\n", word);
+    }
     free(word);
 
     fclose(dictionary_file);
@@ -127,11 +130,11 @@ bool unload(void)
 
         while (row != NULL)
         {
+            // if(isalnum(row->word[0]))
+            // {
+            //     printf("%s\n", row->word);
+            // }
             node *tmp = row;
-            if(isalnum(row->word[0]))
-            {
-                printf("%s\n", row->word);
-            }
             row = tmp->next;
             free(row);
         }
