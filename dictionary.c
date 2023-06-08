@@ -48,6 +48,7 @@ bool check(const char *word)
 // Hashes word to a number
 unsigned int hash(const char *word)
 {
+    printf("%s\n", word);
     // TODO: Improve this hash function
     int first_letter_index = toupper(word[0]) - 'A';
     int second_letter_index = toupper(word[1]) - 'A';
@@ -126,15 +127,8 @@ bool unload(void)
         node *row = table[i];
         node *tmp = table[i];
 
-        // printf("%i ", i);
-        // printf("%s ", row->word);
-
         while (row != NULL)
         {
-            // if(isalpha(row->word[0]))
-            // {
-            //     printf("%s ", row->word);
-            // }
             tmp = row->next;
             free(row);
             row = tmp;
