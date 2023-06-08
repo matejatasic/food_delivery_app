@@ -133,7 +133,7 @@ bool unload(void)
             }
             node *tmp = row;
             row = tmp->next;
-            // free(row);
+            free(row);
         }
     }
 
