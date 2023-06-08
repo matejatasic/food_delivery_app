@@ -131,10 +131,10 @@ bool unload(void)
 
         while (row != NULL)
         {
-            if(isalpha(row->word[0]))
-            {
-                printf("%s ", row->word);
-            }
+            // if(isalpha(row->word[0]))
+            // {
+            //     printf("%s ", row->word);
+            // }
             tmp = row->next;
             free(row);
             row = tmp;
