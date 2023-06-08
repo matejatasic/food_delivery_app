@@ -128,8 +128,8 @@ bool unload(void)
         while (row != NULL)
         {
             node *tmp = row;
-            free(tmp);
             row = row->next;
+            free(tmp);
         }
 
     }
