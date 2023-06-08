@@ -124,13 +124,8 @@ bool unload(void)
     for (int i = 0; i < N; i++)
     {
         node *row = table[i];
+        node *tmp = row;
 
-        if(i == 92)
-        {
-            printf("%s\n", row->word);
-            node *tmp = row;
-            row = tmp->next;
-        }
         while (row != NULL)
         {
             // if(isalnum(row->word[0]))
@@ -138,9 +133,9 @@ bool unload(void)
             //     printf("%i\n", i);
             //     printf("%s\n", row->word);
             // }
-            node *tmp = row;
-            row = tmp->next;
+            tmp = row->next;
             free(row);
+            row = tmp;
         }
     }
 
