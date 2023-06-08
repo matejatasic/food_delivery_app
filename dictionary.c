@@ -128,7 +128,10 @@ bool unload(void)
         while (row != NULL)
         {
             node *tmp = row;
-            printf("%s\n", row->word);
+            if(isalnum(row->word[0]))
+            {
+                printf("%s\n", row->word);
+            }
             row = tmp->next;
             free(row);
         }
