@@ -128,6 +128,7 @@ bool unload(void)
         while (row != NULL)
         {
             node *tmp = row;
+            printf("%s\n", row->word);
             row = tmp->next;
             free(row);
         }
