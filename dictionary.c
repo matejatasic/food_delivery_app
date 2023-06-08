@@ -129,8 +129,8 @@ bool unload(void)
         while (row != NULL)
         {
             tmp = row;
-            row = row->next;
-            free(tmp);
+            free(row);
+            row = tmp->next;
         }
 
     }
