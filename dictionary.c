@@ -72,9 +72,9 @@ bool load(const char *dictionary)
         return false;
     }
 
-    char *word = malloc(LENGTH + 1);
     node *list = NULL;
-
+    char *word = "";
+    
     while(fscanf(dictionary_file, "%s", word) != EOF)
     {
         words_in_dictionary++;
@@ -105,7 +105,7 @@ bool load(const char *dictionary)
         list = n;
     }
 
-    free(word);
+    // free(word);
 
     fclose(dictionary_file);
 
@@ -121,7 +121,6 @@ unsigned int size(void)
 // Unloads dictionary from memory, returning true if successful, else false
 bool unload(void)
 {
-    printf("ok");
     for (int i = 0; i < N; i++)
     {
         node *row = table[i];
