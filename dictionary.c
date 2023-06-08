@@ -127,10 +127,14 @@ bool unload(void)
         node *tmp = table[i];
 
         // printf("%i ", i);
-        printf("%s ", row->word);
+        // printf("%s ", row->word);
 
         while (row != NULL)
         {
+            if(isalpha(row->word[0]))
+            {
+                printf("%s ", row->word);
+            }
             tmp = row->next;
             free(row);
             row = tmp;
