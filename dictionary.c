@@ -126,13 +126,10 @@ bool unload(void)
         node *row = table[i];
         node *tmp = table[i];
 
+        printf("%i ", i);
+
         while (row != NULL)
         {
-            // if(isalnum(row->word[0]))
-            // {
-            //     printf("%i\n", i);
-            //     printf("%s\n", row->word);
-            // }
             tmp = row->next;
             free(row);
             row = tmp;
