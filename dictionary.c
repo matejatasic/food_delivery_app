@@ -73,8 +73,8 @@ bool load(const char *dictionary)
     }
 
     node *list = NULL;
-    char *word = "";
-    
+    char word[LENGTH + 1];
+
     while(fscanf(dictionary_file, "%s", word) != EOF)
     {
         words_in_dictionary++;
