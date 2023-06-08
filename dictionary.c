@@ -73,7 +73,7 @@ bool load(const char *dictionary)
     }
 
     node *list = NULL;
-    char word[LENGTH + 1];
+    char *word = malloc(LENGTH + 1);
 
     while(fscanf(dictionary_file, "%s", word) != EOF)
     {
@@ -104,6 +104,8 @@ bool load(const char *dictionary)
         n->next = list;
         list = n;
     }
+
+    free(word);
 
     fclose(dictionary_file);
 
