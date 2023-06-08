@@ -126,7 +126,7 @@ bool unload(void)
         node *row = table[i];
         node *tmp = table[i];
 
-        printf("%i ", i);
+        printf("%i ", i);cd
 
         while (row != NULL)
         {
