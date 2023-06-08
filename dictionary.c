@@ -121,6 +121,7 @@ unsigned int size(void)
 // Unloads dictionary from memory, returning true if successful, else false
 bool unload(void)
 {
+    printf("ok");
     for (int i = 0; i < N; i++)
     {
         node *row = table[i];
