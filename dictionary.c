@@ -106,7 +106,6 @@ bool load(const char *dictionary)
     }
 
     free(word);
-    printf("ok");
 
     fclose(dictionary_file);
 
