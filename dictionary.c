@@ -135,6 +135,7 @@ bool unload(void)
             row = tmp->next;
             free(row);
         }
+        printf("ok");
     }
 
     return true;
