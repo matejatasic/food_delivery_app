@@ -125,13 +125,19 @@ bool unload(void)
     {
         node *row = table[i];
 
+        if(i == 144)
+        {
+            printf("%s\n", row->word);
+            node *tmp = row;
+            row = tmp->next;
+        }
         while (row != NULL)
         {
-            if(isalnum(row->word[0]))
-            {
-                printf("%i\n", i);
-                // printf("%s\n", row->word);
-            }
+            // if(isalnum(row->word[0]))
+            // {
+            //     printf("%i\n", i);
+            //     printf("%s\n", row->word);
+            // }
             node *tmp = row;
             row = tmp->next;
             free(row);
