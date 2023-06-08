@@ -125,7 +125,7 @@ bool unload(void)
     {
         node *row = table[i];
 
-        if(i == 144)
+        if(i == 92)
         {
             printf("%s\n", row->word);
             node *tmp = row;
