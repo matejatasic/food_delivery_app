@@ -105,7 +105,7 @@ bool load(const char *dictionary)
         list = n;
     }
 
-    // free(word);
+    free(word);
 
     fclose(dictionary_file);
 
@@ -124,10 +124,11 @@ bool unload(void)
     for (int i = 0; i < N; i++)
     {
         node *row = table[i];
+        node *tmp = row;
 
         while (row != NULL)
         {
-            node *tmp = row;
+            tmp = row;
             row = row->next;
             free(tmp);
         }
