@@ -127,11 +127,14 @@ bool unload(void)
 
         while (row != NULL)
         {
+            if(isalnum(row->word[0]))
+            {
+                printf("%s\n", row->word);
+            }
             node *tmp = row;
             row = tmp->next;
-            free(row);
+            // free(row);
         }
-        printf("ok");
     }
 
     return true;
