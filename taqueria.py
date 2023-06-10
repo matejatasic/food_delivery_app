@@ -15,6 +15,8 @@ def main():
     try:
         while True:
             item = input("Choose Item: ")
+            if(item == ""):
+                raise EOFError()
             total += items.get(item.lower().title(), 0)
     except EOFError:
         print("\n")
