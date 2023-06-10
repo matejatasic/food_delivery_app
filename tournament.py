@@ -70,5 +70,6 @@ def simulate_tournament(teams):
 
     return winners[0]["team"]
 
+
 if __name__ == "__main__":
     main()
