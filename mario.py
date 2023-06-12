@@ -3,10 +3,13 @@ def main():
 
     # Promp the user for input until between 1 and 8 inclusive
     while True:
-        height = int(input("Please enter the height: "))
+        try:
+            height = int(input("Please enter the height: "))
 
-        if height >= 1 and height <= 8:
-            break
+            if height >= 1 and height <= 8:
+                break
+        except:
+            pass
 
     # Print two pyramides with the requested height
     for i in range(1, height + 1):
