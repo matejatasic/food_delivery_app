@@ -47,7 +47,7 @@ def calculate_checksum(card_number: str) -> int:
         else:
             checksum += int(i)
 
-        should_multiply = !should_multiply
+        should_multiply = not should_multiply
 
     return checksum
 
