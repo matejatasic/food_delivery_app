@@ -41,12 +41,12 @@ def calculate_checksum(card_number: str) -> int:
     checksum: int = 0
     should_multiply: bool = False
 
-    for i in range(len(card_number), 0, -1):
+    for i in range(len(card_number) - 1, 0, -1):
         if should_multiply:
-            checksum += 2 * int(i)
+            checksum += 2 * int(card_number[i])
         else:
-            checksum += int(i)
-        print(should_multiply)
+            checksum += int(card_number[i])
+        
         should_multiply = not should_multiply
 
     return checksum
