@@ -22,4 +22,5 @@ def main():
 
         print(f"{left_side}  {right_side}")
 
+
 main()
