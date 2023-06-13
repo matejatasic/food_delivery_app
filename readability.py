@@ -1,5 +1,6 @@
 import re
 
+
 def main():
     text: str = input("Text: ")
     letters_count: int = count_letters(text)
@@ -15,7 +16,7 @@ def main():
     sentences_per_100_words = sentences_count / (words_count / 100)
 
     index = round(0.0588*letters_per_100_words - 0.296*sentences_per_100_words - 15.8)
-    
+
     if index >= 16:
         print("Grade 16+")
     elif index < 1:
@@ -23,6 +24,8 @@ def main():
     else:
         print(f"Grade {index}")
 
+
+# Count the number of letters in the text
 def count_letters(text: str) -> int:
     letters_count = 0
 
@@ -31,5 +34,6 @@ def count_letters(text: str) -> int:
             letters_count += 1
 
     return letters_count
+
 
 main()
