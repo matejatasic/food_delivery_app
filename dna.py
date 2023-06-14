@@ -16,10 +16,9 @@ def main():
     longest_match_dict = {}
     for row in dna_file:
         for header in database_headers:
-                if header != "name":
-                    longest_match_dict[header] = longest_match(row, header)
-    # TODO: Check database for matching profiles
-
+            if header != "name":
+                longest_match_dict[header] = longest_match(row, header)
+                
     for person in database_dict:
         matching_strs = 0
 
