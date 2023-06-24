@@ -1,0 +1,4 @@
+1. I think the audio aura for this person is purple, because the averages for energy and danceability are bigger than 0.5 which suggests
+a person that wants to get entertained and moving throughout the day.
+2. This way of calculating a person's audio aura may not be representative because these components of songs may not be important to the
+listener of the songs, maybe a better way would be to look at the genre of the songs to find out the aura of the listener.
