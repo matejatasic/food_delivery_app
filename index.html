@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+            // TODO: Add code to check answers to questions
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section" id="part1">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <h3>Which of the following function convert a string to a float in python?</h3>
+                <p id="result"></p>
+                <div>
+                    <button class="answer">int(x[,base])</button>
+                </div>
+                <div>
+                    <button class="answer">long(x[,base])</button>
+                </div>
+                <div>
+                    <button class="answer">float(x)</button>
+                </div>
+                <div>
+                    <button class="answer">str(x)</button>
+                </div>
+                <!-- TODO: Add multiple choice question here -->
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <h3>How would you print out "Hello World" to the screen in Python?</h3>
+                <p id="part2-result"></p>
+                <input type="text" id="part2-answer">
+                <button id="part2-button">Submit</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        const buttons = document.querySelectorAll(".answer");
+        const result = document.getElementById("result");
+        const part2Result = document.getElementById("part2-result");
+        const part2Answer = document.getElementById("part2-answer");
+        const part2Button = document.getElementById("part2-button");
+        const ANSWER1 = "float(x)";
+        const ANSWER2 = "print('Hello World')";
+
+        for(let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", (e) => {
+                if (e.target.textContent === ANSWER1) {
+                    result.innerText = "Correct!";
+                    e.target.style.background = "green";
+                }
+                else {
+                    result.innerText = "Incorrect";
+                    e.target.style.background = "red";
+                }
+            });
+        }
+
+        part2Button.addEventListener("click", (e) => {
+            if (part2Answer.value === ANSWER2) {
+                part2Result.innerText = "Correct!";
+            }
+            else {
+                part2Result.innerText = "Incorrect";
+            }
+        });
+    </script>
+</html>
