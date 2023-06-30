@@ -1,0 +1,37 @@
+#hero, #background-image {
+    background-image: url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.timeout.com%2Fimages%2F105239239%2Fimage.jpg&f=1&nofb=1&ipt=2c5734fac696a5bde793d12130ecc6b568296445a7d004e0c1a655e0973b09e9&ipo=images');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#hero {
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+}
+
+#background-image {
+    min-height: 100vh;
+}
+
+#hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#hero-text h1 {
+    font-size: 3.5rem;
+}
+
+#hero-text p {
+    font-weight: bold;
+    font-size: 2.5rem;
+}
+
+.image-div img {
+    width: 200px;
+    height: 100%;
+    object-fit: cover;
+}
