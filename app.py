@@ -70,13 +70,13 @@ def buy():
             return apology("Stock does not exist")
         if not request.form.get("shares"):
             return apology("Shares cannot be empty")
-        if not request.form.get("shares", "").isdigit():
+        if not request.form.get("shares", "1").isdigit():
             return apology("Shares is not a valid number")
 
         stock_id = db.execute("SELECT id FROM stocks WHERE symbol = ?", request.form["symbol"])
 
         if not stock_id:
-            db.execute("INSERT INTO stocks (symbol) VALUES (?, ?)", request.form["symbol"])
+            db.execute("INSERT INTO stocks (symbol) VALUES (?)", request.form["symbol"])
 
         cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         total = int(request.form["shares"]) * stock["price"]
