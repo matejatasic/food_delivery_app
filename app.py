@@ -75,12 +75,13 @@ def buy():
 
         stock_id = db.execute("SELECT id FROM stocks WHERE symbol = ?", request.form["symbol"])
 
-        if not stock_id:
+        if not len(stock_id):
             db.execute("INSERT INTO stocks (symbol) VALUES (?)", request.form["symbol"])
+            stock_id = db.execute("SELECT id FROM stocks WHERE symbol = ?", request.form["symbol"])
 
         cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         total = int(request.form["shares"]) * stock["price"]
-        print(cash)
+
         if cash[0]["cash"] < total:
             return apology("Not enough cash")
 
