@@ -80,7 +80,7 @@ def buy():
 
         cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         total = int(request.form["shares"]) * stock["price"]
-
+        print(cash)
         if cash[0]["cash"] < total:
             return apology("Not enough cash")
 
