@@ -45,7 +45,8 @@ def index():
 
     for stock in stocks:
         if not stock["symbol"] in stock_shares:
-            stock_shares[stock["symbol"]] = {"symbol": stock["symbol"], "shares": 1, "price": stock["price"], "total": stock["shares"] * stock["price"]}
+            stock_shares[stock["symbol"]] = {"symbol": stock["symbol"], "shares": 1,
+                                             "price": stock["price"], "total": stock["shares"] * stock["price"]}
         else:
             stock_shares[stock["symbol"]]["shares"] += stock["shares"]
 
@@ -86,7 +87,8 @@ def buy():
         if cash[0]["cash"] < total:
             return apology("Not enough cash")
 
-        db.execute("INSERT INTO orders (stock_id, user_id, shares) VALUES (?, ?, ?)", stock_id[0]["id"], session["user_id"], request.form["shares"])
+        db.execute("INSERT INTO orders (stock_id, user_id, shares) VALUES (?, ?, ?)",
+                   stock_id[0]["id"], session["user_id"], request.form["shares"])
         db.execute("UPDATE users SET cash = cash - ? WHERE id = ?", total, session["user_id"])
 
         return redirect("/")
@@ -103,7 +105,7 @@ def history():
 
     stocks, total, cash = get_user_shares_info()
 
-    return render_template("index.html", stocks=stocks, cash=cash, total=total)
+    return render_template("history.html", stocks=stocks, cash=cash, total=total)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -238,15 +240,18 @@ def sell():
 
         price = lookup(stock[0]["symbol"])["price"]
 
-        db.execute("INSERT INTO orders (stock_id, user_id, shares) VALUES (?, ?, ?)", stock[0]["id"], session["user_id"], -int(request.form["shares"]))
+        db.execute("INSERT INTO orders (stock_id, user_id, shares) VALUES (?, ?, ?)",
+                   stock[0]["id"], session["user_id"], -int(request.form["shares"]))
         db.execute("UPDATE users SET cash = cash + ? WHERE id = ?", int(request.form["shares"]) * price, session["user_id"])
 
         return redirect("/")
 
     return render_template("sell.html", stocks=stocks)
 
+
 def get_user_shares_info() -> tuple:
-    stocks = db.execute("SELECT symbol, shares FROM orders JOIN stocks ON orders.stock_id = stocks.id WHERE user_id = ?", session["user_id"])
+    stocks = db.execute(
+        "SELECT symbol, shares FROM orders JOIN stocks ON orders.stock_id = stocks.id WHERE user_id = ?", session["user_id"])
     total = 0
     cash = 0
 
@@ -256,6 +261,7 @@ def get_user_shares_info() -> tuple:
         cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
 
     return (stocks, total, cash)
+
 
 def add_price(stocks: list) -> list:
     for stock in stocks:
