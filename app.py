@@ -161,6 +161,7 @@ def quote():
             return apology("Symbol cannot be empty")
 
         stock = lookup(request.form["symbol"])
+        stock["price"] = round(stock["price"], 2)
 
         if not stock:
             return apology("Stock does not exist")
