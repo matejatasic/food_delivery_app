@@ -45,7 +45,7 @@ def index():
 
     for stock in stocks:
         if not stock["symbol"] in stock_shares:
-            stock_shares[stock["symbol"]] = {"symbol": stock["symbol"], "shares": 1, "price": round(stock["price"], 2)}
+            stock_shares[stock["symbol"]] = {"symbol": stock["symbol"], "shares": 1, "price": stock["price"], "total": stock["shares"] * stock["price"]}
         else:
             stock_shares[stock["symbol"]]["shares"] += stock["shares"]
 
