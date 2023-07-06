@@ -52,7 +52,8 @@ def index():
     result = []
 
     for stock_share in stock_shares.values():
-        result.append(stock_share)
+        if stock_share["shares"] > 0:
+            result.append(stock_share)
 
     return render_template("index.html", stocks=result, cash=cash, total=total)
 
@@ -235,7 +236,10 @@ def sell():
         if int(request.form["shares"]) > num_of_shares:
             return apology("Not enough shares")
 
+        price = lookup(stock[0]["symbol"])["price"]
+
         db.execute("INSERT INTO orders (stock_id, user_id, shares) VALUES (?, ?, ?)", stock[0]["id"], session["user_id"], -int(request.form["shares"]))
+        db.execute("UPDATE users SET cash = cash + ? WHERE id = ?", int(request.form["shares"]) * price, session["user_id"])
 
         return redirect("/")
 
