@@ -1,0 +1,2 @@
+bank-management-system:
+	g++ bank-management-system.cpp ./repositories/account-repository.cpp ./repositories/transaction-repository.cpp ./models/transaction-model.cpp ./models/account-model.cpp ./services/validation-service.cpp ./services/bank-service.cpp -lsqlite3 -o bank-management-system
