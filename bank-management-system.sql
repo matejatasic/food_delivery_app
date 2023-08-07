@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS accounts (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, owner varchar(30) NOT NULL, pin varchar(30) NOT NULL, phone varchar(16) NOT NULL, email varchar(30) NOT NULL, registration_date date NOT NULL, balance decimal);
+CREATE TABLE IF NOT EXISTS transactions(id integer NOT NULL PRIMARY KEY AUTOINCREMENT,amount decimal, account_id integer, type varchar(30), datetime datetime, FOREIGN KEY(account_id) REFERENCES accounts(id));
