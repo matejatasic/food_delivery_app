@@ -16,3 +16,11 @@ The main file is in the root folder and is named bank-management-system. Apart f
 3. After that run the executable using the `./bank-management-system` command
 
 **Note:** you will have to create the tables(using the SQL queries from the _bank-management-system.sql_ file) and populate the accounts table with the needed data for this app to work. The pin column in accounts table will have to be populated with the hash of a pin.
+
+## About CS50
+CS50 is a openware course from Havard University and taught by David J. Malan
+
+Introduction to the intellectual enterprises of computer science and the art of programming. This course teaches students how to think algorithmically and solve problems efficiently. Topics include abstraction, algorithms, data structures, encapsulation, resource management, security, and software engineering. Languages include C, Python, and SQL plus students’ choice of: HTML, CSS, and JavaScript (for web development).
+
+- Where do I get CS50 course?
+https://cs50.harvard.edu/x/2020/
