@@ -58,7 +58,7 @@
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="Google Search" class="submit-button mt-3">
-                                <button id="im-feeling-lucky" class="submit-button mt-3">I’m Feeling Lucky</button>
+                                <input type="submit" value="I’m Feeling Lucky" name="btnI" class="submit-button mt-3">
                             </div>
                         </form>
                     </div>
@@ -66,11 +66,4 @@
             </div>
         </div>
     </body>
-    <script>
-        document.getElementById("im-feeling-lucky").onclick = (e) => {
-            e.preventDefault();
-
-            location.href = "https://www.google.com/doodles";
-        };
-    </script>
 </html>
