@@ -1,9 +1,0 @@
-body {
-    padding: 10px;
-}
-
-#listing-page-image {
-    object-fit: contain;
-    width: 100%;
-    height: 350px;
-}
