@@ -16,7 +16,7 @@
 </head>
 <body>
     <!-- nav -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Food Delivery App</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,26 @@
                     <a class="nav-link" href="#">Link</a>
                 </li>
             </ul>
+            <div>
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex flex-row justify-content-center" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{% static 'customer_part/images/avatar.png' %}" alt="user_image">
+                            <p class="ms-2 mt-2">username</p>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="d-flex flex-column flex-sm-row">
+                        <p class="me-3"><a class="nav-link" href="#">Login</a></p>
+                        <p><a class="nav-link" href="#">Register</a></p>
+                    </div>
+                {% endif %}
+            </div>
             </div>
         </div>
     </nav>
