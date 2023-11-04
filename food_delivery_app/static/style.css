@@ -1,3 +1,31 @@
+#navbar {
+    background-color: #4fb5fe !important;
+}
+
+#navbar * {
+    color: white;
+}
+
+#navbar .dropdown img {
+    width: 15%;
+}
+
+.dropdown-toggle::after {
+    margin-top: 17px;
+}
+
+.dropdown-toggle {
+    text-decoration: none;
+}
+
+.dropdown-menu {
+    left: 20% !important;
+}
+
+.dropdown-menu li a {
+    color: black !important;
+}
+
 #footer-logo {
     font-size: 1.8rem;
 }
