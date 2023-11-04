@@ -46,8 +46,8 @@
                     </div>
                 {% else %}
                     <div class="d-flex flex-column flex-sm-row">
-                        <p class="me-3"><a class="nav-link" href="#">Login</a></p>
-                        <p><a class="nav-link" href="#">Register</a></p>
+                        <p class="me-3"><a class="nav-link" href="{% url 'login' %}">Login</a></p>
+                        <p><a class="nav-link" href="{% url 'register' %}">Register</a></p>
                     </div>
                 {% endif %}
             </div>
