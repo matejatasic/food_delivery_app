@@ -1,0 +1,44 @@
+#restaurant-header {
+    height: 30vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#restaurant-header-text {
+    position: absolute;
+    bottom: 0;
+    color: white;
+}
+
+#restaurant-header-text h1 {
+    font-size: 2.2rem;
+}
+
+
+#restaurant-header-text p {
+    font-size: 1.5rem;
+}
+
+#restaurant-main {
+    min-height: 70vh;
+}
+
+#categories a {
+    text-decoration: none;
+    color: black;
+}
+
+.restaurant-item {
+    margin-bottom: 15px;
+}
+
+.restaurant-item div {
+    height: 20vh;
+}
+
+.restaurant-item i {
+    font-size: 30px;
+}

@@ -9,3 +9,6 @@ def login(request):
 
 def register(request):
     return render(request, "customer_part/register.html")
+
+def restaurant(request):
+    return render(request, "customer_part/restaurant.html")
