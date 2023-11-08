@@ -12,3 +12,6 @@ def register(request):
 
 def restaurant(request):
     return render(request, "customer_part/restaurant.html")
+
+def restaurants(request):
+    return render(request, "customer_part/restaurants.html")
