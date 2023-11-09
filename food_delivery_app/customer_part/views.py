@@ -15,3 +15,6 @@ def restaurant(request):
 
 def restaurants(request):
     return render(request, "customer_part/restaurants.html")
+
+def cart(request):
+    return render(request, "customer_part/cart.html")
