@@ -1,0 +1,61 @@
+#restaurant-header {
+    height: 30vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#restaurant-header-text {
+    position: absolute;
+    bottom: 0;
+    color: white;
+}
+
+#restaurant-header-text h1 {
+    font-size: 2.2rem;
+}
+
+
+#restaurant-header-text p {
+    font-size: 1.5rem;
+}
+
+#restaurant-main {
+    min-height: 70vh;
+}
+
+#categories a {
+    text-decoration: none;
+    color: black;
+}
+
+.restaurant-item, .restaurant {
+    margin-bottom: 15px;
+}
+
+.restaurant-item div, .restaurant div {
+    height: 25vh;
+}
+
+.restaurant-item i, .restaurant i {
+    font-size: 30px;
+}
+
+.restaurant-item img, .restaurant img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.restaurant-item-header, .restaurant-header {
+    font-style: bold;
+    font-size: 1.5rem;
+}
+
+@media only screen and (min-width: 768px) {
+    .restaurant-item div, .restaurant div {
+        height: 20vh;
+    }
+}
