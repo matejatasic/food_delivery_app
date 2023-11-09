@@ -33,18 +33,6 @@
             </ul>
             <div>
                 {% if user.is_authenticated %}
-                    <div class="dropdown">
-                        <a class="dropdown-toggle d-flex flex-row justify-content-center" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{% static 'customer_part/images/avatar.png' %}" alt="user_image">
-                            <p class="ms-2 mt-2">username</p>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </div>
-                {% else %}
                     <div class="row">
                         <div class="col-5 col-sm-7 d-flex justify-content-end align-items-center pe-sm-3">
                             <i class="bi bi-cart"></i><span id="cart-quantity">0</span>
@@ -63,11 +51,11 @@
                             </div>
                         </div>
                     </div>
-
-                    {% comment %} <div class="d-flex flex-column flex-sm-row">
+                {% else %}
+                    <div class="d-flex flex-column flex-sm-row">
                         <p class="me-3 mb-sm-0"><a class="nav-link" href="{% url 'login' %}">Login</a></p>
                         <p class="mb-sm-0"><a class="nav-link" href="{% url 'register' %}">Register</a></p>
-                    </div> {% endcomment %}
+                    </div>
                 {% endif %}
             </div>
             </div>
