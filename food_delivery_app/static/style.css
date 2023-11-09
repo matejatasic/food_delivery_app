@@ -16,7 +16,7 @@ html,body
 }
 
 #navbar .dropdown img {
-    width: 15%;
+    width: 25%;
 }
 
 .dropdown-toggle::after {
@@ -28,7 +28,7 @@ html,body
 }
 
 .dropdown-menu {
-    left: 20% !important;
+    left: -5% !important;
 }
 
 .dropdown-menu li a {
@@ -46,4 +46,14 @@ html,body
 footer a {
     color: white;
     text-decoration: none;
+}
+
+@media only screen and (min-width: 768px) {
+    .dropdown-menu {
+        left: -25% !important;
+    }
+
+    #navbar .dropdown img {
+        width: 35%;
+    }
 }
