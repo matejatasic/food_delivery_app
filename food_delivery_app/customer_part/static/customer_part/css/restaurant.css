@@ -1,10 +1,15 @@
-#restaurant-header {
+#restaurant-header,
+#restaurants-header {
     height: 30vh;
     width: 100vw;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
+}
+
+#restaurants-header {
+    background-image: url('../images/restaurants-hero.jpg');
 }
 
 #restaurant-header-text {
