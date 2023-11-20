@@ -1,0 +1,92 @@
+{% extends "customer_part/layout.html" %}
+{% load static %}
+
+{% block style %}
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link href="{% static 'customer_part/css/cart.css' %}" rel="stylesheet">
+{% endblock  %}
+
+{% block main %}
+    <div class="row mt-3">
+        <div class="col-12">
+            <h1 class="text-center">Your Cart</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center my-3">
+        <div class="col-11 col-sm-8">
+            <div class="row cart-item border">
+                <div class="col-2 d-flex justify-content-center align-items-center">
+                    <p>$6.25</p>
+                </div>
+                <div class="col-6 col-sm-6 p-2">
+                    <p class="cart-item-header">Pizza</p>
+                    <p>Suspendisse ut nulla dolor. Fusce mattis in elit eu viverra. Ut porttitor tempus enim.</p>
+                    <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
+                    <span>2</span>
+                    <button class="btn btn-link"><i class="bi bi-file-minus-fill"></i></button>
+                </div>
+                <div class="col-4 col-sm-4">
+                    <img src="{% static 'customer_part/images/pizza.jpg' %}" alt="meal_image">
+                </div>
+            </div>
+            <div class="row cart-item border">
+                <div class="col-2 d-flex justify-content-center align-items-center">
+                    <p>$6.25</p>
+                </div>
+                <div class="col-6 col-sm-6 p-2">
+                    <p class="cart-item-header">Pizza</p>
+                    <p>Suspendisse ut nulla dolor. Fusce mattis in elit eu viverra. Ut porttitor tempus enim.</p>
+                    <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
+                    <span>2</span>
+                    <button class="btn btn-link"><i class="bi bi-file-minus-fill"></i></button>
+                </div>
+                <div class="col-4 col-sm-4">
+                    <img src="{% static 'customer_part/images/pizza.jpg' %}" alt="meal_image">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="prices" class="row justify-content-center mb-3">
+        <div class="col-11 col-sm-8">
+            <div class="row">
+                <div class="col-6">
+                    <p>Items Prices: </p>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <p>$12.50</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p>Delivery: </p>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <p>$15.00</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p>Tax: </p>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <p>$01.00</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p>Total: </p>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <p>$28.50</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button class="btn btn-success btn-lg">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
