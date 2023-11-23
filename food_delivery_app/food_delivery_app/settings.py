@@ -32,6 +32,8 @@ DEBUG = True
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(" ")
 
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'crispy_forms',
+    'crispy_bootstrap5',
 
     'customer_part'
 ]
@@ -123,6 +128,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 # Static files (CSS, JavaScript, Images)

@@ -1,13 +1,18 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
-from . import views
+
+from .views import index, login, register, restaurant, restaurants, cart, orders
 
 
 urlpatterns = [
-    path("", views.index, name="home"),
-    path("login", views.login, name="login"),
-    path("register", views.register, name="register"),
-    path("restaurant", views.restaurant, name="restaurant"),
-    path("restaurants", views.restaurants, name="restaurants"),
-    path("cart", views.cart, name="cart"),
-    path("orders", views.orders, name="orders")
+    path("", index, name="home"),
+    path("login", login, name="login"),
+    path("register", register, name="register"),
+    path("restaurant", restaurant, name="restaurant"),
+    path("restaurants", restaurants, name="restaurants"),
+    path("cart", cart, name="cart"),
+    path("orders", orders, name="orders"),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
