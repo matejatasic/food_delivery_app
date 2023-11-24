@@ -1,0 +1,7 @@
+/env
+.env
+
+__pycache__/
+
+
+food_delivery_app/.coverage
