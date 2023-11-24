@@ -71,6 +71,27 @@ class RegistrationTests(TestCase):
         self.assertEqual(self.payload["username"], new_profile.user.username)
         self.assertIn(self.file_image_name, new_profile.image.name)
 
+    def test_on_registration_user_is_logged_in_successfully(self):
+        self.client.post(self.registration_url, self.payload)
+
+        self.assertTrue(User.objects.get(username=self.username).is_authenticated)
+
+    def test_registration_with_invalid_input_returning_errors(self):
+        # a username that is longer than allowed max_length
+        self.payload[
+            "username"
+        ] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod fermentum ante, in imperdiet augue sodales eget. Cras ante enim, lacinia sed hendrerit nec, dictum venenatis tellus. Donec tempor, elit quis volutpat porttitor, arcu massa tincidunt quam."
+
+        # a confirmation password that is different from the password
+        self.payload["password2"] = "some_other_p@assword"
+
+        response = self.client.post(self.registration_url, self.payload)
+
+        form_errors = response.context["form"].errors.as_data()
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(len(form_errors), 2)
+
 
 class LoginTests(TestCase):
     login_url: str = reverse("login")
