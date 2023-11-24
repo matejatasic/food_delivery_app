@@ -37,7 +37,7 @@ def register(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
         form: ModelForm = RegisterForm(request.POST, request.FILES)
 
         try:
-            register_service.register(form)
+            register_service.register(request, form)
 
             return redirect(reverse("home"))
         except ValidationError:
