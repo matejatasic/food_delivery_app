@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth import logout
 from django.forms import Form, ModelForm, ValidationError
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -13,7 +14,7 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/home.html")
 
 
-def login(request: HttpRequest) -> HttpResponse:
+def login(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.method == "POST":
         login_service: LoginService = LoginService()
         form: Form = LoginForm(request.POST)
@@ -30,7 +31,7 @@ def login(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/login.html", {"form": LoginForm()})
 
 
-def register(request: HttpRequest) -> HttpResponse:
+def register(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.method == "POST":
         register_service: RegisterService = RegisterService()
         form: ModelForm = RegisterForm(request.POST, request.FILES)
@@ -43,6 +44,12 @@ def register(request: HttpRequest) -> HttpResponse:
             return render(request, "customer_part/register.html", {"form": form})
 
     return render(request, "customer_part/register.html", {"form": RegisterForm()})
+
+
+def logout_user(request: HttpRequest) -> HttpResponseRedirect:
+    logout(request)
+
+    return redirect(reverse("home"))
 
 
 def restaurant(request: HttpRequest) -> HttpResponse:
