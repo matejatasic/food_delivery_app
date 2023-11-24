@@ -1,10 +1,12 @@
-from django.forms import ValidationError
+from django.core.exceptions import PermissionDenied
+from django.forms import Form, ModelForm, ValidationError
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .forms import RegisterForm
-from .services import RegisterService
+from .forms import RegisterForm, LoginForm
+from .services.login_service import LoginService
+from .services.register_service import RegisterService
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -12,25 +14,35 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 def login(request: HttpRequest) -> HttpResponse:
-    return render(request, "customer_part/login.html")
-
-
-def register(request: HttpRequest) -> HttpResponse:
-    form = RegisterForm()
-    register_service = RegisterService()
-
     if request.method == "POST":
-        form = RegisterForm(request.POST, request.FILES)
+        login_service: LoginService = LoginService()
+        form: Form = LoginForm(request.POST)
 
-        register_service.register(form)
         try:
-            # register_service.register(form)
+            login_service.login(request, form)
 
             return redirect(reverse("home"))
         except ValidationError:
-            pass
+            return render(request, "customer_part/login.html", {"form": form})
+        except PermissionDenied:
+            return render(request, "customer_part/login.html", {"form": form})
 
-    return render(request, "customer_part/register.html", {"form": form})
+    return render(request, "customer_part/login.html", {"form": LoginForm()})
+
+
+def register(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        register_service: RegisterService = RegisterService()
+        form: ModelForm = RegisterForm(request.POST, request.FILES)
+
+        try:
+            register_service.register(form)
+
+            return redirect(reverse("home"))
+        except ValidationError:
+            return render(request, "customer_part/register.html", {"form": form})
+
+    return render(request, "customer_part/register.html", {"form": RegisterForm()})
 
 
 def restaurant(request: HttpRequest) -> HttpResponse:
