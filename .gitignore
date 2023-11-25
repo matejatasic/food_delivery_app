@@ -5,3 +5,4 @@ __pycache__/
 
 
 food_delivery_app/.coverage
+food_delivery_app/media/profile_pictures/*
