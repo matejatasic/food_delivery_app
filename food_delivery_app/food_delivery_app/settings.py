@@ -31,6 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(" ")
 
+BING_MAPS_API_KEY=os.getenv("BING_MAPS_API_KEY")
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'crispy_bootstrap5',
+    'django_select2',
 
     'customer_part'
 ]
@@ -144,6 +146,28 @@ LOGGING = {
         }
     },
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get("REDIS_LOCATION", "redis://127.0.0.1:6379"),
+        "OPTIONS": {
+            "DB": 0,
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "TIMEOUT": 0 if DEBUG else 300,
+    },
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get("REDIS_LOCATION", "redis://127.0.0.1:6379"),
+        "OPTIONS": {
+            "DB": 1,
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+
+SELECT2_CACHE_BACKEND = "select2"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

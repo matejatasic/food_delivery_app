@@ -2,12 +2,24 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, AbstractUser
 from django.forms import Form, EmailField, CharField, ImageField, PasswordInput
+from django.urls import reverse_lazy
+
+from django_select2.forms import HeavySelect2Widget  # type: ignore
 
 
 class RegisterForm(UserCreationForm):
     email = EmailField(required=True)
-    address = CharField(max_length=255)
+    address = CharField(
+        max_length=500,
+        help_text="Type the whole address. The address should minimally hold street name and number, city and country. Eg. Street 123, City, Country",
+    )
     image = ImageField(label="Profile Image", required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.fields["address"].widget = HeavySelect2Widget(
+            data_url=reverse_lazy("addresses")
+        )
 
     class Meta:
         model = User

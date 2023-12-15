@@ -1,13 +1,16 @@
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.forms import Form, ModelForm, ValidationError
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
+from .services.address_service import AddressService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
 
@@ -71,3 +74,17 @@ def cart(request: HttpRequest) -> HttpResponse:
 
 def orders(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/orders.html")
+
+
+def addresses(request: HttpRequest):
+    address_service = AddressService()
+    addresses: list[dict[str, str]] = address_service.get_address_options(
+        request.GET["term"]
+    )
+
+    return JsonResponse(
+        {
+            "results": addresses,
+        },
+        encoder=DjangoJSONEncoder,
+    )
