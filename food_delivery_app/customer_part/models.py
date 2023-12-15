@@ -19,3 +19,19 @@ class Profile(BaseModel):
 
     def __str__(self):
         return f"{self.user.username} profile"
+
+
+class Address(BaseModel):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    raw = models.CharField(max_length=200)
+    address_line = models.CharField(max_length=60, null=True, blank=True)
+    district_1 = models.CharField()
+    district_2 = models.CharField()
+    country = models.CharField(max_length=60)
+    locality = models.CharField(max_length=165)
+    postal_code = models.IntegerField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
+
+    def __str__(self) -> str:
+        return self.raw
