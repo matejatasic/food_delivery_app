@@ -4,11 +4,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms import ValidationError
 from django.test import TestCase
 from django.urls import reverse
+from faker import Faker  # type: ignore
+from json import dumps
 import os
 from http import HTTPStatus
 
 from food_delivery_app.settings import MEDIA_ROOT
-from ..models import Profile
+from ...models import Profile
 
 
 class RegistrationTests(TestCase):
@@ -16,6 +18,7 @@ class RegistrationTests(TestCase):
     home_url: str = reverse("home")
 
     def setUp(self) -> None:
+        self.faker = Faker()
         self.username: str = "user"
         self.image_name: str = "img_avatar"
         self.file_image_name: str = f"{self.image_name}.png"
@@ -28,13 +31,30 @@ class RegistrationTests(TestCase):
         image: SimpleUploadedFile = SimpleUploadedFile(
             self.file_image_name, image_content, "image/png"
         )
-
-        self.payload: dict[str, str | SimpleUploadedFile] = {
+        # dict[str, str | SimpleUploadedFile | [str, list[dict[str, dict[_Never, _Never]]]]]
+        fake_address = self.faker.address()
+        self.payload = {
             "username": self.username,
             "password1": "p@ssword123",
             "password2": "p@ssword123",
             "email": "user@test.com",
-            "address": "Some address",
+            "address": dumps(
+                [
+                    {
+                        "fields": {
+                            "latitude": float(self.faker.latitude()),
+                            "longitude": float(self.faker.longitude()),
+                            "raw": fake_address,
+                            "address_line": fake_address,
+                            "district_1": self.faker.country_code(),
+                            "district_2": self.faker.country_code(),
+                            "country": self.faker.country(),
+                            "locality": self.faker.city(),
+                            "postal_code": self.faker.postcode(),
+                        }
+                    }
+                ]
+            ),
             "image": image,
         }
 
@@ -49,7 +69,9 @@ class RegistrationTests(TestCase):
         for picture in test_pictures:
             os.remove(os.path.join(profile_pictures_folder, picture))
 
-    def test_access_to_restiger_as_authenticated_user_unsuccessful(self):
+    def test_access_to_register_as_authenticated_user_unsuccessful(self):
+        """Asserts that the authenticated user cannot land on the register page"""
+
         self.client.post(self.registration_url, self.payload)
         response = self.client.get(self.registration_url)
 
@@ -57,6 +79,8 @@ class RegistrationTests(TestCase):
         self.assertEqual(response["location"], self.home_url)
 
     def test_on_registration_user_created_successfully(self) -> None:
+        """Asserts that the user is created after the succesful registration"""
+
         response = self.client.post(self.registration_url, self.payload)
 
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
@@ -64,6 +88,8 @@ class RegistrationTests(TestCase):
         self.assertEqual(User.objects.count(), 1)
 
     def test_on_registration_profile_created_successfully(self) -> None:
+        """Asserts that the user profile is created after the succesful registration"""
+
         response = self.client.post(self.registration_url, self.payload)
 
         new_profile: Profile = Profile.objects.get(user__username=self.username)
@@ -75,11 +101,15 @@ class RegistrationTests(TestCase):
         self.assertIn(self.file_image_name, new_profile.image.name)
 
     def test_on_registration_user_is_logged_in_successfully(self) -> None:
+        """Asserts that the user is logged in after the succesful registration"""
+
         self.client.post(self.registration_url, self.payload)
 
         self.assertTrue(User.objects.get(username=self.username).is_authenticated)
 
     def test_registration_with_invalid_input_returning_errors(self) -> None:
+        """Asserts that the server returns errors if the input data failed validation"""
+
         # a username that is longer than allowed max_length
         self.payload[
             "username"
