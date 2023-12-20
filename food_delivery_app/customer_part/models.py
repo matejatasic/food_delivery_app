@@ -14,7 +14,7 @@ class BaseModel(models.Model):
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     image = models.ImageField(
-        default="avatar.jpg", upload_to="profile_pictures", blank=True
+        default="avatar.jpg", upload_to="profile_pictures", blank=True, null=True
     )
 
     def __str__(self):
@@ -25,7 +25,7 @@ class Address(BaseModel):
     latitude = models.FloatField()
     longitude = models.FloatField()
     raw = models.CharField(max_length=200)
-    address_line = models.CharField(max_length=60, null=True, blank=True)
+    address_line = models.CharField(max_length=70, null=True, blank=True)
     district_1 = models.CharField()
     district_2 = models.CharField()
     country = models.CharField(max_length=60)

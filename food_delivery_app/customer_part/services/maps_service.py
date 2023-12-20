@@ -11,12 +11,8 @@ class MapsService:
     location_by_query_url: str = "http://dev.virtualearth.net/REST/v1/Locations"
 
     def get_location_by_query(self, query: str) -> list[MapsResponseResourcesDto]:
-        query_parameters: str = (
-            f"query={query}&include=queryParse&key={BING_MAPS_API_KEY}"
-        )
+        response: Response = self.send_request(query)
 
-        response: Response = get(f"{self.location_by_query_url}?{query_parameters}")
-        print(response.status_code)
         if response.status_code == HTTPStatus.BAD_REQUEST:
             raise BadRequest(
                 f"Response Headers: {response.headers}, Response: {response.json()}"
@@ -33,3 +29,10 @@ class MapsService:
         ]
 
         return resources_dtos
+
+    def send_request(self, query: str) -> Response:
+        query_parameters: str = (
+            f"query={query}&include=queryParse&key={BING_MAPS_API_KEY}"
+        )
+
+        return get(f"{self.location_by_query_url}?{query_parameters}")
