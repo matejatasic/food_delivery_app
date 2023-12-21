@@ -36,7 +36,9 @@ class LoginServiceTests(TestCase):
         self.login_service.login(self.request_mock, self.form_mock)
 
     @patch.object(LoginService, "log_errors")
-    def test_login_raises_the_validaiton_error_if_the_form_is_invalid(self, log_errors_mock):
+    def test_login_raises_the_validaiton_error_if_the_form_is_invalid(
+        self, log_errors_mock
+    ):
         """Asserts that the login raises the ValidationError if the form has received invalid input"""
 
         self.form_mock.is_valid.return_value = False

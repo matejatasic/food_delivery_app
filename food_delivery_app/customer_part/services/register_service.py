@@ -23,9 +23,7 @@ class RegisterService:
                 first_name=form.cleaned_data.get("first_name", None),
                 last_name=form.cleaned_data.get("last_name", None),
                 email=form.cleaned_data["email"],
-                address=loads(form.cleaned_data["address"])[0]["fields"]
-                if form.cleaned_data.get("address")
-                else None,
+                address=loads(form.cleaned_data["address"])[0]["fields"],
             )
         except AddressValidationError:
             form.add_error(None, "There was a problem while validating the adddress")
@@ -47,7 +45,7 @@ class RegisterService:
         first_name: str | None,
         last_name: str | None,
         email: str,
-        address: dict[str, str] | None,
+        address: dict[str, str],
     ) -> User:
         user_service: UserService = self.get_user_service()
 
