@@ -12,6 +12,7 @@ class RegisterForm(UserCreationForm):
     address = CharField(
         max_length=500,
         help_text="Type the whole address. The address should minimally hold street name and number, city and country. Eg. Street 123, City, Country",
+        required=True,
     )
     image = ImageField(label="Profile Image", required=False)
 

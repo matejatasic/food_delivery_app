@@ -19,7 +19,7 @@ class UserService:
         first_name: str | None,
         last_name: str | None,
         email: str,
-        address: dict | None,
+        address: dict,
     ) -> User:
         with transaction.atomic():
             transaction_savepoint = transaction.savepoint()
@@ -34,29 +34,28 @@ class UserService:
             user.full_clean()
             user.save()
 
-            if address:
-                try:
-                    self.create_address(
-                        latitude=address["latitude"],
-                        longitude=address["longitude"],
-                        raw_address=address["raw"],
-                        address_line=address["address_line"],
-                        district_1=address["district_1"],
-                        district_2=address["district_2"],
-                        country=address["country"],
-                        locality=address["locality"],
-                        postal_code=address["postal_code"],
-                        user=user,
-                    )
+            try:
+                self.create_address(
+                    latitude=address["latitude"],
+                    longitude=address["longitude"],
+                    raw_address=address["raw"],
+                    address_line=address["address_line"],
+                    district_1=address["district_1"],
+                    district_2=address["district_2"],
+                    country=address["country"],
+                    locality=address["locality"],
+                    postal_code=address["postal_code"],
+                    user=user,
+                )
 
-                    transaction.savepoint_commit(transaction_savepoint)
-                except ValidationError as validation_error:
-                    error_messages = self.__get_error_messages(validation_error)
-                    self.log_errors(error_messages)
+                transaction.savepoint_commit(transaction_savepoint)
+            except ValidationError as validation_error:
+                error_messages = self.__get_error_messages(validation_error)
+                self.log_errors(error_messages)
 
-                    transaction.savepoint_rollback(transaction_savepoint)
+                transaction.savepoint_rollback(transaction_savepoint)
 
-                    raise AddressValidationError(error_messages)
+                raise AddressValidationError(error_messages)
 
             return user
 
