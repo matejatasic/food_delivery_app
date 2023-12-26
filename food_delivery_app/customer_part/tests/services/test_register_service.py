@@ -3,48 +3,22 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.http import HttpRequest
 from django.test import TestCase
-from faker import Faker  # type: ignore
-from json import dumps
 from unittest.mock import patch, Mock
 
 from ...exceptions import AddressValidationError
+from ..factories import RegisterFormDataFactory
 from ...services.register_service import RegisterService
 
 
 class RegisterServiceTests(TestCase):
     register_service = RegisterService()
-    faker = Faker()
     request_mock: Mock
     form_mock: Mock
 
     def setUp(self) -> None:
         self.request_mock = Mock(spec=HttpRequest)
         self.form_mock = Mock(spec=ModelForm)
-        fake_address = self.faker.address()
-        self.form_mock.cleaned_data = {
-            "username": self.faker.profile(fields=["username"])["username"],
-            "password1": self.faker.password(),
-            "first_name": self.faker.first_name(),
-            "last_name": self.faker.last_name(),
-            "email": self.faker.email(),
-            "address": dumps(
-                [
-                    {
-                        "fields": {
-                            "latitude": float(self.faker.latitude()),
-                            "longitude": float(self.faker.longitude()),
-                            "raw": fake_address,
-                            "address_line": fake_address,
-                            "district_1": self.faker.country_code(),
-                            "district_2": self.faker.country_code(),
-                            "country": self.faker.country(),
-                            "locality": self.faker.city(),
-                            "postal_code": self.faker.postcode(),
-                        }
-                    }
-                ]
-            ),
-        }
+        self.form_mock.cleaned_data = RegisterFormDataFactory()
 
     @patch.object(RegisterService, "login_user")
     @patch.object(RegisterService, "create_profile")

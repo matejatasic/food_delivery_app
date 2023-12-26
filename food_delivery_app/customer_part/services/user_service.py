@@ -38,7 +38,7 @@ class UserService:
                 self.create_address(
                     latitude=address["latitude"],
                     longitude=address["longitude"],
-                    raw_address=address["raw"],
+                    raw=address["raw"],
                     address_line=address["address_line"],
                     district_1=address["district_1"],
                     district_2=address["district_2"],
@@ -73,7 +73,7 @@ class UserService:
         self,
         latitude: int,
         longitude: int,
-        raw_address: str,
+        raw: str,
         address_line: str | None,
         district_1: str,
         district_2: str,
@@ -87,7 +87,7 @@ class UserService:
         address_service.create(
             latitude=latitude,
             longitude=longitude,
-            raw_address=raw_address,
+            raw=raw,
             address_line=address_line,
             district_1=district_1,
             district_2=district_2,

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from typing import Any
+from unittest.mock import Mock
 
 
 class BaseModel(models.Model):
@@ -35,3 +37,20 @@ class Address(BaseModel):
 
     def __str__(self) -> str:
         return self.raw
+
+    def get_dict(self) -> dict[str, Any]:
+        return {
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "raw": self.raw,
+            "address_line": self.address_line,
+            "district_1": self.district_1,
+            "district_2": self.district_2,
+            "country": self.country,
+            "locality": self.locality,
+            "postal_code": self.postal_code,
+            "user": self.user,
+        }
+
+    def get_mock(self) -> Mock:
+        return Mock(spec=self)

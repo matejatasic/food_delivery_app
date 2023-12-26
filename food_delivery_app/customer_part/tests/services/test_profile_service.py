@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.test import TestCase
-from faker import Faker  # type: ignore
 from unittest.mock import patch, Mock
 
 from ...models import Profile
@@ -11,7 +10,6 @@ from ...services.profile_service import ProfileService
 class ProfileServiceTests(TestCase):
     profile_service = ProfileService()
     query = "Some Address"
-    faker = Faker()
 
     @patch.object(ProfileService, "get_model_instance")
     def test_create_returns_profile_model_instance_when_created_successfully(
