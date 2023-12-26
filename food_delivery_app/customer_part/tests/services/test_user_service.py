@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from faker import Faker  # type: ignore
 from unittest.mock import patch, Mock
 
 from ...exceptions import AddressValidationError
+from ..factories import UserServiceCreateParametersFactory
 from ...models import Address
 from ...services.address_service import AddressService
 from ...services.user_service import UserService
@@ -12,7 +12,6 @@ from ...services.user_service import UserService
 
 class UserServiceTests(TestCase):
     user_service = UserService()
-    faker = Faker()
 
     @patch.object(UserService, "get_address_service")
     @patch.object(UserService, "get_model_instance")
@@ -31,27 +30,7 @@ class UserServiceTests(TestCase):
         get_address_service_mock.return_value = address_service_mock
         address_service_mock.create.return_value = address_mock
 
-        fake_address = self.faker.address()
-        address_dict = {
-            "latitude": float(self.faker.latitude()),
-            "longitude": float(self.faker.longitude()),
-            "raw": fake_address,
-            "address_line": fake_address,
-            "district_1": self.faker.country_code(),
-            "district_2": self.faker.country_code(),
-            "country": self.faker.country(),
-            "locality": self.faker.city(),
-            "postal_code": self.faker.postcode(),
-        }
-
-        result = self.user_service.create(
-            username=self.faker.profile(fields=["username"])["username"],
-            password=self.faker.password(),
-            first_name=self.faker.first_name(),
-            last_name=self.faker.last_name(),
-            email=self.faker.email(),
-            address=address_dict,
-        )
+        result = self.user_service.create(**UserServiceCreateParametersFactory())
 
         self.assertIsInstance(result, Mock)
 
@@ -75,29 +54,8 @@ class UserServiceTests(TestCase):
             {"some_field": "Invalid field"}
         )
 
-        fake_address = self.faker.address()
-        address_dict = {
-            "latitude": float(self.faker.latitude()),
-            "longitude": float(self.faker.longitude()),
-            "raw": fake_address,
-            "address_line": fake_address,
-            "district_1": self.faker.country_code(),
-            "district_2": self.faker.country_code(),
-            "country": self.faker.country(),
-            "locality": self.faker.city(),
-            "postal_code": self.faker.postcode(),
-        }
-        result = [
-            self.faker.profile(fields=["username"])["username"],
-            self.faker.password(),
-            self.faker.first_name(),
-            self.faker.last_name(),
-            self.faker.email(),
-            address_dict,
-        ]
-
         self.assertRaises(
             AddressValidationError,
             self.user_service.create,
-            *result,
+            **UserServiceCreateParametersFactory(),
         )

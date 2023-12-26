@@ -4,11 +4,10 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms import ValidationError
 from django.test import TestCase
 from django.urls import reverse
-from faker import Faker  # type: ignore
-from json import dumps
 import os
 from http import HTTPStatus
 
+from ..factories import RegisterFormDataFactory
 from food_delivery_app.settings import MEDIA_ROOT
 from ...models import Profile
 
@@ -18,7 +17,6 @@ class RegistrationTests(TestCase):
     home_url: str = reverse("home")
 
     def setUp(self) -> None:
-        self.faker = Faker()
         self.username: str = "user"
         self.image_name: str = "img_avatar"
         self.file_image_name: str = f"{self.image_name}.png"
@@ -31,30 +29,9 @@ class RegistrationTests(TestCase):
         image: SimpleUploadedFile = SimpleUploadedFile(
             self.file_image_name, image_content, "image/png"
         )
-        # dict[str, str | SimpleUploadedFile | [str, list[dict[str, dict[_Never, _Never]]]]]
-        fake_address = self.faker.address()
-        self.payload = {
-            "username": self.username,
-            "password1": "p@ssword123",
-            "password2": "p@ssword123",
-            "email": "user@test.com",
-            "address": dumps(
-                [
-                    {
-                        "fields": {
-                            "latitude": float(self.faker.latitude()),
-                            "longitude": float(self.faker.longitude()),
-                            "raw": fake_address,
-                            "address_line": fake_address,
-                            "district_1": self.faker.country_code(),
-                            "district_2": self.faker.country_code(),
-                            "country": self.faker.country(),
-                            "locality": self.faker.city(),
-                            "postal_code": self.faker.postcode(),
-                        }
-                    }
-                ]
-            ),
+
+        self.payload: dict[str, str | SimpleUploadedFile] = {
+            **RegisterFormDataFactory(has_password_confirmation=True),
             "image": image,
         }
 
@@ -92,7 +69,9 @@ class RegistrationTests(TestCase):
 
         response = self.client.post(self.registration_url, self.payload)
 
-        new_profile: Profile = Profile.objects.get(user__username=self.username)
+        new_profile: Profile = Profile.objects.get(
+            user__username=self.payload["username"]
+        )
 
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(response["location"], self.home_url)
@@ -104,8 +83,9 @@ class RegistrationTests(TestCase):
         """Asserts that the user is logged in after the succesful registration"""
 
         self.client.post(self.registration_url, self.payload)
-
-        self.assertTrue(User.objects.get(username=self.username).is_authenticated)
+        self.assertTrue(
+            User.objects.get(username=self.payload["username"]).is_authenticated
+        )
 
     def test_registration_with_invalid_input_returning_errors(self) -> None:
         """Asserts that the server returns errors if the input data failed validation"""

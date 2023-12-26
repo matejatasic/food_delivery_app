@@ -1,12 +1,11 @@
 from django.test import TestCase
-from faker import Faker  # type: ignore
 
+from ..factories import RegisterFormDataFactory
 from ...forms import RegisterForm
 
 
 class RegisterFormTests(TestCase):
     register_form: RegisterForm
-    faker = Faker()
 
     def setUp(self):
         self.register_form = None
@@ -14,14 +13,8 @@ class RegisterFormTests(TestCase):
     def test_register_form_valid_when_input_is_valid(self):
         """Asserts that the register form is valid, with no errors, when the input is valid"""
 
-        password = self.faker.password()
-        data = {
-            "username": self.faker.profile(fields=["username"])["username"],
-            "email": self.faker.email(),
-            "password1": password,
-            "password2": password,
-            "address": self.faker.address(),
-        }
+        data = RegisterFormDataFactory(has_password_confirmation=True)
+
         self.register_form = RegisterForm(data=data)
 
         self.assertTrue(self.register_form.is_valid())
@@ -42,14 +35,9 @@ class RegisterFormTests(TestCase):
     def test_register_form_invalid_when_email_invalid(self):
         """Asserts that the register form is not valid when email is not valid"""
 
-        password = self.faker.password()
-        data = {
-            "username": self.faker.profile(fields=["username"])["username"],
-            "email": "invalid email",
-            "password1": password,
-            "password2": password,
-            "address": self.faker.address(),
-        }
+        data = RegisterFormDataFactory(
+            has_password_confirmation=True, has_invalid_email=True
+        )
         self.register_form = RegisterForm(data=data)
 
         self.assertFalse(self.register_form.is_valid())
@@ -58,14 +46,7 @@ class RegisterFormTests(TestCase):
     def test_register_invalid_when_image_invalid(self):
         """Asserts that the register form is not valid when image is not valid"""
 
-        password = self.faker.password()
-        data = {
-            "username": self.faker.profile(fields=["username"])["username"],
-            "email": self.faker.email(),
-            "password1": password,
-            "password2": password,
-            "address": self.faker.address(),
-        }
+        data = RegisterFormDataFactory(has_password_confirmation=True)
         self.register_form = RegisterForm(data, {"image": "invalid image"})
 
         self.assertFalse(self.register_form.is_valid())

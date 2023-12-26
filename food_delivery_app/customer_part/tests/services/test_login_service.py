@@ -3,25 +3,21 @@ from django.core.exceptions import ValidationError, PermissionDenied
 from django.forms import Form
 from django.http import HttpRequest
 from django.test import TestCase
-from faker import Faker  # type: ignore
 from unittest.mock import patch, Mock
 
+from ..factories import LoginFormDataFactory
 from ...services.login_service import LoginService
 
 
 class LoginServiceTests(TestCase):
     login_service = LoginService()
-    faker = Faker()
     request_mock: Mock
     form_mock: Mock
 
     def setUp(self) -> None:
         self.request_mock = Mock(spec=HttpRequest)
         self.form_mock = Mock(spec=Form)
-        self.form_mock.cleaned_data = {
-            "username": self.faker.profile(fields=["username"])["username"],
-            "password": self.faker.password(),
-        }
+        self.form_mock.cleaned_data = LoginFormDataFactory()
 
     @patch.object(LoginService, "handle_login")
     @patch.object(LoginService, "get_authenticated_user")
