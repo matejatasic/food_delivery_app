@@ -13,6 +13,7 @@ from .forms import RegisterForm, LoginForm
 from .services.address_service import AddressService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
+from .services.restaurant_service import RestaurantService
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -65,7 +66,16 @@ def restaurant(request: HttpRequest) -> HttpResponse:
 
 
 def restaurants(request: HttpRequest) -> HttpResponse:
-    return render(request, "customer_part/restaurants.html")
+    restaurant_service = RestaurantService()
+
+    return render(
+        request,
+        "customer_part/restaurants.html",
+        {
+            "restaurants": restaurant_service.get_all(),
+            "categories": restaurant_service.get_all_categories(),
+        },
+    )
 
 
 def cart(request: HttpRequest) -> HttpResponse:
