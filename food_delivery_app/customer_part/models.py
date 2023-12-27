@@ -1,21 +1,34 @@
-from django.db import models
+from django.db.models import (
+    Model,
+    DateTimeField,
+    ForeignKey,
+    OneToOneField,
+    ImageField,
+    CASCADE,
+    SET_NULL,
+    FloatField,
+    CharField,
+    IntegerField,
+    TextField,
+    BooleanField,
+)
 from django.contrib.auth.models import User
 from django.utils import timezone
 from typing import Any
 from unittest.mock import Mock
 
 
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(db_index=True, default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
+class BaseModel(Model):
+    created_at = DateTimeField(db_index=True, default=timezone.now)
+    updated_at = DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
 
 
 class Profile(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    image = models.ImageField(
+    user = OneToOneField(User, on_delete=CASCADE, related_name="profile")
+    image = ImageField(
         default="avatar.jpg", upload_to="profile_pictures", blank=True, null=True
     )
 
@@ -24,16 +37,16 @@ class Profile(BaseModel):
 
 
 class Address(BaseModel):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    raw = models.CharField(max_length=200)
-    address_line = models.CharField(max_length=70, null=True, blank=True)
-    district_1 = models.CharField()
-    district_2 = models.CharField()
-    country = models.CharField(max_length=60)
-    locality = models.CharField(max_length=165)
-    postal_code = models.IntegerField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
+    latitude = FloatField()
+    longitude = FloatField()
+    raw = CharField(max_length=200)
+    address_line = CharField(max_length=70, null=True, blank=True)
+    district_1 = CharField()
+    district_2 = CharField()
+    country = CharField(max_length=60)
+    locality = CharField(max_length=165)
+    postal_code = IntegerField(null=True, blank=True)
+    user = ForeignKey(User, on_delete=CASCADE, related_name="addresses")
 
     def __str__(self) -> str:
         return self.raw
@@ -54,3 +67,21 @@ class Address(BaseModel):
 
     def get_mock(self) -> Mock:
         return Mock(spec=self)
+
+
+class Restaurant(BaseModel):
+    name = CharField(max_length=80)
+    description = TextField()
+    category = ForeignKey(
+        "RestaurantCategory", on_delete=SET_NULL, null=True, related_name="restaurants"
+    )
+
+
+class RestaurantCategory(BaseModel):
+    name = CharField(max_length=50)
+
+
+class RestaurantLikes(BaseModel):
+    restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="likes")
+    user = ForeignKey(User, on_delete=CASCADE, related_name="likes")
+    is_dislike = BooleanField()
