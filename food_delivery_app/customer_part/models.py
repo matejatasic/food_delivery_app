@@ -75,13 +75,38 @@ class Restaurant(BaseModel):
     category = ForeignKey(
         "RestaurantCategory", on_delete=SET_NULL, null=True, related_name="restaurants"
     )
+    image = ImageField(upload_to="restaurant_pictures")
+
+    def __str__(self) -> str:
+        return self.name
+
+    def get_like_percentage(self):
+        all_likes = self.likes.all()
+
+        if len(all_likes) == 0:
+            return 0
+
+        dislikes = [like for like in all_likes if like.is_dislike]
+
+        return int(len(dislikes) / len(all_likes) * 100)
 
 
 class RestaurantCategory(BaseModel):
     name = CharField(max_length=50)
 
+    class Meta:
+        verbose_name_plural = "Restaurant categories"
 
-class RestaurantLikes(BaseModel):
+    def __str__(self) -> str:
+        return self.name
+
+
+class RestaurantLike(BaseModel):
     restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="likes")
     user = ForeignKey(User, on_delete=CASCADE, related_name="likes")
     is_dislike = BooleanField()
+
+    def __str__(self) -> str:
+        like_type = "Like" if not self.is_dislike else "Dislike"
+
+        return f"{like_type} by {self.user.username} to {self.restaurant.name}"
