@@ -1,5 +1,5 @@
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import PermissionDenied
+from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -9,11 +9,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from http import HTTPStatus
-from json import loads
+from json import loads, dumps
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
-from .exceptions import RestaurantDoesNotExist
+from .exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
 from .services.address_service import AddressService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
@@ -90,7 +90,7 @@ def orders(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/orders.html")
 
 
-def addresses(request: HttpRequest):
+def addresses(request: HttpRequest) -> JsonResponse:
     address_service = AddressService()
     addresses: list[dict[str, str]] = address_service.get_address_options(
         request.GET["term"]
@@ -105,7 +105,7 @@ def addresses(request: HttpRequest):
 
 
 @csrf_exempt
-def like(request: HttpRequest):
+def like(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
         return JsonResponse(
             {"error": "You are not authorized to perform this action"},
@@ -117,7 +117,6 @@ def like(request: HttpRequest):
 
     data = loads(request.body)
     restaurant_id = data.get("restaurant_id")
-
     restaurant_service = RestaurantService()
 
     try:
@@ -136,5 +135,33 @@ def like(request: HttpRequest):
     except RestaurantDoesNotExist:
         return JsonResponse(
             {"error": f"The restaurant with the id {restaurant_id} does not exist"},
+            status=HTTPStatus.NOT_FOUND,
+        )
+
+
+@csrf_exempt
+def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    if request.method == "POST":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
+    category_name = request.GET.get("category_name")
+    restaurant_service = RestaurantService()
+
+    try:
+        return JsonResponse(
+            {
+                "data": dumps(restaurant_service.get_by_category(category_name)),
+            },
+            status=HTTPStatus.OK,
+        )
+    except RestaurantCategoryDoesNotExist:
+        return JsonResponse(
+            {"error": f"The restaurant category {category_name} does not exist"},
             status=HTTPStatus.NOT_FOUND,
         )
