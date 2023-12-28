@@ -31,7 +31,13 @@
                                 <div class="col-8 col-sm-8 p-2">
                                     <p class="restaurant-header">{{ restaurant.name }}</p>
                                     <p>{{ restaurant.description }}</p>
-                                    <span><i class="bi bi-hand-thumbs-up"></i> {{ restaurant.get_like_percentage }}%</span>
+                                    <span class="clickable like-button d-inline-block me-2 mt-2" data-id="{{ restaurant.id }}">
+                                        {% if user.is_authenticated and restaurant.id in user.liked_restaurants %}
+                                            <i class="bi bi-hand-thumbs-up-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-hand-thumbs-up"></i>
+                                        {% endif %}
+                                    </span><span>{{ restaurant.likes.count }}</span>
                                 </div>
                                 <div class="col-4 col-sm-4">
                                     <img src="{% get_media_prefix %}{{ restaurant.image }}" alt="meal_image">
@@ -43,4 +49,11 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        const likeRoute = "{% url 'like' %}"
+    </script>
+    <script src="{% static 'customer_part/js/like.js' %}"></script>
 {% endblock %}

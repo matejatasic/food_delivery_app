@@ -26,6 +26,14 @@ class BaseModel(Model):
         abstract = True
 
 
+# Add aditional functionality to the built in User authentication model
+def liked_restaurants(self) -> list[int]:
+    return [result[0] for result in self.likes.values_list("restaurant__id")]
+
+
+User.add_to_class("liked_restaurants", liked_restaurants)
+
+
 class Profile(BaseModel):
     user = OneToOneField(User, on_delete=CASCADE, related_name="profile")
     image = ImageField(
@@ -104,9 +112,6 @@ class RestaurantCategory(BaseModel):
 class RestaurantLike(BaseModel):
     restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="likes")
     user = ForeignKey(User, on_delete=CASCADE, related_name="likes")
-    is_dislike = BooleanField()
 
     def __str__(self) -> str:
-        like_type = "Like" if not self.is_dislike else "Dislike"
-
-        return f"{like_type} by {self.user.username} to {self.restaurant.name}"
+        return f"Like by {self.user.username} to {self.restaurant.name}"

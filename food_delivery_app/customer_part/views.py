@@ -7,9 +7,13 @@ from django.forms import Form, ModelForm, ValidationError
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from http import HTTPStatus
+from json import loads
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
+from .exceptions import RestaurantDoesNotExist
 from .services.address_service import AddressService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
@@ -98,3 +102,39 @@ def addresses(request: HttpRequest):
         },
         encoder=DjangoJSONEncoder,
     )
+
+
+@csrf_exempt
+def like(request: HttpRequest):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    if request.method == "GET":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
+    data = loads(request.body)
+    restaurant_id = data.get("restaurant_id")
+
+    restaurant_service = RestaurantService()
+
+    try:
+        action_taken, current_number_of_likes = restaurant_service.like(
+            restaurant_id=restaurant_id, authenticated_user=request.user
+        )
+
+        return JsonResponse(
+            {
+                "message": f"The post was {action_taken}",
+                "action": action_taken,
+                "current_number_of_likes": current_number_of_likes,
+            },
+            status=HTTPStatus.OK,
+        )
+    except RestaurantDoesNotExist:
+        return JsonResponse(
+            {"error": f"The restaurant with the id {restaurant_id} does not exist"},
+            status=HTTPStatus.NOT_FOUND,
+        )
