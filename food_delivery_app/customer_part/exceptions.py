@@ -19,3 +19,7 @@ class AddressValidationError(ValidationError):
 
 class RestaurantDoesNotExist(ObjectDoesNotExist):
     """The Restaurant instance does not exist in the database"""
+
+
+class RestaurantCategoryDoesNotExist(ObjectDoesNotExist):
+    """The RestaurantCategory instance does not exist in the database"""

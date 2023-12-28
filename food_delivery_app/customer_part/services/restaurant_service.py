@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
 
-from ..exceptions import RestaurantDoesNotExist
+from ..dtos import RestaurantDto
+from ..exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
 from ..models import Restaurant, RestaurantCategory, RestaurantLike
 
 
@@ -30,3 +31,18 @@ class RestaurantService:
             action = "liked"
 
         return (action, restaurant.likes.count())
+
+    def get_by_category(self, category_name: str | None):
+        if not RestaurantCategory.objects.filter(name=category_name).exists():
+            raise RestaurantCategoryDoesNotExist()
+
+        return [
+            RestaurantDto(
+                id=restaurant.id,
+                name=restaurant.name,
+                description=restaurant.description,
+                image=restaurant.image.name,
+                number_of_likes=restaurant.likes.count(),
+            ).toDict()
+            for restaurant in Restaurant.objects.filter(category__name=category_name)
+        ]

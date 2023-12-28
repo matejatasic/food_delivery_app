@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from django.core.serializers import serialize
 
 from .models import Address
@@ -130,3 +131,21 @@ class MapsResponseAddressDto:
     @property
     def postal_code(self) -> str | None:
         return self.__postal_code
+
+
+@dataclass
+class RestaurantDto:
+    id: int
+    name: str
+    description: str
+    image: str
+    number_of_likes: int
+
+    def toDict(self) -> dict[str, str | int]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "image": self.image,
+            "number_of_likes": self.number_of_likes,
+        }

@@ -6,12 +6,12 @@ likeButtons.forEach(element => {
 
 function handleLikeButtonClick(e) {
     const element = e.currentTarget
-    restaurant_id = element.getAttribute("data-id");
+    restaurantId = element.getAttribute("data-id");
 
     fetch(likeRoute, {
         method: "POST",
         body: JSON.stringify({
-            restaurant_id: restaurant_id
+            restaurant_id: restaurantId
         })
     })
     .then(res => res.json())
