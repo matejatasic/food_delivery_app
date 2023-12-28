@@ -1,12 +1,16 @@
-const likeButtons = document.querySelectorAll(".like-button");
+addEventListenersToLikeButtons();
 
-likeButtons.forEach(element => {
-    element.addEventListener("click", (e) => handleLikeButtonClick(e))
-})
+function addEventListenersToLikeButtons() {
+    const likeButtons = document.querySelectorAll(".like-button");
+
+    likeButtons.forEach(element => {
+        element.addEventListener("click", (e) => handleLikeButtonClick(e))
+    })
+}
 
 function handleLikeButtonClick(e) {
     const element = e.currentTarget
-    restaurantId = element.getAttribute("data-id");
+    const restaurantId = element.getAttribute("data-id");
 
     fetch(likeRoute, {
         method: "POST",
@@ -38,3 +42,5 @@ function changeLikeCount(element, currentNumberOfLikes) {
     const numberOfLikesSpan = element.nextElementSibling;
     numberOfLikesSpan.textContent = currentNumberOfLikes;
 }
+
+export {addEventListenersToLikeButtons};
