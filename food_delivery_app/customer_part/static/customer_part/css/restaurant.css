@@ -59,6 +59,10 @@
     font-size: 1.5rem;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 @media only screen and (min-width: 768px) {
     .restaurant-item div, .restaurant div {
         height: 20vh;

@@ -12,6 +12,7 @@ from .views import (
     restaurants,
     cart,
     orders,
+    like,
 )
 
 
@@ -19,6 +20,7 @@ urlpatterns = [
     path("", index, name="home"),
     path("addresses", addresses, name="addresses"),
     path("cart", cart, name="cart"),
+    path("like", like, name="like"),
     path("login", login, name="login"),
     path("logout", logout_user, name="logout"),
     path("orders", orders, name="orders"),

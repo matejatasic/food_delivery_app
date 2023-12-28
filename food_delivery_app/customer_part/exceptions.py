@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 
 class Unauthorized(Exception):
@@ -15,3 +15,7 @@ class InternalServerError(Exception):
 
 class AddressValidationError(ValidationError):
     """There is an error while creating the Address"""
+
+
+class RestaurantDoesNotExist(ObjectDoesNotExist):
+    """The Restaurant instance does not exist in the database"""
