@@ -1,3 +1,5 @@
+import { addEventListenersToLikeButtons } from "./like.js";
+
 const categoryButtons = document.querySelectorAll(".category-button");
 
 categoryButtons.forEach(element => {
@@ -5,7 +7,7 @@ categoryButtons.forEach(element => {
 })
 
 function handleCategoryButtonClick(e) {
-    categoryName = e.currentTarget.getAttribute("data-name");
+    const categoryName = e.currentTarget.getAttribute("data-name");
 
     fetch(
         `${getRestaurantsByCategoryRoute}?category_name=${categoryName}`,
@@ -16,7 +18,9 @@ function handleCategoryButtonClick(e) {
     .then(response => response.json())
     .then(response => {
         const data = JSON.parse(response.data);
-        showFilteredRestaurants(data)
+
+        showFilteredRestaurants(data);
+        addEventListenersToLikeButtons();
     })
 }
 
@@ -43,7 +47,7 @@ function getRestaurantRow(restaurant, restaurantsLikedByUser) {
                 <div class="col-8 col-sm-8 p-2">
                     <p class="restaurant-header">${restaurant.name}</p>
                     <p>${restaurant.description}</p>
-                    <span class="clickable like-button d-inline-block me-2 mt-2" data-id="{{ restaurant.id }}">
+                    <span class="clickable like-button d-inline-block me-2 mt-2" data-id="${restaurant.id}">
                         ${icon}
                     </span><span>${restaurant.number_of_likes}</span>
                 </div>

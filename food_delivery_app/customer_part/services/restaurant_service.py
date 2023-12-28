@@ -7,8 +7,17 @@ from ..models import Restaurant, RestaurantCategory, RestaurantLike
 
 
 class RestaurantService:
-    def get_all(self) -> QuerySet[Restaurant]:
-        return Restaurant.objects.all()
+    def get_all(self) -> list[dict[str, str | int]]:
+        return [
+            RestaurantDto(
+                id=restaurant.id,
+                name=restaurant.name,
+                description=restaurant.description,
+                image=restaurant.image.name,
+                number_of_likes=restaurant.likes.count(),
+            ).toDict()
+            for restaurant in Restaurant.objects.all()
+        ]
 
     def get_all_categories(self) -> QuerySet[RestaurantCategory]:
         return RestaurantCategory.objects.all()
