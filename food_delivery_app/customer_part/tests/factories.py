@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User
 
 from factory import Factory, SubFactory, LazyAttribute, DictFactory, Trait  # type: ignore
+from factory.django import DjangoModelFactory # type: ignore
 from json import dumps
 
 from .base import faker  # type: ignore
 from ..forms import LoginForm
-from ..models import Address
+from ..models import Address, Restaurant, RestaurantCategory, RestaurantLike
 
 
 class UserFactory(Factory):
@@ -31,6 +32,31 @@ class AddressFactory(Factory):
     country = LazyAttribute(lambda _: faker.country())
     locality = LazyAttribute(lambda _: faker.city())
     postal_code = LazyAttribute(lambda _: faker.postcode())
+    user = SubFactory(UserFactory)
+
+
+class RestaurantCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = RestaurantCategory
+
+    name = LazyAttribute(lambda _: faker.pystr())
+
+
+class RestaurantFactory(DjangoModelFactory):
+    class Meta:
+        model = Restaurant
+
+    id = LazyAttribute(lambda _: faker.random_number())
+    name = LazyAttribute(lambda _: faker.pystr())
+    description = LazyAttribute(lambda _: faker.pystr())
+    category = SubFactory(RestaurantCategoryFactory)
+
+
+class RestaurantLikeFactory(Factory):
+    class Meta:
+        model = RestaurantLike
+
+    restaurant = SubFactory(RestaurantFactory)
     user = SubFactory(UserFactory)
 
 
