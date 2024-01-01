@@ -19,7 +19,7 @@ class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.fields["address"].widget = HeavySelect2Widget(
-            data_url=reverse_lazy("addresses")
+            data_url=reverse_lazy("address")
         )
 
     class Meta:

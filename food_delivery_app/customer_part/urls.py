@@ -4,7 +4,7 @@ from django.urls import path
 
 from .views import (
     index,
-    addresses,
+    address,
     login,
     register,
     logout_user,
@@ -19,7 +19,7 @@ from .views import (
 
 urlpatterns = [
     path("", index, name="home"),
-    path("addresses", addresses, name="addresses"),
+    path("address", address, name="address"),
     path("cart", cart, name="cart"),
     path(
         "get_restaurants_by_category",

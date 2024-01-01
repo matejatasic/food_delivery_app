@@ -90,7 +90,7 @@ def orders(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/orders.html")
 
 
-def addresses(request: HttpRequest) -> JsonResponse:
+def address(request: HttpRequest) -> JsonResponse:
     address_service = AddressService()
     addresses: list[dict[str, str]] = address_service.get_address_options(
         request.GET["term"]

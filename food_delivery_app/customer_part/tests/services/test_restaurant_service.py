@@ -4,7 +4,7 @@ from unittest.mock import patch, Mock
 from ..base import faker
 from ...exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
 from ..factories import RestaurantFactory, RestaurantLikeFactory, UserFactory
-from ...services.restaurant_service import RestaurantService
+from ...services.restaurant_service import RestaurantService, LIKED, UNLIKED
 
 
 class RestaurantServiceTests(TestCase):
@@ -60,7 +60,7 @@ class RestaurantServiceTests(TestCase):
             restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
         )
 
-        self.assertEqual(result[0], self.restaurant_service.LIKED)
+        self.assertEqual(result[0], LIKED)
 
     @patch.object(RestaurantService, "get_like")
     @patch.object(RestaurantService, "get_by_id")
@@ -78,7 +78,7 @@ class RestaurantServiceTests(TestCase):
             restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
         )
 
-        self.assertEqual(result[0], self.restaurant_service.UNLIKED)
+        self.assertEqual(result[0], UNLIKED)
 
     @patch.object(RestaurantService, "restaurant_exists")
     def test_like_raises_the_restaurant_does_not_exist_error(
