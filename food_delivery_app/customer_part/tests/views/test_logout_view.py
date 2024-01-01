@@ -5,7 +5,7 @@ from http import HTTPStatus
 from ..factories import RegisterFormDataFactory, LoginFormDataFactory
 
 
-class LogoutTests(TestCase):
+class LogoutViewTest(TestCase):
     logout_url: str = reverse("logout")
     login_url: str = reverse("login")
     registration_url: str = reverse("register")

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 
 from factory import Factory, SubFactory, LazyAttribute, DictFactory, Trait  # type: ignore
-from factory.django import DjangoModelFactory # type: ignore
+from factory.django import DjangoModelFactory  # type: ignore
 from json import dumps
 
 from .base import faker  # type: ignore
@@ -9,11 +9,11 @@ from ..forms import LoginForm
 from ..models import Address, Restaurant, RestaurantCategory, RestaurantLike
 
 
-class UserFactory(Factory):
+class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    id = LazyAttribute(lambda _: faker.random_digit())
+    id = LazyAttribute(lambda _: faker.random_number())
     username = LazyAttribute(lambda _: faker.profile(fields=["username"])["username"])
     password = LazyAttribute(lambda _: faker.pystr(max_chars=10))
     email = LazyAttribute(lambda _: faker.email())

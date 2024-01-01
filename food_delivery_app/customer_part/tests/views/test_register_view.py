@@ -12,7 +12,7 @@ from food_delivery_app.settings import MEDIA_ROOT
 from ...models import Profile
 
 
-class RegistrationTests(TestCase):
+class RegisterViewTest(TestCase):
     registration_url: str = reverse("register")
     home_url: str = reverse("home")
 

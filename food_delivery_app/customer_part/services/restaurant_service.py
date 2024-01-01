@@ -6,10 +6,11 @@ from ..exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
 from ..models import Restaurant, RestaurantCategory, RestaurantLike
 
 
-class RestaurantService:
-    LIKED = "liked"
-    UNLIKED = "unliked"
+LIKED = "liked"
+UNLIKED = "unliked"
 
+
+class RestaurantService:
     def get_all(self) -> list[dict[str, str | int]]:
         return [
             RestaurantDto(
