@@ -1,0 +1,95 @@
+from django.test import TestCase
+from unittest.mock import patch, Mock
+
+from ..base import faker
+from ...exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
+from ..factories import RestaurantFactory, RestaurantLikeFactory, UserFactory
+from ...services.restaurant_service import RestaurantService, LIKED, UNLIKED
+
+
+class RestaurantServiceTests(TestCase):
+    restaurant_service = RestaurantService()
+
+    @patch.object(RestaurantService, "get_restaurants_by_category_queryset")
+    @patch.object(RestaurantService, "category_exists")
+    def test_get_by_category_returns_results_when_category_exists_succesfully(
+        self, category_exists_mock, get_restaurants_by_category_queryset_mock
+    ):
+        """Asserts that the method for getting the restaurants returns dictionaries if the category exists"""
+
+        category_exists_mock.return_value = True
+        number_of_restaurants = 3
+        get_restaurants_by_category_queryset_mock.return_value = (
+            RestaurantFactory.build_batch(number_of_restaurants)
+        )
+
+        result = self.restaurant_service.get_by_category(category_name=faker.pystr())
+
+        self.assertEqual(len(result), number_of_restaurants)
+        self.assertIsInstance(result[0], dict)
+
+    @patch.object(RestaurantService, "category_exists")
+    def test_get_by_category_raises_the_restaurant_category_does_not_exist_error(
+        self, category_exists_mock
+    ):
+        """Asserts that the method for getting the restaurants raises the RestaurantCategoryDoesNotExist if the category does not exists"""
+
+        category_exists_mock.side_effect = RestaurantCategoryDoesNotExist()
+
+        self.assertRaises(
+            RestaurantCategoryDoesNotExist,
+            self.restaurant_service.get_by_category,
+            category_name=faker.pystr(),
+        )
+
+    @patch.object(RestaurantService, "create_like")
+    @patch.object(RestaurantService, "get_like")
+    @patch.object(RestaurantService, "get_by_id")
+    @patch.object(RestaurantService, "restaurant_exists")
+    def test_like_liked_if_not_already_liked(
+        self, restaurant_exists_mock, get_by_id_mock, get_like_mock, create_like_mock
+    ):
+        """Assert that the like method likes the restaurant if it is not already liked by the user"""
+
+        restaurant_exists_mock.return_value = True
+        get_by_id_mock.return_value = RestaurantFactory()
+        get_like_mock.side_effect = Exception()
+        create_like_mock.return_value = None
+
+        result = self.restaurant_service.like(
+            restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
+        )
+
+        self.assertEqual(result[0], LIKED)
+
+    @patch.object(RestaurantService, "get_like")
+    @patch.object(RestaurantService, "get_by_id")
+    @patch.object(RestaurantService, "restaurant_exists")
+    def test_like_unliked_if_already_liked(
+        self, restaurant_exists_mock, get_by_id_mock, get_like_mock
+    ):
+        """Assert that the like method unlikes the restaurant if it is already liked by the user"""
+
+        restaurant_exists_mock.return_value = True
+        get_by_id_mock.return_value = RestaurantFactory()
+        get_like_mock.return_value = Mock(RestaurantLikeFactory())
+
+        result = self.restaurant_service.like(
+            restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
+        )
+
+        self.assertEqual(result[0], UNLIKED)
+
+    @patch.object(RestaurantService, "restaurant_exists")
+    def test_like_raises_the_restaurant_does_not_exist_error(
+        self, restaurant_exists_mock
+    ):
+        """Asserts that the method for getting the restaurants raises the RestaurantDoesNotExist if the restaurant does not exists"""
+
+        restaurant_exists_mock.side_effect = RestaurantDoesNotExist()
+
+        self.assertRaises(
+            RestaurantDoesNotExist,
+            self.restaurant_service.like,
+            *[faker.random_digit(), UserFactory()]
+        )
