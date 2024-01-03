@@ -10,7 +10,7 @@ from django.db.models import (
     CharField,
     IntegerField,
     TextField,
-    BooleanField,
+    DecimalField,
 )
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -88,16 +88,6 @@ class Restaurant(BaseModel):
     def __str__(self) -> str:
         return self.name
 
-    def get_like_percentage(self):
-        all_likes = self.likes.all()
-
-        if len(all_likes) == 0:
-            return 0
-
-        dislikes = [like for like in all_likes if like.is_dislike]
-
-        return int(len(dislikes) / len(all_likes) * 100)
-
 
 class RestaurantCategory(BaseModel):
     name = CharField(max_length=50)
@@ -115,3 +105,10 @@ class RestaurantLike(BaseModel):
 
     def __str__(self) -> str:
         return f"Like by {self.user.username} to {self.restaurant.name}"
+
+
+class RestaurantItem(BaseModel):
+    name = CharField(max_length=80)
+    description = TextField()
+    restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="items")
+    price = DecimalField(max_digits=6, decimal_places=2)
