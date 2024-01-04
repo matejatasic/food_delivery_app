@@ -106,9 +106,23 @@ class RestaurantLike(BaseModel):
     def __str__(self) -> str:
         return f"Like by {self.user.username} to {self.restaurant.name}"
 
+class RestaurantItemCategory(BaseModel):
+    name = CharField(max_length=50)
+    restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="item_categories", default=None)
+
+    class Meta:
+        verbose_name_plural = "Restaurant item categories"
+
+    def __str__(self) -> str:
+        return f"Category \"{self.name}\" for restaurant {self.restaurant}"
 
 class RestaurantItem(BaseModel):
     name = CharField(max_length=80)
     description = TextField()
     restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="items")
     price = DecimalField(max_digits=6, decimal_places=2)
+    image = ImageField(upload_to="restaurant_items")
+    category = ForeignKey(RestaurantItemCategory, on_delete=CASCADE, related_name="items", default=None)
+
+    def __str__(self) -> str:
+        return f"Item \"{self.name}\" in restaurant {self.restaurant}"
