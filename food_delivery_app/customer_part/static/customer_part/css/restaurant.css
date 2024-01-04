@@ -54,9 +54,14 @@
     object-fit: cover;
 }
 
-.restaurant-item-header, .restaurant-header {
+.restaurant-item-header, .restaurant-row-header {
     font-style: bold;
     font-size: 1.5rem;
+}
+
+.restaurant-row-header a {
+    text-decoration: none;
+    color: black;
 }
 
 .clickable {

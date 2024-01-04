@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from django.core.serializers import serialize
 
-from .models import Address
+from .models import Address, RestaurantItem, RestaurantItemCategory
 
 
 class AddressOptionDto:
@@ -140,12 +140,22 @@ class RestaurantDto:
     description: str
     image: str
     number_of_likes: int
+    food_items: list[RestaurantItem] | None = None
+    food_item_categories: list[RestaurantItemCategory] | None = None
 
-    def toDict(self) -> dict[str, str | int]:
-        return {
+    def toDict(self) -> dict[str, str | int | object]:
+        dictionary = {
             "id": self.id,
             "name": self.name,
             "description": self.description,
             "image": self.image,
             "number_of_likes": self.number_of_likes,
         }
+
+        if not self.food_items is None:
+            dictionary["food_items"] = self.food_items
+
+        if not self.food_item_categories is None:
+            dictionary["food_item_categories"] = self.food_item_categories
+
+        return dictionary

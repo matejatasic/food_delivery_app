@@ -9,4 +9,4 @@ error.log
 food_delivery_app/.coverage
 food_delivery_app/media/profile_pictures/*
 
-/media
+food_delivery_app/media

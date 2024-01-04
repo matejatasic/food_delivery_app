@@ -44,15 +44,15 @@ class RestaurantServiceTests(TestCase):
 
     @patch.object(RestaurantService, "create_like")
     @patch.object(RestaurantService, "get_like")
-    @patch.object(RestaurantService, "get_by_id")
+    @patch.object(RestaurantService, "get_by_id_queryset")
     @patch.object(RestaurantService, "restaurant_exists")
     def test_like_liked_if_not_already_liked(
-        self, restaurant_exists_mock, get_by_id_mock, get_like_mock, create_like_mock
+        self, restaurant_exists_mock, get_by_id_queryset_mock, get_like_mock, create_like_mock
     ):
         """Assert that the like method likes the restaurant if it is not already liked by the user"""
 
         restaurant_exists_mock.return_value = True
-        get_by_id_mock.return_value = RestaurantFactory()
+        get_by_id_queryset_mock.return_value = RestaurantFactory()
         get_like_mock.side_effect = Exception()
         create_like_mock.return_value = None
 
@@ -63,15 +63,15 @@ class RestaurantServiceTests(TestCase):
         self.assertEqual(result[0], LIKED)
 
     @patch.object(RestaurantService, "get_like")
-    @patch.object(RestaurantService, "get_by_id")
+    @patch.object(RestaurantService, "get_by_id_queryset")
     @patch.object(RestaurantService, "restaurant_exists")
     def test_like_unliked_if_already_liked(
-        self, restaurant_exists_mock, get_by_id_mock, get_like_mock
+        self, restaurant_exists_mock, get_by_id_queryset_mock, get_like_mock
     ):
         """Assert that the like method unlikes the restaurant if it is already liked by the user"""
 
         restaurant_exists_mock.return_value = True
-        get_by_id_mock.return_value = RestaurantFactory()
+        get_by_id_queryset_mock.return_value = RestaurantFactory()
         get_like_mock.return_value = Mock(RestaurantLikeFactory())
 
         result = self.restaurant_service.like(
