@@ -9,13 +9,13 @@
 {% endblock %}
 
 {% block main %}
-    <div id="restaurant-header" style="background-image: url('https://www.foodiesfeed.com/wp-content/uploads/2023/06/pouring-honey-on-pancakes.jpg')">
+    <div id="restaurant-header" style="background-image: url('{% get_media_prefix %}{{ restaurant.image }}')">
         <div id="restaurant-header-text" class="row p-3">
             <div class="col-12">
-                <h1>Some restaurant</h1>
+                <h1>{{ restaurant.name }}</h1>
             </div>
             <div class="col-12">
-                <p>Some description</p>
+                <p>{{ restaurant.description }}</p>
             </div>
         </div>
     </div>
@@ -24,42 +24,40 @@
             <div id="categories" class="col-12 col-sm-3 ps-5">
                 <h2>Categories</h2>
                 <ul class="list-group">
-                    <li class="list-group-item"><a href="#">Pizzas</a></li>
-                    <li class="list-group-item"><a href="#">Pastas</a></li>
-                    <li class="list-group-item"><a href="#">Drinks</a></li>
-                    <li class="list-group-item"><a href="#">Soups</a></li>
-                    <li class="list-group-item"><a href="#">Breakfast</a></li>
+                    {% if restaurant.food_item_categories %}
+                        {% for category in restaurant.food_item_categories %}
+                            <li class="list-group-item clickable category-button" data-name="{{ category.name }}">{{ category.name }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <p>No categories to show</p>
+                    {% endif %}
                   </ul>
             </div>
             <div class="col-12 col-sm-8">
                 <div class="row justify-content-center my-3">
-                    <div class="col-10">
+                    <div class="col-10 mb-3">
                         <h2>All</h2>
                     </div>
-                    <div class="col-11">
-                        <div class="row restaurant-item border">
-                            <div class="col-8 col-sm-8 p-2">
-                                <p class="restaurant-item-header">Pizza</p>
-                                <p>Suspendisse ut nulla dolor. Fusce mattis in elit eu viverra. Ut porttitor tempus enim, ac venenatis dui.</p>
-                                <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
+                    {% if restaurant.food_items %}
+                        {% for item in restaurant.food_items %}
+                            <div class="col-11">
+                                <div class="row restaurant-item border">
+                                    <div class="col-8 col-sm-8 p-2">
+                                        <p class="restaurant-item-header">{{ item.name }}</p>
+                                        <p>{{ item.description }}</p>
+                                        <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
+                                    </div>
+                                    <div class="col-4 col-sm-4">
+                                        <img src="{% get_media_prefix %}{{ item.image }}" alt="meal_image">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-4 col-sm-4">
-                                <img src="{% static 'customer_part/images/pizza.jpg' %}" alt="meal_image">
-                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-11">
+                            <p>No items to show</p>
                         </div>
-                    </div>
-                    <div class="col-11">
-                        <div class="row restaurant-item border">
-                            <div class="col-8 col-sm-8 p-2">
-                                <p class="restaurant-item-header">Pizza</p>
-                                <p>Suspendisse ut nulla dolor. Fusce mattis in elit eu viverra. Ut porttitor tempus enim, ac venenatis dui.</p>
-                                <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
-                            </div>
-                            <div class="col-4 col-sm-4">
-                                <img src="{% static 'customer_part/images/pizza.jpg' %}" alt="meal_image">
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

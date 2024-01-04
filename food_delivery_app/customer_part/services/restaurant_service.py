@@ -11,7 +11,7 @@ UNLIKED = "unliked"
 
 
 class RestaurantService:
-    def get_all(self) -> list[dict[str, str | int]]:
+    def get_all(self) -> list[dict[str, str | int | object]]:
         return [
             RestaurantDto(
                 id=restaurant.id,
@@ -30,7 +30,7 @@ class RestaurantService:
         if not self.restaurant_exists(id=restaurant_id):
             raise RestaurantDoesNotExist()
 
-        restaurant = self.get_by_id(id=restaurant_id)
+        restaurant = self.get_by_id_queryset(id=restaurant_id)
 
         try:
             like = self.get_like(
@@ -46,7 +46,20 @@ class RestaurantService:
 
         return (action, restaurant.likes.count())
 
-    def get_by_id(self, id: str) -> Restaurant:
+    def get_by_id(self, id: str):
+        restaurant = self.get_by_id_queryset(id)
+
+        return RestaurantDto(
+            id=restaurant.id,
+            name=restaurant.name,
+            description=restaurant.description,
+            image=restaurant.image.name,
+            number_of_likes=restaurant.likes.count(),
+            food_items=[item for item in restaurant.items.all()],
+            food_item_categories=[category for category in restaurant.item_categories.all()]
+        )
+
+    def get_by_id_queryset(self, id: str) -> Restaurant:
         return Restaurant.objects.get(id=id)
 
     def restaurant_exists(self, id: str) -> bool:
@@ -60,7 +73,7 @@ class RestaurantService:
     def create_like(self, restaurant: Restaurant, authenticated_user: User) -> None:
         RestaurantLike.objects.create(restaurant=restaurant, user=authenticated_user)
 
-    def get_by_category(self, category_name: str | None) -> list[dict[str, str | int]]:
+    def get_by_category(self, category_name: str | None) -> list[dict[str, str | int | object]]:
         if not self.category_exists(category_name=category_name):
             raise RestaurantCategoryDoesNotExist()
 

@@ -27,26 +27,30 @@
                     </div>
                     <div class="col-10">
                         <div id="restaurants" class="row">
-                            {% for restaurant in restaurants %}
-                                <div class="col-12" >
-                                    <div class="row restaurant border">
-                                        <div class="col-8 col-sm-8 p-2">
-                                            <p class="restaurant-header">{{ restaurant.name }}</p>
-                                            <p>{{ restaurant.description }}</p>
-                                            <span class="clickable like-button d-inline-block me-2 mt-2" data-id="{{ restaurant.id }}">
-                                                {% if user.is_authenticated and restaurant.id in user.liked_restaurants %}
-                                                    <i class="bi bi-hand-thumbs-up-fill"></i>
-                                                {% else %}
-                                                    <i class="bi bi-hand-thumbs-up"></i>
-                                                {% endif %}
-                                            </span><span>{{ restaurant.number_of_likes }}</span>
-                                        </div>
-                                        <div class="col-4 col-sm-4">
-                                            <img src="{% get_media_prefix %}{{ restaurant.image }}" alt="restaurant_image">
+                            {% if restaurants %}
+                                {% for restaurant in restaurants %}
+                                    <div class="col-12" >
+                                        <div class="row restaurant border">
+                                            <div class="col-8 col-sm-8 p-2">
+                                                <p class="restaurant-row-header"><a href="{% url 'restaurant' restaurant.id %}">{{ restaurant.name }}</a></p>
+                                                <p>{{ restaurant.description }}</p>
+                                                <span class="clickable like-button d-inline-block me-2 mt-2" data-id="{{ restaurant.id }}">
+                                                    {% if user.is_authenticated and restaurant.id in user.liked_restaurants %}
+                                                        <i class="bi bi-hand-thumbs-up-fill"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-hand-thumbs-up"></i>
+                                                    {% endif %}
+                                                </span><span>{{ restaurant.number_of_likes }}</span>
+                                            </div>
+                                            <div class="col-4 col-sm-4">
+                                                <img src="{% get_media_prefix %}{{ restaurant.image }}" alt="restaurant_image">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                <div>No restaurants to show</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -61,6 +65,7 @@
         const getRestaurantsByCategoryRoute = "{% url 'get_restaurants_by_category' %}";
         const mediaPrefix = "{% get_media_prefix %}";
         const restaurantsLikedByUser = "{{ user.liked_restaurants }}";
+        const restaurantUrl = "{% url 'restaurant' 0 %}"
     </script>
     <script type="module" src="{% static 'customer_part/js/like.js' %}"></script>
     <script type="module" src="{% static 'customer_part/js/filter_restaurants.js' %}"></script>

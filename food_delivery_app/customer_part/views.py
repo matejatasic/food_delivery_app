@@ -65,8 +65,11 @@ def logout_user(request: HttpRequest) -> HttpResponseRedirect:
     return redirect(reverse("home"))
 
 
-def restaurant(request: HttpRequest) -> HttpResponse:
-    return render(request, "customer_part/restaurant.html")
+def restaurant(request: HttpRequest, id: str) -> HttpResponse:
+    restaurant_service = RestaurantService()
+    restaurant = restaurant_service.get_by_id(id=id)
+
+    return render(request, "customer_part/restaurant.html", {"restaurant": restaurant})
 
 
 def restaurants(request: HttpRequest) -> HttpResponse:

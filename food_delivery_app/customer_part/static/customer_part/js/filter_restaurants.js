@@ -41,11 +41,13 @@ function getRestaurantRow(restaurant, restaurantsLikedByUser) {
         icon = '<i class="bi bi-hand-thumbs-up-fill"></i>';
     }
 
+    let currentRestaurantUrl = restaurantUrl.replace(/\/\d+/,`/${restaurant.id}`)
+
     return `
         <div class="col-12" >
             <div class="row restaurant border">
                 <div class="col-8 col-sm-8 p-2">
-                    <p class="restaurant-header">${restaurant.name}</p>
+                <p class="restaurant-row-header"><a href="${currentRestaurantUrl}">${restaurant.name}</a></p>
                     <p>${restaurant.description}</p>
                     <span class="clickable like-button d-inline-block me-2 mt-2" data-id="${restaurant.id}">
                         ${icon}

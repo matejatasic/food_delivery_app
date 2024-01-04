@@ -31,7 +31,7 @@ urlpatterns = [
     path("logout", logout_user, name="logout"),
     path("orders", orders, name="orders"),
     path("register", register, name="register"),
-    path("restaurant", restaurant, name="restaurant"),
+    path("restaurant/<int:id>", restaurant, name="restaurant"),
     path("restaurants", restaurants, name="restaurants"),
 ]
 
