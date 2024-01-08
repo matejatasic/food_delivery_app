@@ -9,7 +9,6 @@ from ..factories import UserFactory, RestaurantItemFactory
 class GetRestaurantItemsByCategoryViewTest(TestCase):
     get_restaurant_items_by_category_url = reverse("get_restaurant_items_by_category")
 
-    # dopisi testovi za ovaj view i mozda za restaurant servis
     def test_get_restaurant_items_by_category_returns_items_successfully(self):
         """Asserts that the response contains at least one item"""
 
