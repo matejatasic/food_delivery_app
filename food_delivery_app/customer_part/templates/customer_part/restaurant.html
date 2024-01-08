@@ -38,28 +38,40 @@
                     <div class="col-10 mb-3">
                         <h2>All</h2>
                     </div>
-                    {% if restaurant.food_items %}
-                        {% for item in restaurant.food_items %}
-                            <div class="col-11">
-                                <div class="row restaurant-item border">
-                                    <div class="col-8 col-sm-8 p-2">
-                                        <p class="restaurant-item-header">{{ item.name }}</p>
-                                        <p>{{ item.description }}</p>
-                                        <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
+                    <div class="col-10">
+                        <div id="items" class="row">
+                            {% if restaurant.food_items %}
+                                {% for item in restaurant.food_items %}
+                                    <div class="col-12">
+                                        <div class="row restaurant-item border">
+                                            <div class="col-8 col-sm-8 p-2">
+                                                <p class="restaurant-item-header">{{ item.name }}</p>
+                                                <p>{{ item.description }}</p>
+                                                <button class="btn btn-link"><i class="bi bi-plus-square-fill"></i></button>
+                                            </div>
+                                            <div class="col-4 col-sm-4">
+                                                <img src="{% get_media_prefix %}{{ item.image }}" alt="meal_image">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-4 col-sm-4">
-                                        <img src="{% get_media_prefix %}{{ item.image }}" alt="meal_image">
-                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-11">
+                                    <p>No items to show</p>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="col-11">
-                            <p>No items to show</p>
+                            {% endif %}
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        const mediaPrefix = "{% get_media_prefix %}";
+        const getRestaurantItemsByCategoryUrl = "{% url 'get_restaurant_items_by_category' %}"
+    </script>
+    <script type="module" src="{% static 'customer_part/js/filter_restaurant_items.js' %}"></script>
 {% endblock %}

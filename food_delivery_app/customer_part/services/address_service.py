@@ -36,7 +36,7 @@ class AddressService:
                 )
                 address_dto = AddressOptionDto(address_instance)
 
-                addresses.append(address_dto.toDict())
+                addresses.append(address_dto.get_dict())
 
             return addresses
         except BadRequest as e:

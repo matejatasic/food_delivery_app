@@ -14,6 +14,7 @@ from .views import (
     orders,
     like,
     get_restaurants_by_category,
+    get_restaurant_items_by_category,
 )
 
 
@@ -25,6 +26,11 @@ urlpatterns = [
         "get_restaurants_by_category",
         get_restaurants_by_category,
         name="get_restaurants_by_category",
+    ),
+    path(
+        "get_restaurant_items_by_category",
+        get_restaurant_items_by_category,
+        name="get_restaurant_items_by_category",
     ),
     path("like", like, name="like"),
     path("login", login, name="login"),

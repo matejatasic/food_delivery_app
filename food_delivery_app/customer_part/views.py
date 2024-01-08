@@ -13,7 +13,11 @@ from json import loads, dumps
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
-from .exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
+from .exceptions import (
+    RestaurantDoesNotExist,
+    RestaurantCategoryDoesNotExist,
+    RestaurantItemCategoryDoesNotExist,
+)
 from .services.address_service import AddressService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
@@ -166,5 +170,32 @@ def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:
     except RestaurantCategoryDoesNotExist:
         return JsonResponse(
             {"error": f"The restaurant category {category_name} does not exist"},
+            status=HTTPStatus.NOT_FOUND,
+        )
+
+
+def get_restaurant_items_by_category(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    if request.method == "POST":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
+    category_name = request.GET.get("category_name")
+    restaurant_service = RestaurantService()
+
+    try:
+        return JsonResponse(
+            {
+                "data": dumps(restaurant_service.get_items_by_category(category_name)),
+            },
+            status=HTTPStatus.OK,
+        )
+    except RestaurantItemCategoryDoesNotExist:
+        return JsonResponse(
+            {"error": f"The item category {category_name} does not exist"},
             status=HTTPStatus.NOT_FOUND,
         )
