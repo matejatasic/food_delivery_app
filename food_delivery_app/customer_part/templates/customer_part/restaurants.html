@@ -15,9 +15,13 @@
             <div id="categories" class="col-12 col-sm-3 ps-5">
                 <h2>Categories</h2>
                 <ul class="list-group">
-                    {% for category in categories %}
-                        <li class="list-group-item clickable category-button" data-name="{{ category.name }}">{{ category.name }}</li>
-                    {% endfor %}
+                    {% if categories %}
+                        {% for category in categories %}
+                            <li class="list-group-item clickable category-button" data-name="{{ category.name }}">{{ category.name }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <p>No categories to show</p>
+                    {% endif %}
                   </ul>
             </div>
             <div class="col-12 col-sm-8">

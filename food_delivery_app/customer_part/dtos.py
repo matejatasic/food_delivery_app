@@ -9,7 +9,7 @@ class AddressOptionDto:
         self.__address_model = address
         self.__address = address.raw
 
-    def toDict(self):
+    def get_dict(self):
         return {"id": serialize("json", [self.__address_model]), "text": self.__address}
 
     @property
@@ -143,7 +143,7 @@ class RestaurantDto:
     food_items: list[RestaurantItem] | None = None
     food_item_categories: list[RestaurantItemCategory] | None = None
 
-    def toDict(self) -> dict[str, str | int | object]:
+    def get_dict(self) -> dict[str, str | int | object]:
         dictionary = {
             "id": self.id,
             "name": self.name,

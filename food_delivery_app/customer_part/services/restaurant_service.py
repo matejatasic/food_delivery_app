@@ -1,9 +1,20 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import QuerySet
 
 from ..dtos import RestaurantDto
-from ..exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
-from ..models import Restaurant, RestaurantCategory, RestaurantLike
+from ..exceptions import (
+    RestaurantDoesNotExist,
+    RestaurantCategoryDoesNotExist,
+    RestaurantItemCategoryDoesNotExist,
+)
+from ..models import (
+    Restaurant,
+    RestaurantCategory,
+    RestaurantLike,
+    RestaurantItem,
+    RestaurantItemCategory,
+)
 
 
 LIKED = "liked"
@@ -19,7 +30,7 @@ class RestaurantService:
                 description=restaurant.description,
                 image=restaurant.image.name,
                 number_of_likes=restaurant.likes.count(),
-            ).toDict()
+            ).get_dict()
             for restaurant in Restaurant.objects.all()
         ]
 
@@ -56,7 +67,9 @@ class RestaurantService:
             image=restaurant.image.name,
             number_of_likes=restaurant.likes.count(),
             food_items=[item for item in restaurant.items.all()],
-            food_item_categories=[category for category in restaurant.item_categories.all()]
+            food_item_categories=[
+                category for category in restaurant.item_categories.all()
+            ],
         )
 
     def get_by_id_queryset(self, id: str) -> Restaurant:
@@ -73,7 +86,9 @@ class RestaurantService:
     def create_like(self, restaurant: Restaurant, authenticated_user: User) -> None:
         RestaurantLike.objects.create(restaurant=restaurant, user=authenticated_user)
 
-    def get_by_category(self, category_name: str | None) -> list[dict[str, str | int | object]]:
+    def get_by_category(
+        self, category_name: str | None
+    ) -> list[dict[str, str | int | object]]:
         if not self.category_exists(category_name=category_name):
             raise RestaurantCategoryDoesNotExist()
 
@@ -84,7 +99,7 @@ class RestaurantService:
                 description=restaurant.description,
                 image=restaurant.image.name,
                 number_of_likes=restaurant.likes.count(),
-            ).toDict()
+            ).get_dict()
             for restaurant in self.get_restaurants_by_category_queryset(
                 category_name=category_name
             )
@@ -97,3 +112,11 @@ class RestaurantService:
         self, category_name: str | None
     ) -> QuerySet[Restaurant]:
         return Restaurant.objects.filter(category__name=category_name)
+
+    def get_items_by_category(self, category_name: str | None) -> list[dict]:
+        try:
+            category = RestaurantItemCategory.objects.get(name=category_name)
+
+            return [item.get_dict() for item in category.items.all()]
+        except ObjectDoesNotExist:
+            raise RestaurantItemCategoryDoesNotExist()

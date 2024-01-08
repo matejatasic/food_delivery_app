@@ -23,3 +23,7 @@ class RestaurantDoesNotExist(ObjectDoesNotExist):
 
 class RestaurantCategoryDoesNotExist(ObjectDoesNotExist):
     """The RestaurantCategory instance does not exist in the database"""
+
+
+class RestaurantItemCategoryDoesNotExist(ObjectDoesNotExist):
+    """The RestaurantItemCategory instance does not exist in the database"""
