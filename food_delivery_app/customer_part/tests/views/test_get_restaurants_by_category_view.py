@@ -1,10 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 from http import HTTPStatus
-from json import dumps, loads
+from json import loads
 
 from ..factories import UserFactory, RestaurantFactory
-from ...services.restaurant_service import LIKED
 
 
 class GetRestaurantsByCategoryViewTest(TestCase):

@@ -47,7 +47,11 @@ class RestaurantServiceTests(TestCase):
     @patch.object(RestaurantService, "get_by_id_queryset")
     @patch.object(RestaurantService, "restaurant_exists")
     def test_like_liked_if_not_already_liked(
-        self, restaurant_exists_mock, get_by_id_queryset_mock, get_like_mock, create_like_mock
+        self,
+        restaurant_exists_mock,
+        get_by_id_queryset_mock,
+        get_like_mock,
+        create_like_mock,
     ):
         """Assert that the like method likes the restaurant if it is not already liked by the user"""
 

@@ -6,7 +6,14 @@ from json import dumps
 
 from .base import faker  # type: ignore
 from ..forms import LoginForm
-from ..models import Address, Restaurant, RestaurantCategory, RestaurantLike
+from ..models import (
+    Address,
+    Restaurant,
+    RestaurantCategory,
+    RestaurantLike,
+    RestaurantItem,
+    RestaurantItemCategory,
+)
 
 
 class UserFactory(DjangoModelFactory):
@@ -58,6 +65,25 @@ class RestaurantLikeFactory(Factory):
 
     restaurant = SubFactory(RestaurantFactory)
     user = SubFactory(UserFactory)
+
+
+class RestaurantItemCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = RestaurantItemCategory
+
+    name = LazyAttribute(lambda _: faker.pystr())
+    restaurant = SubFactory(RestaurantFactory)
+
+
+class RestaurantItemFactory(DjangoModelFactory):
+    class Meta:
+        model = RestaurantItem
+
+    name = LazyAttribute(lambda _: faker.pystr())
+    description = LazyAttribute(lambda _: faker.pystr())
+    restaurant = LazyAttribute(lambda _self: _self.category.restaurant)
+    price = LazyAttribute(lambda _: faker.pydecimal(left_digits=2, right_digits=2))
+    category = SubFactory(RestaurantItemCategoryFactory)
 
 
 class MapsResponseBboxFactory(DictFactory):
