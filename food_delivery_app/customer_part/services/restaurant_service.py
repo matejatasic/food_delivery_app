@@ -120,3 +120,9 @@ class RestaurantService:
             return [item.get_dict() for item in category.items.all()]
         except ObjectDoesNotExist:
             raise RestaurantItemCategoryDoesNotExist()
+
+    def get_item(self, id: str) -> RestaurantItem:
+        return RestaurantItem.objects.get(id=id)
+
+    def item_exists(self, id: str) -> bool:
+        return RestaurantItem.objects.filter(id=id).exists()

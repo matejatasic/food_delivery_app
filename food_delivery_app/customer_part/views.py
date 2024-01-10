@@ -1,5 +1,4 @@
-from django.core.exceptions import PermissionDenied
-from django.core.serializers import serialize
+from django.core.exceptions import PermissionDenied, FieldDoesNotExist, FieldError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -17,8 +16,11 @@ from .exceptions import (
     RestaurantDoesNotExist,
     RestaurantCategoryDoesNotExist,
     RestaurantItemCategoryDoesNotExist,
+    RestaurantItemDoesNotExist,
+    RestaurantItemNotInCart
 )
 from .services.address_service import AddressService
+from .services.cart_service import CartService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
 from .services.restaurant_service import RestaurantService
@@ -144,6 +146,40 @@ def like(request: HttpRequest) -> JsonResponse:
             {"error": f"The restaurant with the id {restaurant_id} does not exist"},
             status=HTTPStatus.NOT_FOUND,
         )
+
+@csrf_exempt
+def change_cart(request: HttpRequest) -> JsonResponse:
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    if request.method == "GET":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
+    cart_service = CartService()
+
+    try:
+        item_name, total_number_of_items = cart_service.add_item(request=request)
+
+        return JsonResponse(
+            {
+                "data": dumps({
+                    "item_name": item_name,
+                    "total_number_of_items": total_number_of_items
+                }),
+            },
+            status=HTTPStatus.OK,
+        )
+    except FieldDoesNotExist as error:
+        return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
+    except FieldError as error:
+        return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
+    except RestaurantItemDoesNotExist as error:
+        return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
+    except RestaurantItemNotInCart as error:
+        return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
 
 
 @csrf_exempt

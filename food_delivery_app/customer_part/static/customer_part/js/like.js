@@ -22,7 +22,7 @@ function handleLikeButtonClick(e) {
     .then(data => {
         changeLikeButtonIcon(element, data.action);
         changeLikeCount(element, data.current_number_of_likes);
-    })
+    });
 }
 
 function changeLikeButtonIcon(element, actionTaken) {
