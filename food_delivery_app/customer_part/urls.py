@@ -15,7 +15,7 @@ from .views import (
     like,
     get_restaurants_by_category,
     get_restaurant_items_by_category,
-    change_cart
+    change_cart,
 )
 
 
