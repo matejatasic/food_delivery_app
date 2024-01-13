@@ -4,6 +4,7 @@ coverage==7.3.2
 crispy-bootstrap5==2023.10
 Django==4.2.7
 django-crispy-forms==2.1
+django-debug-toolbar==4.2.0
 django-select2==7.4.2
 django-stubs==4.2.6
 django-stubs-ext==4.2.5
