@@ -17,7 +17,8 @@ from .exceptions import (
     RestaurantCategoryDoesNotExist,
     RestaurantItemCategoryDoesNotExist,
     RestaurantItemDoesNotExist,
-    RestaurantItemNotInCart
+    RestaurantItemNotInCart,
+    EmptyRequestBodyError,
 )
 from .services.address_service import AddressService
 from .services.cart_service import CartService
@@ -147,6 +148,7 @@ def like(request: HttpRequest) -> JsonResponse:
             status=HTTPStatus.NOT_FOUND,
         )
 
+
 @csrf_exempt
 def change_cart(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
@@ -165,13 +167,17 @@ def change_cart(request: HttpRequest) -> JsonResponse:
 
         return JsonResponse(
             {
-                "data": dumps({
-                    "item_name": item_name,
-                    "total_number_of_items": total_number_of_items
-                }),
+                "data": dumps(
+                    {
+                        "item_name": item_name,
+                        "total_number_of_items": total_number_of_items,
+                    }
+                ),
             },
             status=HTTPStatus.OK,
         )
+    except EmptyRequestBodyError as error:
+        return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
     except FieldDoesNotExist as error:
         return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
     except FieldError as error:

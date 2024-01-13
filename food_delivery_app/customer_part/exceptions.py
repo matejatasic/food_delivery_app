@@ -13,6 +13,10 @@ class InternalServerError(Exception):
     pass
 
 
+class EmptyRequestBodyError(Exception):
+    """The request body is empty"""
+
+
 class AddressValidationError(ValidationError):
     """There is an error while creating the Address"""
 
