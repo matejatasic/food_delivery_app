@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 
 from ..dtos import RestaurantDto
 from ..exceptions import (
@@ -29,9 +29,9 @@ class RestaurantService:
                 name=restaurant.name,
                 description=restaurant.description,
                 image=restaurant.image.name,
-                number_of_likes=restaurant.likes.count(),
+                number_of_likes=restaurant.number_of_likes,
             ).get_dict()
-            for restaurant in Restaurant.objects.all()
+            for restaurant in Restaurant.objects.all().annotate(number_of_likes=Count("likes"))
         ]
 
     def get_all_categories(self) -> QuerySet[RestaurantCategory]:
@@ -55,25 +55,32 @@ class RestaurantService:
             )
             action = "liked"
 
-        return (action, restaurant.likes.count())
+        return (action, restaurant.number_of_likes) # type: ignore
 
     def get_by_id(self, id: str):
-        restaurant = self.get_by_id_queryset(id)
+        restaurant = self.get_by_id_queryset(id, with_items=True, with_item_categories=True) # type: ignore
 
         return RestaurantDto(
             id=restaurant.id,
             name=restaurant.name,
             description=restaurant.description,
             image=restaurant.image.name,
-            number_of_likes=restaurant.likes.count(),
+            number_of_likes=restaurant.number_of_likes, # type: ignore
             food_items=[item for item in restaurant.items.all()],
             food_item_categories=[
                 category for category in restaurant.item_categories.all()
             ],
         )
 
-    def get_by_id_queryset(self, id: str) -> Restaurant:
-        return Restaurant.objects.get(id=id)
+    def get_by_id_queryset(self, id: str, with_items=False, with_item_categories=False) -> Restaurant:
+        query = Restaurant.objects.all()
+
+        if with_items:
+            query = query.prefetch_related("items")
+        if with_item_categories:
+            query = query.prefetch_related("item_categories")
+
+        return query.annotate(number_of_likes=Count("likes")).get(id=id)
 
     def restaurant_exists(self, id: str) -> bool:
         return Restaurant.objects.filter(id=id).exists()

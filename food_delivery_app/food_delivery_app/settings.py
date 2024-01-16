@@ -64,6 +64,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = ["food_delivery_app.backend.UserModelBackend"]
+
 INTERNAL_IPS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(" ")
 
 ROOT_URLCONF = 'food_delivery_app.urls'
