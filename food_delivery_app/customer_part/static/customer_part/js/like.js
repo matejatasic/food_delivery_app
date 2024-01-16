@@ -11,9 +11,11 @@ function addEventListenersToLikeButtons() {
 function handleLikeButtonClick(e) {
     const element = e.currentTarget
     const restaurantId = element.getAttribute("data-id");
+    const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
     fetch(likeRoute, {
         method: "POST",
+        headers: { "X-CSRFToken": csrfToken },
         body: JSON.stringify({
             restaurant_id: restaurantId
         })

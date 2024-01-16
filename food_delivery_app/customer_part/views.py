@@ -6,7 +6,6 @@ from django.forms import Form, ModelForm, ValidationError
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
 from http import HTTPStatus
 from json import loads, dumps
 
@@ -114,7 +113,6 @@ def address(request: HttpRequest) -> JsonResponse:
     )
 
 
-@csrf_exempt
 def like(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
         return JsonResponse(
@@ -148,8 +146,6 @@ def like(request: HttpRequest) -> JsonResponse:
             status=HTTPStatus.NOT_FOUND,
         )
 
-
-@csrf_exempt
 def change_cart(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
         return JsonResponse(
@@ -188,7 +184,6 @@ def change_cart(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
 
 
-@csrf_exempt
 def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
         return JsonResponse(
