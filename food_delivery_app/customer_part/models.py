@@ -91,7 +91,7 @@ class Restaurant(BaseModel):
 
 
 class RestaurantCategory(BaseModel):
-    name = CharField(max_length=50)
+    name = CharField(max_length=50, db_index=True)
 
     class Meta:
         verbose_name_plural = "Restaurant categories"
@@ -101,15 +101,15 @@ class RestaurantCategory(BaseModel):
 
 
 class RestaurantLike(BaseModel):
-    restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="likes")
-    user = ForeignKey(User, on_delete=CASCADE, related_name="likes")
+    restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="likes", db_index=True)
+    user = ForeignKey(User, on_delete=CASCADE, related_name="likes", db_index=True)
 
     def __str__(self) -> str:
         return f"Like by {self.user.username} to {self.restaurant.name}"
 
 
 class RestaurantItemCategory(BaseModel):
-    name = CharField(max_length=50)
+    name = CharField(max_length=50, db_index=True)
     restaurant = ForeignKey(
         Restaurant, on_delete=CASCADE, related_name="item_categories", default=None
     )
