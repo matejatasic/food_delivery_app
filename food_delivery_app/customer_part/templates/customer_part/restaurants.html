@@ -32,6 +32,9 @@
                     <div class="col-10">
                         <div id="restaurants" class="row">
                             {% if restaurants %}
+                                {% if user.is_authenticated %}
+                                    {% csrf_token %}
+                                {% endif %}
                                 {% for restaurant in restaurants %}
                                     <div class="col-12" >
                                         <div class="row restaurant border">

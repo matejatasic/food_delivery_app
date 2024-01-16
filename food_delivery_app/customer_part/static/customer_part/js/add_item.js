@@ -15,13 +15,15 @@ decrementButtons.forEach(element => {
 function handleChangeButtonsClick(e, action) {
     const element = e.currentTarget;
     const itemId = element.getAttribute("data-id");
+    const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
     fetch(changeCartUrl, {
         method: "POST",
+        headers: { "X-CSRFToken": csrfToken },
         body: JSON.stringify({
             item_id: itemId,
             action: action
-        })
+        }),
     })
     .then(res => res.json())
     .then(response => {
