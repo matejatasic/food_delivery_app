@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -174,6 +175,12 @@ CACHES = {
 }
 
 SELECT2_CACHE_BACKEND = "select2"
+
+CSP_IMG_SRC = ("'self'", "data:")
+CSP_STYLE_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com")
+CSP_SCRIPT_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://code.jquery.com", "https://cdnjs.cloudflare.com")
+CSP_FONT_SRC = ("'self'", "https://cdn.jsdelivr.net")
+CSP_INCLUDE_NONCE_IN = ["script-src"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

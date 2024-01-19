@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block main %}
-    <div id="restaurant-header" style="background-image: url('{% get_media_prefix %}{{ restaurant.image }}')">
+    <div id="restaurant-header">
         <div id="restaurant-header-text" class="row p-3">
             <div class="col-12">
                 <h1>{{ restaurant.name }}</h1>
@@ -76,7 +76,12 @@
 {% endblock %}
 
 {% block js %}
-    <script>
+    <script nonce="{{request.csp_nonce}}">
+        document.addEventListener("DOMContentLoaded", () => {
+            const headerImageUrl = "{% get_media_prefix %}{{ restaurant.image }}";
+            const header = document.getElementById("restaurant-header");
+            header.style.backgroundImage = `url('${headerImageUrl}')`;
+        });
         const mediaPrefix = "{% get_media_prefix %}";
         const getRestaurantItemsByCategoryUrl = "{% url 'get_restaurant_items_by_category' %}";
         const changeCartUrl = "{% url 'change_cart' %}";
