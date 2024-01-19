@@ -85,6 +85,7 @@ class Restaurant(BaseModel):
         "RestaurantCategory", on_delete=SET_NULL, null=True, related_name="restaurants"
     )
     image = ImageField(upload_to="restaurant_pictures")
+    number_of_likes: int
 
     def __str__(self) -> str:
         return self.name

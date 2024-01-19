@@ -4,6 +4,7 @@ from unittest.mock import patch, Mock
 from ..base import faker
 from ...exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
 from ..factories import RestaurantFactory, RestaurantLikeFactory, UserFactory
+from ...models import Restaurant
 from ...services.restaurant_service import RestaurantService, LIKED, UNLIKED
 
 
@@ -56,9 +57,11 @@ class RestaurantServiceTests(TestCase):
         """Assert that the like method likes the restaurant if it is not already liked by the user"""
 
         restaurant_exists_mock.return_value = True
-        get_by_id_queryset_mock.return_value = RestaurantFactory()
+        restaurant = RestaurantFactory()
+        get_by_id_queryset_mock.return_value = restaurant
         get_like_mock.side_effect = Exception()
         create_like_mock.return_value = None
+        self.__add_number_of_likes_to_restaurant(restaurant=restaurant, number_of_likes=1)
 
         result = self.restaurant_service.like(
             restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
@@ -75,14 +78,19 @@ class RestaurantServiceTests(TestCase):
         """Assert that the like method unlikes the restaurant if it is already liked by the user"""
 
         restaurant_exists_mock.return_value = True
-        get_by_id_queryset_mock.return_value = RestaurantFactory()
+        restaurant = RestaurantFactory()
+        get_by_id_queryset_mock.return_value = restaurant
         get_like_mock.return_value = Mock(RestaurantLikeFactory())
+        self.__add_number_of_likes_to_restaurant(restaurant=restaurant, number_of_likes=1)
 
         result = self.restaurant_service.like(
             restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
         )
 
         self.assertEqual(result[0], UNLIKED)
+
+    def __add_number_of_likes_to_restaurant(self, restaurant: Restaurant, number_of_likes: int):
+        restaurant.number_of_likes = number_of_likes
 
     @patch.object(RestaurantService, "restaurant_exists")
     def test_like_raises_the_restaurant_does_not_exist_error(
