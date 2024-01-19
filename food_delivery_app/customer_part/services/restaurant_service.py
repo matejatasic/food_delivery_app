@@ -42,6 +42,7 @@ class RestaurantService:
             raise RestaurantDoesNotExist()
 
         restaurant = self.get_by_id_queryset(id=restaurant_id)
+        number_of_likes = restaurant.number_of_likes
 
         try:
             like = self.get_like(
@@ -49,23 +50,25 @@ class RestaurantService:
             )
             like.delete()
             action = "unliked"
+            number_of_likes -= 1
         except:
             self.create_like(
                 restaurant=restaurant, authenticated_user=authenticated_user
             )
             action = "liked"
+            number_of_likes += 1
 
-        return (action, restaurant.number_of_likes) # type: ignore
+        return (action, number_of_likes)
 
     def get_by_id(self, id: str):
-        restaurant = self.get_by_id_queryset(id, with_items=True, with_item_categories=True) # type: ignore
+        restaurant = self.get_by_id_queryset(id, with_items=True, with_item_categories=True)
 
         return RestaurantDto(
             id=restaurant.id,
             name=restaurant.name,
             description=restaurant.description,
             image=restaurant.image.name,
-            number_of_likes=restaurant.number_of_likes, # type: ignore
+            number_of_likes=restaurant.number_of_likes,
             food_items=[item for item in restaurant.items.all()],
             food_item_categories=[
                 category for category in restaurant.item_categories.all()
