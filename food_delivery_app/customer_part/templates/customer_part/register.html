@@ -1,0 +1,59 @@
+{% extends "customer_part/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+    <link href="{% static 'customer_part/css/register.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+    <div id="register-background">
+        <div class="row h-100 flex-column justify-content-center align-items-center">
+            <div class="col-8 col-sm-6 bg-info p-3 my-4">
+                <form method="POST" class="text-white" enctype="multipart/form-data">
+                    {% csrf_token %}
+	                {{ form|crispy }}
+
+                    <div class="my-3">
+                        <a href="{% url 'login' %}">Already have an account? Click Here</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock  %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+    {{ form.media }}
+
+    <script nonce="{{request.csp_nonce}}">
+        $( document ).ready(() => {
+            const route = "{% url 'address' %}"
+
+            $('.django-select2').djangoSelect2({
+                minimumInputLength: 2,
+                ajax: {
+                    url: `http://127.0.0.1:8000${route}`,
+                    dataType: 'json',
+                    data: (params) => {
+                        return {
+                            term: params.term
+                        };
+                    },
+                    processResults: (data) => {
+                        return {
+                            results: $.map(data.results, (item) => {
+                                return {
+                                    text: item.text,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    }
+                  }
+            });
+        })
+    </script>
+{% endblock %}
