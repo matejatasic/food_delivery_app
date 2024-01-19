@@ -61,7 +61,9 @@ class RestaurantServiceTests(TestCase):
         get_by_id_queryset_mock.return_value = restaurant
         get_like_mock.side_effect = Exception()
         create_like_mock.return_value = None
-        self.__add_number_of_likes_to_restaurant(restaurant=restaurant, number_of_likes=1)
+        self.__add_number_of_likes_to_restaurant(
+            restaurant=restaurant, number_of_likes=1
+        )
 
         result = self.restaurant_service.like(
             restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
@@ -81,7 +83,9 @@ class RestaurantServiceTests(TestCase):
         restaurant = RestaurantFactory()
         get_by_id_queryset_mock.return_value = restaurant
         get_like_mock.return_value = Mock(RestaurantLikeFactory())
-        self.__add_number_of_likes_to_restaurant(restaurant=restaurant, number_of_likes=1)
+        self.__add_number_of_likes_to_restaurant(
+            restaurant=restaurant, number_of_likes=1
+        )
 
         result = self.restaurant_service.like(
             restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
@@ -89,7 +93,9 @@ class RestaurantServiceTests(TestCase):
 
         self.assertEqual(result[0], UNLIKED)
 
-    def __add_number_of_likes_to_restaurant(self, restaurant: Restaurant, number_of_likes: int):
+    def __add_number_of_likes_to_restaurant(
+        self, restaurant: Restaurant, number_of_likes: int
+    ):
         restaurant.number_of_likes = number_of_likes
 
     @patch.object(RestaurantService, "restaurant_exists")

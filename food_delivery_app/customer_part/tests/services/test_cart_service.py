@@ -4,7 +4,11 @@ from django.test import TestCase
 from json import dumps
 from unittest.mock import Mock, patch
 
-from ...exceptions import EmptyRequestBodyError, RestaurantItemDoesNotExist, RestaurantItemNotInCart
+from ...exceptions import (
+    EmptyRequestBodyError,
+    RestaurantItemDoesNotExist,
+    RestaurantItemNotInCart,
+)
 from ..factories import RestaurantItemFactory
 from ...services.cart_service import CartService, INCREMENT, DECREMENT
 
@@ -72,7 +76,9 @@ class CartServiceTests(TestCase):
 
         request_mock.body = None
 
-        self.assertRaises(EmptyRequestBodyError, self.cart_service.add_item, request_mock)
+        self.assertRaises(
+            EmptyRequestBodyError, self.cart_service.add_item, request_mock
+        )
 
     def test_change_cart_raises_error_when_request_body_data_invalid(self):
         """Asserts that the change cart method raises the FieldDoesNotExist when request body data is invalid"""
@@ -101,7 +107,9 @@ class CartServiceTests(TestCase):
         request_mock.body = dumps({"item_id": 1, "action": INCREMENT})
         item_exists_mock.return_value = False
 
-        self.assertRaises(RestaurantItemDoesNotExist, self.cart_service.add_item, request_mock)
+        self.assertRaises(
+            RestaurantItemDoesNotExist, self.cart_service.add_item, request_mock
+        )
 
     @patch.object(CartService, "get_item")
     @patch.object(CartService, "item_exists")
@@ -118,4 +126,6 @@ class CartServiceTests(TestCase):
         item_exists_mock.return_value = True
         get_item_mock.return_value = item
 
-        self.assertRaises(RestaurantItemNotInCart, self.cart_service.add_item, request_mock)
+        self.assertRaises(
+            RestaurantItemNotInCart, self.cart_service.add_item, request_mock
+        )

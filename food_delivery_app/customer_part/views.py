@@ -146,6 +146,7 @@ def like(request: HttpRequest) -> JsonResponse:
             status=HTTPStatus.NOT_FOUND,
         )
 
+
 def change_cart(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
         return JsonResponse(

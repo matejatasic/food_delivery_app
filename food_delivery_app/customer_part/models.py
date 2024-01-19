@@ -102,7 +102,9 @@ class RestaurantCategory(BaseModel):
 
 
 class RestaurantLike(BaseModel):
-    restaurant = ForeignKey(Restaurant, on_delete=CASCADE, related_name="likes", db_index=True)
+    restaurant = ForeignKey(
+        Restaurant, on_delete=CASCADE, related_name="likes", db_index=True
+    )
     user = ForeignKey(User, on_delete=CASCADE, related_name="likes", db_index=True)
 
     def __str__(self) -> str:

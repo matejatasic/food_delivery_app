@@ -31,7 +31,9 @@ class RestaurantService:
                 image=restaurant.image.name,
                 number_of_likes=restaurant.number_of_likes,
             ).get_dict()
-            for restaurant in Restaurant.objects.all().annotate(number_of_likes=Count("likes"))
+            for restaurant in Restaurant.objects.all().annotate(
+                number_of_likes=Count("likes")
+            )
         ]
 
     def get_all_categories(self) -> QuerySet[RestaurantCategory]:
@@ -61,7 +63,9 @@ class RestaurantService:
         return (action, number_of_likes)
 
     def get_by_id(self, id: str):
-        restaurant = self.get_by_id_queryset(id, with_items=True, with_item_categories=True)
+        restaurant = self.get_by_id_queryset(
+            id, with_items=True, with_item_categories=True
+        )
 
         return RestaurantDto(
             id=restaurant.id,
@@ -75,7 +79,9 @@ class RestaurantService:
             ],
         )
 
-    def get_by_id_queryset(self, id: str, with_items=False, with_item_categories=False) -> Restaurant:
+    def get_by_id_queryset(
+        self, id: str, with_items=False, with_item_categories=False
+    ) -> Restaurant:
         query = Restaurant.objects.all()
 
         if with_items:
