@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied, FieldDoesNotExist, FieldError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import logout
@@ -6,8 +7,9 @@ from django.forms import Form, ModelForm, ValidationError
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.cache import cache_page
 from http import HTTPStatus
-from json import loads, dumps
+from json import dumps
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
@@ -25,7 +27,8 @@ from .services.login_service import LoginService
 from .services.register_service import RegisterService
 from .services.restaurant_service import RestaurantService
 
-
+# cache the page for 6 hours
+@cache_page(21600)
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/home.html")
 
@@ -70,23 +73,36 @@ def logout_user(request: HttpRequest) -> HttpResponseRedirect:
 
     return redirect(reverse("home"))
 
-
 def restaurant(request: HttpRequest, id: str) -> HttpResponse:
     restaurant_service = RestaurantService()
-    restaurant = restaurant_service.get_by_id(id=id)
+    restaurant = cache.get(f"restaurant-{id}")
+
+    if not restaurant:
+        restaurant = restaurant_service.get_by_id(id=id)
+        cache.set(f"restaurant-{id}", restaurant, 900)
 
     return render(request, "customer_part/restaurant.html", {"restaurant": restaurant})
 
-
 def restaurants(request: HttpRequest) -> HttpResponse:
     restaurant_service = RestaurantService()
+
+    restaurants_instances = cache.get("restaurants")
+    categories = cache.get("restaurant-categories")
+
+    if not restaurants_instances:
+        restaurants_instances = restaurant_service.get_all()
+        cache.set("restaurants", restaurants_instances, 900)
+
+    if not categories:
+        categories = restaurant_service.get_all_categories()
+        cache.set("restaurant-categories", categories, 900)
 
     return render(
         request,
         "customer_part/restaurants.html",
         {
-            "restaurants": restaurant_service.get_all(),
-            "categories": restaurant_service.get_all_categories(),
+            "restaurants": restaurants_instances,
+            "categories": categories,
         },
     )
 
@@ -197,9 +213,15 @@ def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:
     restaurant_service = RestaurantService()
 
     try:
+        restaurants_instances = cache.get(f"restaurant-{category_name}")
+
+        if not restaurants_instances:
+            restaurants_instances = restaurant_service.get_by_category(category_name)
+            cache.set(f"restaurant-{category_name}", restaurants_instances, 900)
+
         return JsonResponse(
             {
-                "data": dumps(restaurant_service.get_by_category(category_name)),
+                "data": dumps(restaurants_instances),
             },
             status=HTTPStatus.OK,
         )
@@ -224,9 +246,15 @@ def get_restaurant_items_by_category(request):
     restaurant_service = RestaurantService()
 
     try:
+        items = cache.get(f"restaurant-item-{category_name}")
+
+        if not items:
+            items = restaurant_service.get_items_by_category(category_name)
+            cache.set(f"restaurant-item-{category_name}", items, 900)
+
         return JsonResponse(
             {
-                "data": dumps(restaurant_service.get_items_by_category(category_name)),
+                "data": dumps(items),
             },
             status=HTTPStatus.OK,
         )
