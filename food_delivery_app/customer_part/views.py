@@ -123,14 +123,10 @@ def like(request: HttpRequest) -> JsonResponse:
     if request.method == "GET":
         return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
 
-    data = loads(request.body)
-    restaurant_id = data.get("restaurant_id")
     restaurant_service = RestaurantService()
 
     try:
-        action_taken, current_number_of_likes = restaurant_service.like(
-            restaurant_id=restaurant_id, authenticated_user=request.user
-        )
+        action_taken, current_number_of_likes = restaurant_service.like(request=request)
 
         return JsonResponse(
             {
@@ -140,9 +136,11 @@ def like(request: HttpRequest) -> JsonResponse:
             },
             status=HTTPStatus.OK,
         )
-    except RestaurantDoesNotExist:
+    except EmptyRequestBodyError as error:
+        return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
+    except RestaurantDoesNotExist as error:
         return JsonResponse(
-            {"error": f"The restaurant with the id {restaurant_id} does not exist"},
+            {"error": str(error)},
             status=HTTPStatus.NOT_FOUND,
         )
 
