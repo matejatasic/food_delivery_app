@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+import sys
 
 from dotenv import load_dotenv
 
@@ -173,6 +174,9 @@ CACHES = {
         },
     },
 }
+
+if 'test' in sys.argv:
+      CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache',}
 
 SELECT2_CACHE_BACKEND = "select2"
 
