@@ -1,0 +1,12 @@
+/env
+.env
+
+__pycache__/
+
+
+error.log
+
+food_delivery_app/.coverage
+food_delivery_app/media/profile_pictures/*
+
+food_delivery_app/media
