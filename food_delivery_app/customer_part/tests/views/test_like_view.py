@@ -47,6 +47,16 @@ class LikeViewTest(TestCase):
 
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
+    def test_like_returns_bad_request_when_request_body_empty(self):
+        """Asserts that the response contains the Bad request status code when the request body is empty"""
+
+        user = UserFactory()
+        self.client.force_login(user)
+
+        response = self.client.post(self.like_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
     def test_like_returns_not_found_status_code_when_restaurant_does_not_exist(self):
         """Asserts that the response has the NotFound status code when the restaurant does not exist"""
 

@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import QuerySet, Count
+from django.http import HttpRequest
+from json import JSONDecodeError, loads
+from typing import cast
 
 from ..dtos import RestaurantDto
 from ..exceptions import (
+    EmptyRequestBodyError,
     RestaurantDoesNotExist,
     RestaurantCategoryDoesNotExist,
     RestaurantItemCategoryDoesNotExist,
@@ -39,9 +43,21 @@ class RestaurantService:
     def get_all_categories(self) -> QuerySet[RestaurantCategory]:
         return RestaurantCategory.objects.all()
 
-    def like(self, restaurant_id: str, authenticated_user: User) -> tuple[str, int]:
+    def like(self, request: HttpRequest) -> tuple[str, int]:
+        try:
+            data = loads(request.body)
+        except JSONDecodeError:
+            raise EmptyRequestBodyError("The request body cannot be empty")
+        except TypeError:
+            raise EmptyRequestBodyError("The request body cannot be empty")
+
+        restaurant_id = data.get("restaurant_id")
+        authenticated_user = cast(User, request.user)
+
         if not self.restaurant_exists(id=restaurant_id):
-            raise RestaurantDoesNotExist()
+            raise RestaurantDoesNotExist(
+                f"The restaurant with the id {restaurant_id} does not exist"
+            )
 
         restaurant = self.get_by_id_queryset(id=restaurant_id)
         number_of_likes = restaurant.number_of_likes

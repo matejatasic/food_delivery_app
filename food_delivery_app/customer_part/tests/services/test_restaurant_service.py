@@ -1,8 +1,14 @@
+from django.http import HttpRequest
 from django.test import TestCase
+from json import dumps
 from unittest.mock import patch, Mock
 
 from ..base import faker
-from ...exceptions import RestaurantDoesNotExist, RestaurantCategoryDoesNotExist
+from ...exceptions import (
+    EmptyRequestBodyError,
+    RestaurantDoesNotExist,
+    RestaurantCategoryDoesNotExist,
+)
 from ..factories import RestaurantFactory, RestaurantLikeFactory, UserFactory
 from ...models import Restaurant
 from ...services.restaurant_service import RestaurantService, LIKED, UNLIKED
@@ -64,10 +70,11 @@ class RestaurantServiceTests(TestCase):
         self.__add_number_of_likes_to_restaurant(
             restaurant=restaurant, number_of_likes=1
         )
+        request_mock = Mock(HttpRequest)
+        request_mock.body = dumps({"restaurant_id": faker.random_digit()})
+        request_mock.user = UserFactory()
 
-        result = self.restaurant_service.like(
-            restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
-        )
+        result = self.restaurant_service.like(request=request_mock)
 
         self.assertEqual(result[0], LIKED)
 
@@ -86,10 +93,11 @@ class RestaurantServiceTests(TestCase):
         self.__add_number_of_likes_to_restaurant(
             restaurant=restaurant, number_of_likes=1
         )
+        request_mock = Mock(HttpRequest)
+        request_mock.body = dumps({"restaurant_id": faker.random_digit()})
+        request_mock.user = UserFactory()
 
-        result = self.restaurant_service.like(
-            restaurant_id=faker.random_digit(), authenticated_user=UserFactory()
-        )
+        result = self.restaurant_service.like(request=request_mock)
 
         self.assertEqual(result[0], UNLIKED)
 
@@ -98,6 +106,17 @@ class RestaurantServiceTests(TestCase):
     ):
         restaurant.number_of_likes = number_of_likes
 
+    def test_like_raises_error_when_request_body_empty(self):
+        """Asserts that the like method raises the EmptyRequestBodyError when request body is empty"""
+
+        request_mock = Mock(HttpRequest)
+
+        request_mock.body = None
+
+        self.assertRaises(
+            EmptyRequestBodyError, self.restaurant_service.like, request_mock
+        )
+
     @patch.object(RestaurantService, "restaurant_exists")
     def test_like_raises_the_restaurant_does_not_exist_error(
         self, restaurant_exists_mock
@@ -105,9 +124,10 @@ class RestaurantServiceTests(TestCase):
         """Asserts that the method for getting the restaurants raises the RestaurantDoesNotExist if the restaurant does not exists"""
 
         restaurant_exists_mock.side_effect = RestaurantDoesNotExist()
+        request_mock = Mock(HttpRequest)
+        request_mock.body = dumps({"restaurant_id": faker.random_digit()})
+        request_mock.user = UserFactory()
 
         self.assertRaises(
-            RestaurantDoesNotExist,
-            self.restaurant_service.like,
-            *[faker.random_digit(), UserFactory()]
+            RestaurantDoesNotExist, self.restaurant_service.like, request_mock
         )
