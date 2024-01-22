@@ -10,3 +10,7 @@ food_delivery_app/.coverage
 food_delivery_app/media/profile_pictures/*
 
 food_delivery_app/media
+
+# SSL keys
+cert.pem
+key.pem
