@@ -200,12 +200,6 @@ def change_cart(request: HttpRequest) -> JsonResponse:
 
 
 def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:
-    if not request.user.is_authenticated:
-        return JsonResponse(
-            {"error": "You are not authorized to perform this action"},
-            status=HTTPStatus.UNAUTHORIZED,
-        )
-
     if request.method == "POST":
         return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
 
@@ -233,12 +227,6 @@ def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:
 
 
 def get_restaurant_items_by_category(request):
-    if not request.user.is_authenticated:
-        return JsonResponse(
-            {"error": "You are not authorized to perform this action"},
-            status=HTTPStatus.UNAUTHORIZED,
-        )
-
     if request.method == "POST":
         return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
 

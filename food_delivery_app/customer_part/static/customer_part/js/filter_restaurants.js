@@ -30,7 +30,9 @@ function showFilteredRestaurants(data) {
     restaurantsDiv.innerHTML = "";
 
     data.forEach(restaurant => {
-        restaurantsDiv.innerHTML += getRestaurantRow(restaurant, JSON.parse(restaurantsLikedByUser));
+        let likedRestaurants = restaurantsLikedByUser ? JSON.parse(restaurantsLikedByUser) : [];
+
+        restaurantsDiv.innerHTML += getRestaurantRow(restaurant, likedRestaurants);
     })
 }
 
