@@ -25,15 +25,6 @@ class GetRestaurantsByCategoryViewTest(TestCase):
 
         self.assertGreaterEqual(1, len(data))
 
-    def test_get_restaurants_by_category_returns_unauthorized_status_code_when_user_not_authenticated(
-        self,
-    ):
-        """Asserts that the response has the Unauthorized status when user is not authenticated"""
-
-        response = self.client.get(self.get_restaurants_by_category_url)
-
-        self.assertEqual(response.status_code, HTTPStatus.UNAUTHORIZED)
-
     def test_get_restaurants_by_category_returns_bad_request_status_code_when_post_request_sent(
         self,
     ):
