@@ -27,8 +27,6 @@ from .services.login_service import LoginService
 from .services.register_service import RegisterService
 from .services.restaurant_service import RestaurantService
 
-# cache the page for 6 hours
-@cache_page(21600)
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/home.html")
 
