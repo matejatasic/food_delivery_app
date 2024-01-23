@@ -139,6 +139,7 @@ class RestaurantItem(BaseModel):
 
     def get_dict(self) -> dict[str, str | float]:
         return {
+            "id": self.id,
             "name": self.name,
             "description": self.description,
             "price": float(self.price),

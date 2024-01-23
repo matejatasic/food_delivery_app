@@ -1,16 +1,20 @@
-const incrementButtons = document.querySelectorAll(".increment-button");
-const decrementButtons = document.querySelectorAll(".decrement-button");
-
 const INCREMENT = "increment";
 const DECREMENT = "decrement";
 
-incrementButtons.forEach(element => {
-    element.addEventListener("click", (e) => handleChangeButtonsClick(e, INCREMENT));
-})
+addEventListenersToChangeCartButtons();
 
-decrementButtons.forEach(element => {
-    element.addEventListener("click", (e) => handleChangeButtonsClick(e, DECREMENT));
-})
+function addEventListenersToChangeCartButtons() {
+    const incrementButtons = document.querySelectorAll(".increment-button");
+    const decrementButtons = document.querySelectorAll(".decrement-button");
+
+    incrementButtons.forEach(element => {
+        element.addEventListener("click", (e) => handleChangeButtonsClick(e, INCREMENT));
+    })
+
+    decrementButtons.forEach(element => {
+        element.addEventListener("click", (e) => handleChangeButtonsClick(e, DECREMENT));
+    })
+}
 
 function handleChangeButtonsClick(e, action) {
     const element = e.currentTarget;
@@ -31,3 +35,5 @@ function handleChangeButtonsClick(e, action) {
         cartQuantityElement.textContent = JSON.parse(response.data).total_number_of_items;
     });
 }
+
+export {addEventListenersToChangeCartButtons};

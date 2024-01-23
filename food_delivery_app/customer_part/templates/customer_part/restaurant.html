@@ -85,7 +85,8 @@
         const mediaPrefix = "{% get_media_prefix %}";
         const getRestaurantItemsByCategoryUrl = "{% url 'get_restaurant_items_by_category' %}";
         const changeCartUrl = "{% url 'change_cart' %}";
+        const isUserAuthenticated = "{{ user.is_authenticated }}"
     </script>
     <script type="module" src="{% static 'customer_part/js/filter_restaurant_items.js' %}"></script>
-    <script src="{% static 'customer_part/js/add_item.js' %}"></script>
+    <script type="module" src="{% static 'customer_part/js/add_item.js' %}"></script>
 {% endblock %}
