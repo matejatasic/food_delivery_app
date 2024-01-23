@@ -69,6 +69,11 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = ["food_delivery_app.backend.UserModelBackend"]
 
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 86400
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+
 INTERNAL_IPS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(" ")
 
 ROOT_URLCONF = 'food_delivery_app.urls'
@@ -178,6 +183,7 @@ CACHES = {
 
 if 'test' in sys.argv:
       CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache',}
+      SECURE_SSL_REDIRECT = False
 
 SELECT2_CACHE_BACKEND = "select2"
 
