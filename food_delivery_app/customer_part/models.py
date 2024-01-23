@@ -145,3 +145,16 @@ class RestaurantItem(BaseModel):
             "price": float(self.price),
             "image": self.image.name,
         }
+
+
+class Order(BaseModel):
+    buyer = ForeignKey(User, on_delete=CASCADE, related_name="orders")
+
+
+class OrderItem(BaseModel):
+    order = ForeignKey(Order, on_delete=CASCADE, related_name="items")
+    item = ForeignKey(RestaurantItem, on_delete=CASCADE)
+    quantity = IntegerField(default=1)
+
+    class Meta:
+        unique_together = ("order", "item")
