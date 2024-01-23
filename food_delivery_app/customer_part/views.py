@@ -27,6 +27,7 @@ from .services.login_service import LoginService
 from .services.register_service import RegisterService
 from .services.restaurant_service import RestaurantService
 
+
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/home.html")
 
@@ -71,6 +72,7 @@ def logout_user(request: HttpRequest) -> HttpResponseRedirect:
 
     return redirect(reverse("home"))
 
+
 def restaurant(request: HttpRequest, id: str) -> HttpResponse:
     restaurant_service = RestaurantService()
     restaurant = cache.get(f"restaurant-{id}")
@@ -80,6 +82,7 @@ def restaurant(request: HttpRequest, id: str) -> HttpResponse:
         cache.set(f"restaurant-{id}", restaurant, 900)
 
     return render(request, "customer_part/restaurant.html", {"restaurant": restaurant})
+
 
 def restaurants(request: HttpRequest) -> HttpResponse:
     restaurant_service = RestaurantService()
