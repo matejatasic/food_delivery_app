@@ -1,7 +1,9 @@
+from decimal import Decimal
 from django.core.exceptions import FieldDoesNotExist, FieldError
+from django.forms import ImageField
 from django.http import HttpRequest
 from json import JSONDecodeError, loads
-from typing import cast
+from typing import cast, NewType
 
 from ..exceptions import (
     RestaurantItemDoesNotExist,
@@ -14,6 +16,10 @@ from .restaurant_service import RestaurantService
 
 INCREMENT = "increment"
 DECREMENT = "decrement"
+
+ItemDictionary = NewType("ItemDictionary", dict[str, str | int | Decimal | ImageField])
+ItemsDictionary = NewType("ItemsDictionary", dict[str, ItemDictionary])
+Cart = NewType("Cart", dict[str, ItemsDictionary | int])
 
 
 class CartService:
@@ -42,7 +48,7 @@ class CartService:
             )
 
         cart = self.get_cart(request=request)
-        items = cast(dict[str, dict[str, str | int]], cart["items"])
+        items = cast(ItemsDictionary, cart["items"])
         cart_item = items.get(item_id)
         item = self.get_item(id=item_id)
 
@@ -65,33 +71,35 @@ class CartService:
 
         return restaurant_service.item_exists(id=id)
 
-    def get_cart(
-        self, request: HttpRequest
-    ) -> dict[str, dict[str, dict[str, str | int]] | int]:
+    def get_cart(self, request: HttpRequest) -> Cart:
         return request.session.get("cart", {"items": {}, "total_number_of_items": 0})
 
     def set_cart(
         self,
         request: HttpRequest,
-        cart: dict[str, dict[str, dict[str, str | int]] | int],
+        cart: Cart,
     ) -> None:
         request.session["cart"] = cart
 
-    def get_item(self, id: str) -> RestaurantItem:
-        restaurant_service = RestaurantService()
-
-        return restaurant_service.get_item(id=id)
-
     def increment_item(
         self,
-        cart_item: dict[str, str | int] | None,
-        items: dict[str, dict[str, str | int]],
+        cart_item: ItemDictionary | None,
+        items: ItemsDictionary,
         item_id: str,
         item: RestaurantItem,
-        cart: dict[str, dict | int],
+        cart: Cart,
     ) -> None:
         if not cart_item:
-            items[item_id] = {"product": item.name, "quantity": 0}
+            items[item_id] = cast(
+                ItemDictionary,
+                {
+                    "product": item.name,
+                    "description": item.description,
+                    "price": float(item.price),
+                    "image": item.image.name,
+                    "quantity": 0,
+                },
+            )
 
         quantity: int = cast(int, items[item_id]["quantity"])
         total_number_of_items: int = cast(int, cart["total_number_of_items"])
@@ -103,10 +111,10 @@ class CartService:
 
     def decrement_item(
         self,
-        cart_item: dict[str, str | int] | None,
-        items: dict[str, dict[str, str | int]],
+        cart_item: ItemDictionary | None,
+        items: ItemsDictionary,
         item_id: str,
-        cart: dict[str, dict | int],
+        cart: Cart,
     ) -> None:
         if not cart_item:
             raise RestaurantItemNotInCart(
@@ -123,3 +131,34 @@ class CartService:
 
         if items[item_id]["quantity"] == 0:
             del items[item_id]
+
+    def get_cart_expenses(self, request) -> tuple[float, float, float, float]:
+        cart: Cart = self.get_cart(request=request)
+
+        price_for_all_items = self.get_price_for_all_items(cart=cart)
+        delivery = 15.00
+        tax_rate = 0.1
+        tax = price_for_all_items * tax_rate
+        tax = float(f'{tax:.2f}')
+        total = price_for_all_items + delivery + tax
+
+        return (price_for_all_items, delivery, tax, total)
+
+    def get_price_for_all_items(self, cart: Cart) -> float:
+        if not cart["total_number_of_items"]:
+            return 0.0
+
+        price = 0.0
+        cart_items = cast(ItemsDictionary, cart["items"])
+        for item in cart_items.values():
+            item_price = cast(float, item["price"])
+            item_quantity = cast(int, item["quantity"])
+
+            price += item_price * item_quantity
+
+        return price
+
+    def get_item(self, id: str) -> RestaurantItem:
+        restaurant_service = RestaurantService()
+
+        return restaurant_service.get_item(id=id)
