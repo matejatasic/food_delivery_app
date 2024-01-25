@@ -11,7 +11,7 @@ class RestaurantsViewTest(TestCase):
     def test_restaurants_view_returns_appropriate_view_data(self):
         number_of_items = 2
 
-        RestaurantFactory.create_batch(2)
+        RestaurantFactory.create_batch(number_of_items)
         response = self.client.get(self.restaurants_url)
 
         self.assertEqual(response.status_code, HTTPStatus.OK)

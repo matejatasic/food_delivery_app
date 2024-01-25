@@ -129,3 +129,20 @@ class CartServiceTests(TestCase):
         self.assertRaises(
             RestaurantItemNotInCart, self.cart_service.add_item, request_mock
         )
+
+    @patch.object(CartService, "get_cart")
+    def test_get_cart_expenses_returns_appropriate_data(self, get_cart_mock):
+        """Asserts that the get cart function returns all the expenses successfully"""
+
+        get_cart_mock.return_value = {
+            "items": {
+                "1": {"price": 2.0, "quantity": 2},
+                "2": {"price": 1.0, "quantity": 1},
+            },
+            "total_number_of_items": 3,
+        }
+
+        expenses = self.cart_service.get_cart_expenses(request=Mock(HttpRequest))
+
+        self.assertEqual(len(expenses), 4)
+        self.assertEqual(expenses[0], 5.0)

@@ -108,19 +108,25 @@ def restaurants(request: HttpRequest) -> HttpResponse:
     )
 
 
+@login_required
 def cart(request: HttpRequest) -> HttpResponse:
     cart_service = CartService()
 
-    price_for_all_items, delivery, tax, total = cart_service.get_cart_expenses(request=request)
+    price_for_all_items, delivery, tax, total = cart_service.get_cart_expenses(
+        request=request
+    )
 
-    return render(request, "customer_part/cart.html", {
-        "cart": cart_service.get_cart(request),
-        "price_for_all_items": price_for_all_items,
-        "delivery": delivery,
-        "tax": tax,
-        "total": price_for_all_items + delivery + tax
-
-    })
+    return render(
+        request,
+        "customer_part/cart.html",
+        {
+            "cart": cart_service.get_cart(request),
+            "price_for_all_items": price_for_all_items,
+            "delivery": delivery,
+            "tax": tax,
+            "total": price_for_all_items + delivery + tax,
+        },
+    )
 
 
 def orders(request: HttpRequest) -> HttpResponse:
