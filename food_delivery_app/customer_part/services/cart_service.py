@@ -139,7 +139,7 @@ class CartService:
         delivery = 15.00
         tax_rate = 0.1
         tax = price_for_all_items * tax_rate
-        tax = float(f'{tax:.2f}')
+        tax = float(f"{tax:.2f}")
         total = price_for_all_items + delivery + tax
 
         return (price_for_all_items, delivery, tax, total)
