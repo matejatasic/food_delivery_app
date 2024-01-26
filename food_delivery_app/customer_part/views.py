@@ -81,7 +81,13 @@ def restaurant(request: HttpRequest, id: str) -> HttpResponse:
         restaurant = restaurant_service.get_by_id(id=id)
         cache.set(f"restaurant-{id}", restaurant, 900)
 
-    return render(request, "customer_part/restaurant.html", {"restaurant": restaurant})
+    cart_service = CartService()
+
+    return render(
+        request,
+        "customer_part/restaurant.html",
+        {"restaurant": restaurant, "cart": cart_service.get_cart(request=request)},
+    )
 
 
 def restaurants(request: HttpRequest) -> HttpResponse:
@@ -124,7 +130,7 @@ def cart(request: HttpRequest) -> HttpResponse:
             "price_for_all_items": price_for_all_items,
             "delivery": delivery,
             "tax": tax,
-            "total": price_for_all_items + delivery + tax,
+            "total": total,
         },
     )
 
@@ -215,6 +221,35 @@ def change_cart(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
     except RestaurantItemNotInCart as error:
         return JsonResponse({"error": str(error)}, status=HTTPStatus.BAD_REQUEST)
+
+
+def get_cart(request: HttpRequest) -> JsonResponse:
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    cart_service = CartService()
+
+    price_for_all_items, delivery, tax, total = cart_service.get_cart_expenses(
+        request=request
+    )
+
+    return JsonResponse(
+        {
+            "data": dumps(
+                {
+                    "cart": cart_service.get_cart(request),
+                    "price_for_all_items": price_for_all_items,
+                    "delivery": delivery,
+                    "tax": tax,
+                    "total": total,
+                }
+            )
+        },
+        status=HTTPStatus.OK,
+    )
 
 
 def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:

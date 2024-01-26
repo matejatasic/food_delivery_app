@@ -3,22 +3,27 @@ const DECREMENT = "decrement";
 
 addEventListenersToChangeCartButtons();
 
-function addEventListenersToChangeCartButtons() {
+function addEventListenersToChangeCartButtons(onSuccessCallback=null) {
     const incrementButtons = document.querySelectorAll(".increment-button");
     const decrementButtons = document.querySelectorAll(".decrement-button");
 
     incrementButtons.forEach(element => {
-        element.addEventListener("click", (e) => handleChangeButtonsClick(e, INCREMENT));
+        element.addEventListener("click", (e) => handleChangeButtonsClick(e, INCREMENT, onSuccessCallback));
     })
 
     decrementButtons.forEach(element => {
-        element.addEventListener("click", (e) => handleChangeButtonsClick(e, DECREMENT));
+        element.addEventListener("click", (e) => handleChangeButtonsClick(e, DECREMENT, onSuccessCallback));
     })
 }
 
-function handleChangeButtonsClick(e, action) {
+function handleChangeButtonsClick(e, action, onSuccessCallback) {
     const element = e.currentTarget;
     const itemId = element.getAttribute("data-id");
+
+    addItemToCart(itemId, action, onSuccessCallback);
+}
+
+function addItemToCart(itemId, action, onSuccessCallback) {
     const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
     fetch(changeCartUrl, {
@@ -29,10 +34,22 @@ function handleChangeButtonsClick(e, action) {
             action: action
         }),
     })
-    .then(res => res.json())
     .then(response => {
-        const cartQuantityElement = document.getElementById("cart-quantity");
-        cartQuantityElement.textContent = JSON.parse(response.data).total_number_of_items;
+        if(!response.ok) {
+            throw new Error(`HTTP status: ${response.status}`);
+        }
+
+        return response.json()
+    })
+    .then(response => {
+        if (!onSuccessCallback) {
+            return;
+        }
+
+        onSuccessCallback(itemId);
+    })
+    .catch(error => {
+        console.log(error);
     });
 }
 
