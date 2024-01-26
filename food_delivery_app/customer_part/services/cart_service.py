@@ -19,7 +19,7 @@ DECREMENT = "decrement"
 
 ItemDictionary = NewType("ItemDictionary", dict[str, str | int | Decimal | ImageField])
 ItemsDictionary = NewType("ItemsDictionary", dict[str, ItemDictionary])
-Cart = NewType("Cart", dict[str, ItemsDictionary | int])
+Cart = NewType("Cart", dict[str, ItemsDictionary | int | float])
 
 
 class CartService:
@@ -72,7 +72,9 @@ class CartService:
         return restaurant_service.item_exists(id=id)
 
     def get_cart(self, request: HttpRequest) -> Cart:
-        return request.session.get("cart", {"items": {}, "total_number_of_items": 0})
+        return request.session.get(
+            "cart", {"items": {}, "total_number_of_items": 0, "delivery": 15.0}
+        )
 
     def set_cart(
         self,
@@ -93,7 +95,8 @@ class CartService:
             items[item_id] = cast(
                 ItemDictionary,
                 {
-                    "product": item.name,
+                    "id": item.id,
+                    "name": item.name,
                     "description": item.description,
                     "price": float(item.price),
                     "image": item.image.name,
@@ -136,7 +139,7 @@ class CartService:
         cart: Cart = self.get_cart(request=request)
 
         price_for_all_items = self.get_price_for_all_items(cart=cart)
-        delivery = 15.00
+        delivery = cast(float, cart["delivery"])
         tax_rate = 0.1
         tax = price_for_all_items * tax_rate
         tax = float(f"{tax:.2f}")

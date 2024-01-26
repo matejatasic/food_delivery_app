@@ -1,5 +1,6 @@
 {% extends "customer_part/layout.html" %}
 {% load static %}
+{% load tags %}
 
 {% block style %}
     <!-- Bootstrap icons -->
@@ -54,6 +55,11 @@
                                                 {% if user.is_authenticated %}
                                                     <button class="btn btn-link decrement-button" data-id="{{ item.id }}"><i class="bi bi-dash-square-fill"></i></button>
                                                     <button class="btn btn-link increment-button" data-id="{{ item.id }}"><i class="bi bi-plus-square-fill"></i></button>
+                                                    {% if item.id|stringformat:"i" in cart.items %}
+                                                        <span class="item-quantity" data-id="{{ item.id }}">{{ cart.items|get_item_quantity:item.id }}</span>
+                                                    {% else %}
+                                                        <span class="item-quantity" data-id="{{ item.id }}"></span>
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                             <div class="col-4 col-sm-4">
@@ -76,17 +82,20 @@
 {% endblock %}
 
 {% block js %}
+    {{ cart|json_script:"cart" }}
     <script nonce="{{request.csp_nonce}}">
         document.addEventListener("DOMContentLoaded", () => {
             const headerImageUrl = "{% get_media_prefix %}{{ restaurant.image }}";
             const header = document.getElementById("restaurant-header");
             header.style.backgroundImage = `url('${headerImageUrl}')`;
         });
+
         const mediaPrefix = "{% get_media_prefix %}";
         const getRestaurantItemsByCategoryUrl = "{% url 'get_restaurant_items_by_category' %}";
         const changeCartUrl = "{% url 'change_cart' %}";
         const isUserAuthenticated = "{{ user.is_authenticated }}"
+        const getCartUrl = "{% url 'get_cart' %}"
     </script>
     <script type="module" src="{% static 'customer_part/js/filter_restaurant_items.js' %}"></script>
-    <script type="module" src="{% static 'customer_part/js/add_item.js' %}"></script>
+    <script type="module" src="{% static 'customer_part/js/restaurant.js' %}"></script>
 {% endblock %}

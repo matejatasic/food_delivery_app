@@ -157,4 +157,7 @@ class RestaurantService:
         return RestaurantItem.objects.get(id=id)
 
     def item_exists(self, id: str) -> bool:
-        return RestaurantItem.objects.filter(id=id).exists()
+        try:
+            return RestaurantItem.objects.filter(id=id).exists()
+        except:
+            return False
