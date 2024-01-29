@@ -4,6 +4,7 @@ from django.test import TestCase
 from json import dumps
 from unittest.mock import Mock, patch
 
+from ..base import faker
 from ...exceptions import (
     EmptyRequestBodyError,
     RestaurantItemDoesNotExist,
@@ -38,7 +39,7 @@ class CartServiceTests(TestCase):
 
         self.assertIn(item_id, cart["items"])
         self.assertEqual(cart["total_number_of_items"], 1)
-        self.assertEqual(cart["items"][item_id]["product"], item.name)
+        self.assertEqual(cart["items"][item_id]["name"], item.name)
         self.assertEqual(cart["items"][item_id]["quantity"], 1)
 
     @patch.object(CartService, "get_item")
@@ -139,6 +140,7 @@ class CartServiceTests(TestCase):
                 "1": {"price": 2.0, "quantity": 2},
                 "2": {"price": 1.0, "quantity": 1},
             },
+            "delivery": faker.random_number(),
             "total_number_of_items": 3,
         }
 
