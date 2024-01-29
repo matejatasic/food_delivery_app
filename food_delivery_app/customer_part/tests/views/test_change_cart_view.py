@@ -29,7 +29,7 @@ class ChangeCartViewTest(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertIn(item_id, cart["items"])
         self.assertEqual(cart["total_number_of_items"], 1)
-        self.assertEqual(cart["items"][item_id]["product"], item.name)
+        self.assertEqual(cart["items"][item_id]["name"], item.name)
         self.assertEqual(cart["items"][item_id]["quantity"], 1)
 
     def test_change_cart_decrements_the_item_successfully(self):
