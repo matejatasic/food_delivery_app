@@ -18,6 +18,7 @@
         <div class="row justify-content-center my-3">
             <div class="col-11 col-sm-8">
                 {% csrf_token %}
+                <input id="stripe-public-key" value="{{ stripe_public_key }}" type="hidden" />
                 {% if cart.total_number_of_items %}
                     <div id="items-list">
                         {% for id, item in cart.items.items %}
@@ -74,7 +75,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 text-center">
-                                    <button class="btn btn-success btn-lg">Checkout</button>
+                                    <button id="checkout-button" class="btn btn-success btn-lg">Checkout</button>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div id="checkout" class="col-12 text-center">
+
                                 </div>
                             </div>
                         </div>
@@ -88,10 +94,13 @@
 {% endblock %}
 
 {% block js %}
+    <script src="https://js.stripe.com/v3/"></script>
     <script nonce="{{request.csp_nonce}}">
         const mediaPrefix = "{% get_media_prefix %}";
         const changeCartUrl = "{% url 'change_cart' %}";
         const getCartUrl = "{% url 'get_cart' %}"
+        const createCheckoutSessionUrl = "{% url 'create_checkout_session' %}"
     </script>
     <script type="module" src="{% static 'customer_part/js/cart.js' %}"></script>
+    <script type="module" src="{% static 'customer_part/js/checkout.js' %}"></script>
 {% endblock %}

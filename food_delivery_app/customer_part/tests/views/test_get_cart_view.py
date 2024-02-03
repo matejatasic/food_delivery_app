@@ -6,6 +6,7 @@ from json import dumps, loads
 from ..factories import UserFactory, RestaurantItemFactory
 from ...services.cart_service import INCREMENT
 
+
 class GetCartViewTest(TestCase):
     get_cart_url = reverse("get_cart")
     change_cart_url = reverse("change_cart")
@@ -42,7 +43,9 @@ class GetCartViewTest(TestCase):
         self.assertIn("tax", data)
         self.assertIn("total", data)
 
-    def test_get_cart_returns_unauthorized_status_code_when_user_not_authenticated(self):
+    def test_get_cart_returns_unauthorized_status_code_when_user_not_authenticated(
+        self,
+    ):
         """Asserts that the response has the Unauthorized status when user is not authenticated"""
 
         response = self.client.get(self.get_cart_url)

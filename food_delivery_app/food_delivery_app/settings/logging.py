@@ -16,7 +16,7 @@ LOGGING = {
             "level": "ERROR",
             "class": "logging.FileHandler",
             "filename": f"{BASE_DIR}/error.log",
-            "formatter": "verbose"
+            "formatter": "verbose",
         },
         "console": {
             "class": "logging.StreamHandler",
@@ -26,7 +26,7 @@ LOGGING = {
         DJANGO_ERROR_LOGGER: {
             "handlers": ["file", "console"],
             "level": "ERROR",
-            "propagate": True
+            "propagate": True,
         }
     },
 }

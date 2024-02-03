@@ -1,9 +1,7 @@
-from decimal import Decimal
 from django.core.exceptions import FieldDoesNotExist, FieldError
-from django.forms import ImageField
 from django.http import HttpRequest
 from json import JSONDecodeError, loads
-from typing import cast, NewType
+from typing import cast
 
 from ..exceptions import (
     RestaurantItemDoesNotExist,
@@ -12,14 +10,10 @@ from ..exceptions import (
 )
 from ..models import RestaurantItem
 from .restaurant_service import RestaurantService
-
+from ..types import Cart, CartItemsDictionary, CartItemDictionary
 
 INCREMENT = "increment"
 DECREMENT = "decrement"
-
-ItemDictionary = NewType("ItemDictionary", dict[str, str | int | Decimal | ImageField])
-ItemsDictionary = NewType("ItemsDictionary", dict[str, ItemDictionary])
-Cart = NewType("Cart", dict[str, ItemsDictionary | int | float])
 
 
 class CartService:
@@ -48,7 +42,7 @@ class CartService:
             )
 
         cart = self.get_cart(request=request)
-        items = cast(ItemsDictionary, cart["items"])
+        items = cast(CartItemsDictionary, cart["items"])
         cart_item = items.get(item_id)
         item = self.get_item(id=item_id)
 
@@ -72,9 +66,7 @@ class CartService:
         return restaurant_service.item_exists(id=id)
 
     def get_cart(self, request: HttpRequest) -> Cart:
-        return request.session.get(
-            "cart", {"items": {}, "total_number_of_items": 0, "delivery": 15.0}
-        )
+        return request.session.get("cart", self.get_initial_cart())
 
     def set_cart(
         self,
@@ -85,15 +77,15 @@ class CartService:
 
     def increment_item(
         self,
-        cart_item: ItemDictionary | None,
-        items: ItemsDictionary,
+        cart_item: CartItemDictionary | None,
+        items: CartItemsDictionary,
         item_id: str,
         item: RestaurantItem,
         cart: Cart,
     ) -> None:
         if not cart_item:
             items[item_id] = cast(
-                ItemDictionary,
+                CartItemDictionary,
                 {
                     "id": item.id,
                     "name": item.name,
@@ -114,8 +106,8 @@ class CartService:
 
     def decrement_item(
         self,
-        cart_item: ItemDictionary | None,
-        items: ItemsDictionary,
+        cart_item: CartItemDictionary | None,
+        items: CartItemsDictionary,
         item_id: str,
         cart: Cart,
     ) -> None:
@@ -152,7 +144,7 @@ class CartService:
             return 0.0
 
         price = 0.0
-        cart_items = cast(ItemsDictionary, cart["items"])
+        cart_items = cast(CartItemsDictionary, cart["items"])
         for item in cart_items.values():
             item_price = cast(float, item["price"])
             item_quantity = cast(int, item["quantity"])
@@ -165,3 +157,9 @@ class CartService:
         restaurant_service = RestaurantService()
 
         return restaurant_service.get_item(id=id)
+
+    def clear_cart(self, request: HttpRequest) -> None:
+        request.session["cart"] = self.get_initial_cart()
+
+    def get_initial_cart(self) -> Cart:
+        return {"items": {}, "total_number_of_items": 0, "delivery": 15.0}
