@@ -1,0 +1,30 @@
+{% extends "customer_part/layout.html" %}
+{% load static %}
+
+{% block style %}
+    <link href="{% static 'customer_part/css/return.css' %}" rel="stylesheet">
+{% endblock %}
+{% block main %}
+    {% csrf_token %}
+
+    <div id="return-background">
+        <div class="row h-100 flex-column justify-content-center align-items-center">
+            <div id="success" class="col-8 col-sm-6 bg-info p-3 hidden">
+                <a href="{% url 'restaurants' %}" class="btn btn-secondary mb-3">Go to Restaurants</a>
+                <p id="message">
+                  Thank you for your purchase! A driver will soon pick up your order.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock  %}
+
+{% block js %}
+    <script defer nonce="{{request.csp_nonce}}">
+        const cartUrl = "{% url 'cart' %}"
+        const stripeSessionStatusUrl = "{% url 'stripe_session_status' %}";
+        const clearCartUrl = "{% url 'clear_cart' %}"
+        const sessionId = "{{ session_id }}";
+    </script>
+    <script src="{% static 'customer_part/js/return.js' %}" defer></script>
+{% endblock %}
