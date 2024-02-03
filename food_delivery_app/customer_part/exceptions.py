@@ -39,3 +39,7 @@ class RestaurantItemDoesNotExist(ObjectDoesNotExist):
 
 class RestaurantItemNotInCart(ObjectDoesNotExist):
     """Restaurant item information is not present in the cart"""
+
+
+class StripeTaxRateDoesNotExist(Exception):
+    """The tax rate is not set"""

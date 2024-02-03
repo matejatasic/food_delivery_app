@@ -1,5 +1,10 @@
 from django.core.cache import cache
-from django.core.exceptions import PermissionDenied, FieldDoesNotExist, FieldError
+from django.core.exceptions import (
+    PermissionDenied,
+    FieldDoesNotExist,
+    FieldError,
+    BadRequest,
+)
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -7,12 +12,12 @@ from django.forms import Form, ModelForm, ValidationError
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
 from http import HTTPStatus
 from json import dumps
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
+from food_delivery_app.settings import STRIPE_API_PUBLIC_KEY
 from .exceptions import (
     RestaurantDoesNotExist,
     RestaurantCategoryDoesNotExist,
@@ -20,12 +25,14 @@ from .exceptions import (
     RestaurantItemDoesNotExist,
     RestaurantItemNotInCart,
     EmptyRequestBodyError,
+    StripeTaxRateDoesNotExist,
 )
 from .services.address_service import AddressService
 from .services.cart_service import CartService
 from .services.login_service import LoginService
 from .services.register_service import RegisterService
 from .services.restaurant_service import RestaurantService
+from .services.stripe_service import StripeService
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -131,6 +138,7 @@ def cart(request: HttpRequest) -> HttpResponse:
             "delivery": delivery,
             "tax": tax,
             "total": total,
+            "stripe_public_key": STRIPE_API_PUBLIC_KEY,
         },
     )
 
@@ -230,6 +238,9 @@ def get_cart(request: HttpRequest) -> JsonResponse:
             status=HTTPStatus.UNAUTHORIZED,
         )
 
+    if request.method == "POST":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
     cart_service = CartService()
 
     price_for_all_items, delivery, tax, total = cart_service.get_cart_expenses(
@@ -248,6 +259,26 @@ def get_cart(request: HttpRequest) -> JsonResponse:
                 }
             )
         },
+        status=HTTPStatus.OK,
+    )
+
+
+def clear_cart(request: HttpRequest) -> JsonResponse:
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    if request.method == "GET":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
+    cart_service = CartService()
+
+    cart_service.clear_cart(request=request)
+
+    return JsonResponse(
+        {"message": "Sucessfully cleared the cart"},
         status=HTTPStatus.OK,
     )
 
@@ -304,3 +335,47 @@ def get_restaurant_items_by_category(request):
             {"error": f"The item category {category_name} does not exist"},
             status=HTTPStatus.NOT_FOUND,
         )
+
+
+def create_checkout_session(request: HttpRequest):
+    stripe_service = StripeService()
+    cart_service = CartService()
+    cart = cart_service.get_cart(request=request)
+
+    try:
+        client_secret = stripe_service.create_checkout_session(
+            username=str(request.user.username), cart=cart
+        )
+
+        return JsonResponse({"clientSecret": client_secret})
+    except StripeTaxRateDoesNotExist as e:
+        return JsonResponse(
+            {"error": "There was a server error, please try again later"},
+            status=HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"error": "There was a server error, please try again later"},
+            status=HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
+
+
+def stripe_session_status(request: HttpRequest):
+    stripe_service = StripeService()
+    session = stripe_service.get_session(session_id=request.GET.get("session_id"))
+
+    try:
+        return JsonResponse(
+            {"status": session.status, "customer_email": session.customer_details.email}  # type: ignore
+        )
+    except BadRequest as e:
+        return JsonResponse({"status": "failed", "message": str(e)})
+
+
+@login_required
+def checkout_return(request: HttpRequest):
+    return render(
+        request,
+        "customer_part/return.html",
+        {"session_id": request.GET.get("session_id")},
+    )

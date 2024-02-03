@@ -1,4 +1,3 @@
-from decimal import Decimal
 from django.db.models import (
     Model,
     DateTimeField,
@@ -147,7 +146,6 @@ class RestaurantItem(BaseModel):
         }
 
 
-# implementiraj stvaranje ordera u cart
 class Order(BaseModel):
     buyer = ForeignKey(User, on_delete=CASCADE, related_name="orders")
 

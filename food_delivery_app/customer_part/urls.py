@@ -17,6 +17,10 @@ from .views import (
     get_restaurants_by_category,
     get_restaurant_items_by_category,
     change_cart,
+    create_checkout_session,
+    stripe_session_status,
+    checkout_return,
+    clear_cart,
 )
 
 
@@ -25,6 +29,17 @@ urlpatterns = [
     path("address", address, name="address"),
     path("cart", cart, name="cart"),
     path("change_cart", change_cart, name="change_cart"),
+    path(
+        "checkout_return",
+        checkout_return,
+        name="checkout_return",
+    ),
+    path("clear_cart", clear_cart, name="clear_cart"),
+    path(
+        "create_checkout_session",
+        create_checkout_session,
+        name="create_checkout_session",
+    ),
     path("get_cart", get_cart, name="get_cart"),
     path(
         "get_restaurants_by_category",
@@ -43,6 +58,11 @@ urlpatterns = [
     path("register", register, name="register"),
     path("restaurant/<int:id>", restaurant, name="restaurant"),
     path("restaurants", restaurants, name="restaurants"),
+    path(
+        "stripe_session_status",
+        stripe_session_status,
+        name="stripe_session_status",
+    ),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
