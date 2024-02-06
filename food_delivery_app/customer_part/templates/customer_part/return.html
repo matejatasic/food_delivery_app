@@ -2,8 +2,11 @@
 {% load static %}
 
 {% block style %}
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="{% static 'customer_part/css/return.css' %}" rel="stylesheet">
 {% endblock %}
+
 {% block main %}
     {% csrf_token %}
 
@@ -23,8 +26,8 @@
     <script defer nonce="{{request.csp_nonce}}">
         const cartUrl = "{% url 'cart' %}"
         const stripeSessionStatusUrl = "{% url 'stripe_session_status' %}";
-        const clearCartUrl = "{% url 'clear_cart' %}"
+        const createOrderUrl = "{% url 'create_order' %}"
         const sessionId = "{{ session_id }}";
     </script>
-    <script src="{% static 'customer_part/js/return.js' %}" defer></script>
+    <script src="{% static 'customer_part/js/return.js' %}" defer type="module"></script>
 {% endblock %}

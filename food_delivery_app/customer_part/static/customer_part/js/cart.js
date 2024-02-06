@@ -98,3 +98,5 @@ function updateExpensesInHtml(priceForAllItems, delivery, tax, total) {
     document.getElementById("tax").textContent = `$${tax.toFixed(decimalPlaces)}`;
     document.getElementById("total").textContent = `$${total.toFixed(decimalPlaces)}`;
 }
+
+export {updateTotalItemQuantityInHtml};

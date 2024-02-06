@@ -1,3 +1,5 @@
+import { updateTotalItemQuantityInHtml } from "./cart.js";
+
 initialize();
 
 async function initialize() {
@@ -9,10 +11,12 @@ async function initialize() {
   } else if (session.status == 'complete') {
     const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
-    response = await fetch(clearCartUrl, {
+    response = await fetch(createOrderUrl, {
         "method": "POST",
         headers: { "X-CSRFToken": csrfToken }
     });
+
+    updateTotalItemQuantityInHtml(0);
 
     if(response.status !== 200) {
         console.log("There was an error");
