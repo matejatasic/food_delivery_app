@@ -30,6 +30,7 @@ from .exceptions import (
 from .services.address_service import AddressService
 from .services.cart_service import CartService
 from .services.login_service import LoginService
+from .services.order_service import OrderService
 from .services.register_service import RegisterService
 from .services.restaurant_service import RestaurantService
 from .services.stripe_service import StripeService
@@ -263,7 +264,7 @@ def get_cart(request: HttpRequest) -> JsonResponse:
     )
 
 
-def clear_cart(request: HttpRequest) -> JsonResponse:
+def create_order(request: HttpRequest) -> JsonResponse:
     if not request.user.is_authenticated:
         return JsonResponse(
             {"error": "You are not authorized to perform this action"},
@@ -273,14 +274,20 @@ def clear_cart(request: HttpRequest) -> JsonResponse:
     if request.method == "GET":
         return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
 
-    cart_service = CartService()
+    order_service = OrderService()
 
-    cart_service.clear_cart(request=request)
+    try:
+        order_service.create(request=request)
 
-    return JsonResponse(
-        {"message": "Sucessfully cleared the cart"},
-        status=HTTPStatus.OK,
-    )
+        return JsonResponse(
+            {"message": "Sucessfully cleared the cart"},
+            status=HTTPStatus.OK,
+        )
+    except Exception:
+        return JsonResponse(
+            {"message": "There was an error while creating the order"},
+            status=HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
 
 
 def get_restaurants_by_category(request: HttpRequest) -> JsonResponse:

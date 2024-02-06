@@ -20,7 +20,7 @@ from .views import (
     create_checkout_session,
     stripe_session_status,
     checkout_return,
-    clear_cart,
+    create_order,
 )
 
 
@@ -34,7 +34,7 @@ urlpatterns = [
         checkout_return,
         name="checkout_return",
     ),
-    path("clear_cart", clear_cart, name="clear_cart"),
+    path("create_order", create_order, name="create_order"),
     path(
         "create_checkout_session",
         create_checkout_session,
