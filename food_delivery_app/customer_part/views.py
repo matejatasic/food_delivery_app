@@ -350,9 +350,7 @@ def create_checkout_session(request: HttpRequest):
     cart = cart_service.get_cart(request=request)
 
     try:
-        client_secret = stripe_service.create_checkout_session(
-            username=str(request.user.username), cart=cart
-        )
+        client_secret = stripe_service.create_checkout_session(cart=cart)
 
         return JsonResponse({"clientSecret": client_secret})
     except StripeTaxRateDoesNotExist as e:
