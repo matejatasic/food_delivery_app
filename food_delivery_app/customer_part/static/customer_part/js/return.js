@@ -5,6 +5,7 @@ initialize();
 async function initialize() {
   let response = await fetch(`${stripeSessionStatusUrl}?session_id=${sessionId}`);
   const session = await response.json();
+  const messageElement = document.getElementById("message");
 
   if (session.status == 'open') {
     window.location.href = cartUrl;
@@ -19,10 +20,15 @@ async function initialize() {
     updateTotalItemQuantityInHtml(0);
 
     if(response.status !== 200) {
-        console.log("There was an error");
-        return;
+        messageElement.textContent = "There was a server error";
     }
-
-    document.getElementById('success').classList.remove('hidden');
+    else {
+      messageElement.textContent = "Thank you for your purchase! A driver will soon pick up your order.";
+    }
   }
+  else {
+    messageElement.textContent = session.message;
+  }
+
+  document.getElementById('response-div').classList.remove('hidden');
 }
