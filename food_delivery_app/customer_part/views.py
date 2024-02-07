@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from http import HTTPStatus
 from json import dumps
+from stripe import InvalidRequestError
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
@@ -367,14 +368,18 @@ def create_checkout_session(request: HttpRequest):
 
 def stripe_session_status(request: HttpRequest):
     stripe_service = StripeService()
-    session = stripe_service.get_session(session_id=request.GET.get("session_id"))
+    session_id = request.GET.get("session_id")
 
     try:
+        session = stripe_service.get_session(session_id=session_id)
+
         return JsonResponse(
             {"status": session.status, "customer_email": session.customer_details.email}  # type: ignore
         )
     except BadRequest as e:
-        return JsonResponse({"status": "failed", "message": str(e)})
+        return JsonResponse({"status": "failed", "message": str(e)}, status=HTTPStatus.BAD_REQUEST)
+    except InvalidRequestError:
+        return JsonResponse({"status": "failed", "message": f"The session with the id {session_id} does not exist"}, status=HTTPStatus.BAD_REQUEST)
 
 
 @login_required

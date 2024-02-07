@@ -78,7 +78,7 @@ class StripeService:
         ]
 
     def get_session(self, session_id: str | None) -> stripe.checkout.Session:
-        if session_id is None:
+        if session_id is None or session_id == "None":
             raise BadRequest("Session id is missing")
 
         return self.retrieve_session(session_id=session_id)
