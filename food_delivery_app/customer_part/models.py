@@ -11,9 +11,11 @@ from django.db.models import (
     IntegerField,
     TextField,
     DecimalField,
+    TextChoices
 )
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from typing import Any
 from unittest.mock import Mock
 
@@ -145,9 +147,18 @@ class RestaurantItem(BaseModel):
             "image": self.image.name,
         }
 
+class OrderStatus(TextChoices):
+    ORDERED = "Ordered", _("Ordered")
+    BEING_TRANSPORTED = "Being Transported", _("Being Transported")
+    DELIVERED = "Delivered", _("Delivered")
+
 
 class Order(BaseModel):
     buyer = ForeignKey(User, on_delete=CASCADE, related_name="orders")
+    status = CharField(
+        choices=OrderStatus.choices,
+        default = OrderStatus.ORDERED
+    )
 
 
 class OrderItem(BaseModel):
