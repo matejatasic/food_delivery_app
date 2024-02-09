@@ -35,14 +35,10 @@ class StripeServiceTests(TestCase):
         log_errors_mock.return_value = None
         create_session_mock.side_effect = Exception(InvalidRequestError)
 
-        self.assertRaises(
-            Exception, self.stripe_service.create_checkout_session, {}
-        )
+        self.assertRaises(Exception, self.stripe_service.create_checkout_session, {})
 
     @patch.object(StripeService, "retrieve_session")
-    def test_get_session_returns_session_successfully(
-        self, retrieve_session_mock
-    ):
+    def test_get_session_returns_session_successfully(self, retrieve_session_mock):
         """Asserts that the method for getting the session returns the session successfully"""
 
         session_mock = Mock(Session)
@@ -52,11 +48,7 @@ class StripeServiceTests(TestCase):
 
         self.assertIsInstance(session, Session)
 
-    def test_get_session_raises_bad_request_when_session_id_not_passed(
-        self
-    ):
+    def test_get_session_raises_bad_request_when_session_id_not_passed(self):
         """Asserts that the method for getting the session raises an BadRequest if the session id is not passed"""
 
-        self.assertRaises(
-            BadRequest, self.stripe_service.get_session, None
-        )
+        self.assertRaises(BadRequest, self.stripe_service.get_session, None)

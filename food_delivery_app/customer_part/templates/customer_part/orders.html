@@ -13,26 +13,34 @@
     <div id="main-part" class="row">
         <div class="col-11 mx-auto my-3">
             <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Items</th>
-                            <th>Price</th>
-                            <th>Date Ordered</th>
-                            <th>Status</th>
-                            <th>More info</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Pizza x 3, Spaghetti x 2</td>
-                            <td>$35</td>
-                            <td>02-12-2023</td>
-                            <td><span class="badge bg-primary">Ordered</span></td>
-                            <td><button class="btn btn-outline-dark"><i class="bi bi-info-lg"></i></button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                {% if orders %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Items</th>
+                                <th>Price</th>
+                                <th>Date Ordered</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>
+                                        {% for item in order.order_items %}
+                                            <span>{{ item.name }} x {{ item.quantity }}{% if not forloop.last %}, {% endif %}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>${{ order.price }}</td>
+                                    <td>{{ order.date_ordered }}</td>
+                                    <td><span class="badge bg-primary">{{ order.status }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No orders to show</p>
+                {% endif %}
             </div>
         </div>
     </div>

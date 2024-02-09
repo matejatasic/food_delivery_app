@@ -5,6 +5,7 @@ from django.http import HttpRequest
 import logging
 from typing import cast
 
+from ..dtos import OrderShowDto
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
 from ..models import Order, OrderItem, RestaurantItem
 from ..services.cart_service import CartService
@@ -17,6 +18,18 @@ class OrderService:
     def __init__(self) -> None:
         self.logger = logging.getLogger(DJANGO_ERROR_LOGGER)
         self.cart_service = CartService()
+
+    def get_by_user(self, user_id: str):
+        orders = Order.objects.filter(buyer__id=user_id).prefetch_related("items")
+
+        return [
+            OrderShowDto(
+                date_ordered=order.created_at,
+                order_items=order.items.select_related("item").all(),
+                status=order.status,
+            )
+            for order in orders
+        ]
 
     def create(self, request: HttpRequest):
         with transaction.atomic():

@@ -11,7 +11,7 @@ from django.db.models import (
     IntegerField,
     TextField,
     DecimalField,
-    TextChoices
+    TextChoices,
 )
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -147,6 +147,7 @@ class RestaurantItem(BaseModel):
             "image": self.image.name,
         }
 
+
 class OrderStatus(TextChoices):
     ORDERED = "Ordered", _("Ordered")
     BEING_TRANSPORTED = "Being Transported", _("Being Transported")
@@ -155,10 +156,7 @@ class OrderStatus(TextChoices):
 
 class Order(BaseModel):
     buyer = ForeignKey(User, on_delete=CASCADE, related_name="orders")
-    status = CharField(
-        choices=OrderStatus.choices,
-        default = OrderStatus.ORDERED
-    )
+    status = CharField(choices=OrderStatus.choices, default=OrderStatus.ORDERED)
 
 
 class OrderItem(BaseModel):
