@@ -21,3 +21,5 @@ Cart = TypedDict(
         "delivery": float,
     },
 )
+
+OrderItemDto = TypedDict("OrderItemDto", {"name": str, "quantity": int})

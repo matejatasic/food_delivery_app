@@ -1,7 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime
+from functools import reduce
 from django.core.serializers import serialize
+from django.db.models.query import QuerySet
 
-from .models import Address, RestaurantItem, RestaurantItemCategory
+from .models import Address, RestaurantItem, RestaurantItemCategory, OrderItem
+from .types import OrderItemDto
 
 
 class AddressOptionDto:
@@ -159,3 +163,49 @@ class RestaurantDto:
             dictionary["food_item_categories"] = self.food_item_categories
 
         return dictionary
+
+
+class OrderShowDto:
+    status: str
+    _date_ordered: str = field(init=False, repr=False)
+    _order_items: list[OrderItemDto] = field(init=False, repr=False)
+    _price: float = field(init=False, repr=False)
+
+    def __init__(
+        self, date_ordered: datetime, order_items: QuerySet[OrderItem], status: str
+    ) -> None:
+        self.date_ordered = date_ordered
+        self.order_items = order_items
+        self.price = order_items
+        self.status = status
+
+    @property
+    def date_ordered(self):
+        return self._date_ordered
+
+    @date_ordered.setter
+    def date_ordered(self, created_at: datetime):
+        self._date_ordered = f"{created_at.year}-{created_at.month}-{created_at.day}"
+
+    @property
+    def order_items(self):
+        return self._order_items
+
+    @order_items.setter
+    def order_items(self, order_items: QuerySet[OrderItem]):
+        self._order_items = [
+            {"name": order_item.item.name, "quantity": order_item.quantity}
+            for order_item in order_items
+        ]
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, order_items: QuerySet[OrderItem]):
+        self._price = reduce(
+            lambda accumulator, order_item: accumulator + float(order_item.item.price),
+            order_items,
+            0.0,
+        )

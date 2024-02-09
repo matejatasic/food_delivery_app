@@ -15,6 +15,7 @@ from django.urls import reverse
 from http import HTTPStatus
 from json import dumps
 from stripe import InvalidRequestError
+from typing import cast
 
 from .decorators import anonimity_required
 from .forms import RegisterForm, LoginForm
@@ -145,8 +146,16 @@ def cart(request: HttpRequest) -> HttpResponse:
     )
 
 
+@login_required
 def orders(request: HttpRequest) -> HttpResponse:
-    return render(request, "customer_part/orders.html")
+    order_service = OrderService()
+    orders = cache.get(f"orders-{request.user.id}")
+
+    if not orders:
+        orders = order_service.get_by_user(cast(str, request.user.id))
+        cache.set(f"orders-{request.user.id}", orders, 30)
+
+    return render(request, "customer_part/orders.html", {"orders": orders})
 
 
 def address(request: HttpRequest) -> JsonResponse:
@@ -377,9 +386,17 @@ def stripe_session_status(request: HttpRequest):
             {"status": session.status, "customer_email": session.customer_details.email}  # type: ignore
         )
     except BadRequest as e:
-        return JsonResponse({"status": "failed", "message": str(e)}, status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse(
+            {"status": "failed", "message": str(e)}, status=HTTPStatus.BAD_REQUEST
+        )
     except InvalidRequestError:
-        return JsonResponse({"status": "failed", "message": f"The session with the id {session_id} does not exist"}, status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse(
+            {
+                "status": "failed",
+                "message": f"The session with the id {session_id} does not exist",
+            },
+            status=HTTPStatus.BAD_REQUEST,
+        )
 
 
 @login_required
