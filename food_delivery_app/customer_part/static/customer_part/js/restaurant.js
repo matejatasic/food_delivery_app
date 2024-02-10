@@ -26,7 +26,10 @@ function onSuccessCallback(itemId) {
 
 function updateHtml(itemId, data) {
     updateTotalItemQuantityInHtml(data.cart.total_number_of_items);
-    updateItemQuantityInHtml(itemId, data.cart.items[itemId].quantity);
+
+    const item = data.cart.items[itemId];
+    const item_quantity = item ? item.quantity : 0;
+    updateItemQuantityInHtml(itemId, item_quantity);
 }
 
 function updateTotalItemQuantityInHtml(totalNumberOfItems) {
