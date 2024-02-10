@@ -23,3 +23,8 @@ Cart = TypedDict(
 )
 
 OrderItemDto = TypedDict("OrderItemDto", {"name": str, "quantity": int})
+
+MostLikedRestaurantDict = TypedDict(
+    "MostLikedRestaurantDict",
+    {"id": int, "name": str, "image": str, "number_of_likes": int},
+)

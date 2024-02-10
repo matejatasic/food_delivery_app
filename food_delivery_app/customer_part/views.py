@@ -39,7 +39,15 @@ from .services.stripe_service import StripeService
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "customer_part/home.html")
+    restaurant_service = RestaurantService()
+
+    most_liked_restaurants = restaurant_service.get_most_liked()
+    print(most_liked_restaurants[0])
+    return render(
+        request,
+        "customer_part/home.html",
+        {"most_liked_restaurants": most_liked_restaurants},
+    )
 
 
 @anonimity_required("home")
