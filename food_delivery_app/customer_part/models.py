@@ -161,7 +161,7 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order = ForeignKey(Order, on_delete=CASCADE, related_name="items")
-    item = ForeignKey(RestaurantItem, on_delete=CASCADE)
+    item = ForeignKey(RestaurantItem, on_delete=CASCADE, related_name="order_items")
     quantity = IntegerField(default=1)
 
     class Meta:

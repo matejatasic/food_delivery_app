@@ -42,11 +42,15 @@ def index(request: HttpRequest) -> HttpResponse:
     restaurant_service = RestaurantService()
 
     most_liked_restaurants = restaurant_service.get_most_liked()
-    print(most_liked_restaurants[0])
+    most_ordered_items = restaurant_service.get_most_ordered_items()
+
     return render(
         request,
         "customer_part/home.html",
-        {"most_liked_restaurants": most_liked_restaurants},
+        {
+            "most_liked_restaurants": most_liked_restaurants,
+            "most_ordered_items": most_ordered_items,
+        },
     )
 
 

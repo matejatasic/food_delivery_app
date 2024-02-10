@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import QuerySet, Count
+from django.db.models import QuerySet, Count, Sum, F
 from django.http import HttpRequest
 from json import JSONDecodeError, loads
 from typing import cast
-from typing_extensions import Annotated
 
-from ..dtos import RestaurantDto, MostLikedRestaurantDto
+from ..dtos import RestaurantDto
 from ..exceptions import (
     EmptyRequestBodyError,
     RestaurantDoesNotExist,
@@ -20,7 +19,7 @@ from ..models import (
     RestaurantItem,
     RestaurantItemCategory,
 )
-from ..types import MostLikedRestaurantDict
+from ..types import MostLikedRestaurantDict, MostOrderedRestaurantItemsDict
 
 
 LIKED = "liked"
@@ -164,19 +163,31 @@ class RestaurantService:
         except:
             return False
 
-    def get_most_liked(self) -> list[MostLikedRestaurantDto]:
-        restaurants: QuerySet[MostLikedRestaurantDict] = (
-            Restaurant.objects.values("id", "name", "image")
-            .annotate(number_of_likes=Count("likes__id"))
-            .order_by("-number_of_likes")[:4]
+    def get_most_liked(self) -> list[MostLikedRestaurantDict]:
+        restaurants = cast(
+            list[MostLikedRestaurantDict],
+            (
+                Restaurant.objects.values("id", "name", "image")
+                .annotate(number_of_likes=Count("likes__id"))
+                .order_by("-number_of_likes")[:4]
+            ),
         )
 
-        return [
-            MostLikedRestaurantDto(
-                id=restaurant["id"],
-                name=restaurant["name"],
-                image=restaurant["image"],
-                number_of_likes=restaurant["number_of_likes"],
-            )
-            for restaurant in restaurants
-        ]
+        return restaurants
+
+    def get_most_ordered_items(self) -> list[MostOrderedRestaurantItemsDict]:
+        items = cast(
+            list[MostOrderedRestaurantItemsDict],
+            (
+                RestaurantItem.objects.exclude(order_items__isnull=True)
+                .select_related("restaurant")
+                .values("image")
+                .annotate(
+                    quantity=Sum("order_items__quantity"),
+                    restaurant_id=F("restaurant__id"),
+                )
+                .order_by("-quantity")[:3]
+            ),
+        )
+
+        return items
