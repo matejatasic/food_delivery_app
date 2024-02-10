@@ -45,6 +45,16 @@
     height: 100%;
 }
 
+.restaurant-anchor {
+    color: black;
+    text-decoration: none;
+}
+
+.restaurant-image {
+    object-fit: cover;
+    height: 120px;
+}
+
 .carousel-item > img {
     object-fit: cover;
 }

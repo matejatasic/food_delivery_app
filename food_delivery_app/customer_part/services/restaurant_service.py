@@ -4,8 +4,9 @@ from django.db.models import QuerySet, Count
 from django.http import HttpRequest
 from json import JSONDecodeError, loads
 from typing import cast
+from typing_extensions import Annotated
 
-from ..dtos import RestaurantDto
+from ..dtos import RestaurantDto, MostLikedRestaurantDto
 from ..exceptions import (
     EmptyRequestBodyError,
     RestaurantDoesNotExist,
@@ -19,6 +20,7 @@ from ..models import (
     RestaurantItem,
     RestaurantItemCategory,
 )
+from ..types import MostLikedRestaurantDict
 
 
 LIKED = "liked"
@@ -161,3 +163,20 @@ class RestaurantService:
             return RestaurantItem.objects.filter(id=id).exists()
         except:
             return False
+
+    def get_most_liked(self) -> list[MostLikedRestaurantDto]:
+        restaurants: QuerySet[MostLikedRestaurantDict] = (
+            Restaurant.objects.values("id", "name", "image")
+            .annotate(number_of_likes=Count("likes__id"))
+            .order_by("-number_of_likes")[:4]
+        )
+
+        return [
+            MostLikedRestaurantDto(
+                id=restaurant["id"],
+                name=restaurant["name"],
+                image=restaurant["image"],
+                number_of_likes=restaurant["number_of_likes"],
+            )
+            for restaurant in restaurants
+        ]

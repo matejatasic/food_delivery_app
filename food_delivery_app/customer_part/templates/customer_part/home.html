@@ -23,26 +23,13 @@
         <h2 class="text-center mb-3">Restaurants that you may like</h2>
         <div class="col-md-8 col-sm-12 mx-auto">
             <div class="row justify-content-around">
-                <div class="col-md-3 col-5 mb-3">
-                    <img class="w-100" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D" alt="restaurant_image">
-                    <p class="ms-2 mt-2 mb-1">Some Restaurant</p>
-                    <span><i class="bi bi-hand-thumbs-up"></i> 50%</span>
-                </div>
-                <div class="col-md-3 col-5">
-                    <img class="w-100" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D" alt="restaurant_image">
-                    <p class="ms-2 mt-2 mb-1">Some Restaurant</p>
-                    <span><i class="bi bi-hand-thumbs-up"></i> 50%</span>
-                </div>
-                <div class="col-md-3 col-5">
-                    <img class="w-100" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D" alt="restaurant_image">
-                    <p class="ms-2 mt-2 mb-1">Some Restaurant</p>
-                    <span><i class="bi bi-hand-thumbs-up"></i> 50%</span>
-                </div>
-                <div class="col-md-3 col-5">
-                    <img class="w-100" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D" alt="restaurant_image">
-                    <p class="ms-2 mt-2 mb-1">Some Restaurant</p>
-                    <span><i class="bi bi-hand-thumbs-up"></i> 50%</span>
-                </div>
+                {% for restaurant in most_liked_restaurants %}
+                    <div class="col-md-3 col-5 mb-3">
+                        <a href="{% url 'restaurant' restaurant.id %}"><img class="w-100 restaurant-image" src="{% get_media_prefix %}{{ restaurant.image }}" alt="restaurant_image"></a>
+                        <p class="ms-2 mt-2 mb-1"><a class="restaurant-anchor" href="{% url 'restaurant' restaurant.id %}">{{ restaurant.name }}</a></p>
+                        <span><i class="bi bi-hand-thumbs-up"></i>{{ restaurant.number_of_likes }}</span>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
