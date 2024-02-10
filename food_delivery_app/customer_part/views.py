@@ -41,8 +41,16 @@ from .services.stripe_service import StripeService
 def index(request: HttpRequest) -> HttpResponse:
     restaurant_service = RestaurantService()
 
-    most_liked_restaurants = restaurant_service.get_most_liked()
-    most_ordered_items = restaurant_service.get_most_ordered_items()
+    most_liked_restaurants = cache.get(f"most-liked-restaurants")
+    most_ordered_items = cache.get(f"most-ordered-items")
+
+    if not most_liked_restaurants:
+        most_liked_restaurants = restaurant_service.get_most_liked()
+        cache.set("most-liked-restaurants", most_liked_restaurants, 900)
+
+    if not most_ordered_items:
+        most_ordered_items = restaurant_service.get_most_ordered_items()
+        cache.set("most-ordered-items", most_ordered_items, 900)
 
     return render(
         request,
