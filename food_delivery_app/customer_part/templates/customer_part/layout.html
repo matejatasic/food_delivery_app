@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-12 d-flex justify-content-center d-sm-block col-sm-11">
                             <div class="row">
-                                <div class="col-4 col-sm-4 d-flex justify-content-end align-items-center"><i class="bi bi-cart"></i><span id="cart-quantity">{% if request.session.cart.total_number_of_items %}{{ request.session.cart.total_number_of_items }}{% else %}0{% endif %}</span></div>
+                                <div class="col-4 col-sm-4 d-flex justify-content-end align-items-center"><i class="bi bi-cart d-inline-block me-1"></i><span id="cart-quantity">{% if request.session.cart.total_number_of_items %}{{ request.session.cart.total_number_of_items }}{% else %}0{% endif %}</span></div>
                                 <div class="col-8 col-sm-8">
                                     <div class="dropdown">
                                         <a class="dropdown-toggle d-flex flex-row justify-content-start justify-content-sm-start" href="#" data-bs-toggle="dropdown" aria-expanded="false">
