@@ -41,8 +41,9 @@
     height: 50vh;
 }
 
-#recommendations-carousel img {
+.carousel-image {
     height: 100%;
+    object-fit: cover;
 }
 
 .restaurant-anchor {
@@ -53,8 +54,4 @@
 .restaurant-image {
     object-fit: cover;
     height: 120px;
-}
-
-.carousel-item > img {
-    object-fit: cover;
 }

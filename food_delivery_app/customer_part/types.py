@@ -28,3 +28,7 @@ MostLikedRestaurantDict = TypedDict(
     "MostLikedRestaurantDict",
     {"id": int, "name": str, "image": str, "number_of_likes": int},
 )
+MostOrderedRestaurantItemsDict = TypedDict(
+    "MostOrderedRestaurantItemsDict",
+    {"image": str, "quantity": int, "restaurant_id": int},
+)

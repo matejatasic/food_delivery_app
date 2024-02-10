@@ -165,14 +165,6 @@ class RestaurantDto:
         return dictionary
 
 
-@dataclass
-class MostLikedRestaurantDto:
-    id: int
-    name: str
-    image: str
-    number_of_likes: int
-
-
 class OrderShowDto:
     status: str
     _date_ordered: str = field(init=False, repr=False)
