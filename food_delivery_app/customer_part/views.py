@@ -71,7 +71,15 @@ def login(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
         try:
             login_service.login(request, form)
 
-            return redirect(reverse("home"))
+            GROUP_ROUTE_MAPPER = {
+                "Admin": reverse("admin:index"),
+                "Customer": reverse("home"),
+                "Driver": reverse("driver"),
+            }
+
+            route = GROUP_ROUTE_MAPPER.get(request.user.groups.all()[0].name, reverse("home"))  # type: ignore
+
+            return redirect(route)
         except ValidationError:
             return render(request, "customer_part/login.html", {"form": form})
         except PermissionDenied:
@@ -176,6 +184,13 @@ def orders(request: HttpRequest) -> HttpResponse:
         cache.set(f"orders-{request.user.id}", orders, 30)
 
     return render(request, "customer_part/orders.html", {"orders": orders})
+
+
+def driver(request: HttpRequest) -> HttpResponse:
+    order_service = OrderService()
+    orders = order_service.get_ordered()
+
+    return render(request, "customer_part/driver.html", {"orders": orders})
 
 
 def address(request: HttpRequest) -> JsonResponse:
