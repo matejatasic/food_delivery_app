@@ -1,15 +1,14 @@
-#orders-heading {
+#driver-header {
+    background-image: url("../images/driver-hero-image.jpg");
     height: 30vh;
     width: 100vw;
-    background-image: url('../images/orders-hero.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    position: relative;
 }
 
-#main-part {
-    min-height: 50vh;
+#driver-main {
+    min-height: 70vh;
 }
 
 #no-orders {

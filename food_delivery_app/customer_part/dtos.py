@@ -209,3 +209,23 @@ class OrderShowDto:
             order_items,
             0.0,
         )
+
+
+class DriverOrderShowDto(OrderShowDto):
+    user: str
+    restaurant: str
+    address: str
+
+    def __init__(
+        self,
+        user: str,
+        restaurant: str,
+        address: str,
+        date_ordered: datetime,
+        order_items: QuerySet[OrderItem],
+        status: str,
+    ) -> None:
+        self.user = user
+        self.restaurant = restaurant
+        self.address = address
+        super().__init__(date_ordered, order_items, status)

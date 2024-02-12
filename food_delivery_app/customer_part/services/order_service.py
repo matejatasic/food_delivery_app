@@ -5,9 +5,9 @@ from django.http import HttpRequest
 import logging
 from typing import cast
 
-from ..dtos import OrderShowDto
+from ..dtos import OrderShowDto, DriverOrderShowDto
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
-from ..models import Order, OrderItem, RestaurantItem
+from ..models import Order, OrderItem, RestaurantItem, OrderStatus
 from ..services.cart_service import CartService
 from ..services.restaurant_service import RestaurantService
 
@@ -19,7 +19,7 @@ class OrderService:
         self.logger = logging.getLogger(DJANGO_ERROR_LOGGER)
         self.cart_service = CartService()
 
-    def get_by_user(self, user_id: str):
+    def get_by_user(self, user_id: str) -> list[OrderShowDto]:
         orders = Order.objects.filter(buyer__id=user_id).prefetch_related("items")
 
         return [
@@ -27,6 +27,23 @@ class OrderService:
                 date_ordered=order.created_at,
                 order_items=order.items.select_related("item").all(),
                 status=order.status,
+            )
+            for order in orders
+        ]
+
+    def get_ordered(self) -> list[DriverOrderShowDto]:
+        orders = Order.objects.select_related("buyer").filter(
+            status=OrderStatus.ORDERED
+        )
+
+        return [
+            DriverOrderShowDto(
+                user=order.buyer.username,
+                restaurant=order.items.select_related("item", "item__restaurant").first().item.restaurant.name,  # type: ignore
+                date_ordered=order.created_at,
+                order_items=order.items.select_related("item"),
+                status=order.status,
+                address=order.buyer.addresses.first().raw,  # type: ignore
             )
             for order in orders
         ]
