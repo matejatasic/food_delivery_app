@@ -1,0 +1,16 @@
+#driver-header {
+    background-image: url("../images/driver-hero-image.jpg");
+    height: 30vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#driver-main {
+    min-height: 70vh;
+}
+
+#no-orders {
+    font-size: 1.8rem;
+}
