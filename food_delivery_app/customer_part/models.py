@@ -157,6 +157,7 @@ class OrderStatus(TextChoices):
 class Order(BaseModel):
     buyer = ForeignKey(User, on_delete=CASCADE, related_name="orders")
     status = CharField(choices=OrderStatus.choices, default=OrderStatus.ORDERED)
+    driver = ForeignKey(User, on_delete=SET_NULL, null=True, default=None, related_name="driver")
 
 
 class OrderItem(BaseModel):
