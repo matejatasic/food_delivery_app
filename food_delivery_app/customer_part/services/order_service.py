@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, BadRequest
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpRequest
@@ -6,6 +6,7 @@ import logging
 from typing import cast
 
 from ..dtos import OrderShowDto, DriverOrderShowDto
+from ..exceptions import OrderDoesNotExist
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
 from ..models import Order, OrderItem, RestaurantItem, OrderStatus
 from ..services.cart_service import CartService
@@ -38,6 +39,7 @@ class OrderService:
 
         return [
             DriverOrderShowDto(
+                id=order.id,
                 user=order.buyer.username,
                 restaurant=order.items.select_related("item", "item__restaurant").first().item.restaurant.name,  # type: ignore
                 date_ordered=order.created_at,
@@ -99,6 +101,40 @@ class OrderService:
 
     def clear_cart(self, request: HttpRequest) -> None:
         self.cart_service.clear_cart(request=request)
+
+    def get_by_driver(self, user_id: str) -> list[DriverOrderShowDto]:
+        orders = Order.objects.filter(driver__id=user_id).prefetch_related("items")
+
+        return [
+            DriverOrderShowDto(
+                id=order.id,
+                user=order.buyer.username,
+                restaurant=order.items.select_related("item", "item__restaurant").first().item.restaurant.name,  # type: ignore
+                date_ordered=order.created_at,
+                order_items=order.items.select_related("item"),
+                status=order.status,
+                address=order.buyer.addresses.first().raw,  # type: ignore
+            )
+            for order in orders
+        ]
+
+    def assign_driver(self, order_id: str | None, user_id: int) -> None:
+        if order_id == None:
+            raise BadRequest("Order id is missing")
+
+        if not self.order_exists(id=cast(str, order_id)):
+            raise OrderDoesNotExist(f"The order with the id {order_id} does not exist")
+
+        order = Order.objects.get(id=cast(str, order_id))
+        order.driver = self.get_user(id=user_id)
+        order.status = OrderStatus.BEING_TRANSPORTED
+        order.save()
+
+    def order_exists(self, id: str) -> bool:
+        return Order.objects.filter(id=id).exists()
+
+    def get_user(self, id: int) -> User:
+        return User.objects.get(id=id)
 
     def __get_error_messages(self, validation_error: ValidationError) -> str:
         """

@@ -28,6 +28,7 @@ from .exceptions import (
     RestaurantItemNotInCart,
     EmptyRequestBodyError,
     StripeTaxRateDoesNotExist,
+    OrderDoesNotExist
 )
 from .services.address_service import AddressService
 from .services.cart_service import CartService
@@ -186,12 +187,38 @@ def orders(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/orders.html", {"orders": orders})
 
 
-def driver(request: HttpRequest) -> HttpResponse:
+def pending_orders(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
     orders = order_service.get_ordered()
 
-    return render(request, "customer_part/driver.html", {"orders": orders})
+    return render(request, "customer_part/drivers/pending_orders.html", {"orders": orders})
 
+def driver(request: HttpRequest) -> HttpResponse:
+    order_service = OrderService()
+    orders = order_service.get_by_driver(cast(str, request.user.id))
+
+    return render(request, "customer_part/drivers/driver.html", {"orders": orders})
+
+def assign_order(request: HttpRequest) -> HttpResponse:
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "You are not authorized to perform this action"},
+            status=HTTPStatus.UNAUTHORIZED,
+        )
+
+    if request.method == "GET":
+        return JsonResponse({"error": "Invalid method"}, status=HTTPStatus.BAD_REQUEST)
+
+    order_service = OrderService()
+
+    try:
+        order_service.assign_driver(order_id=request.POST.get("order_id"), user_id=cast(int, request.user.id))
+
+        return redirect(reverse("driver"))
+    except BadRequest as e:
+        return render(request, "customer_part/error.html", {"title": "Bad Request", "message": str(e)})
+    except OrderDoesNotExist as e:
+        return render(request, "customer_part/error.html", {"title": "Order does not exist", "message": str(e)})
 
 def address(request: HttpRequest) -> JsonResponse:
     address_service = AddressService()

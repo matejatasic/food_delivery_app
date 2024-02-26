@@ -212,12 +212,14 @@ class OrderShowDto:
 
 
 class DriverOrderShowDto(OrderShowDto):
+    id: int
     user: str
     restaurant: str
     address: str
 
     def __init__(
         self,
+        id: int,
         user: str,
         restaurant: str,
         address: str,
@@ -225,6 +227,7 @@ class DriverOrderShowDto(OrderShowDto):
         order_items: QuerySet[OrderItem],
         status: str,
     ) -> None:
+        self.id = id
         self.user = user
         self.restaurant = restaurant
         self.address = address

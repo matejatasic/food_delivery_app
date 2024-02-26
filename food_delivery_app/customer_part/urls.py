@@ -21,13 +21,16 @@ from .views import (
     stripe_session_status,
     checkout_return,
     create_order,
+    pending_orders,
     driver,
+    assign_order
 )
 
 
 urlpatterns = [
     path("", index, name="home"),
     path("address", address, name="address"),
+    path("assign_order", assign_order, name="assign_order"),
     path("cart", cart, name="cart"),
     path("change_cart", change_cart, name="change_cart"),
     path(
@@ -42,6 +45,7 @@ urlpatterns = [
         name="create_checkout_session",
     ),
     path("driver", driver, name="driver"),
+    path("pending_orders", pending_orders, name="pending_orders"),
     path("get_cart", get_cart, name="get_cart"),
     path(
         "get_restaurants_by_category",
