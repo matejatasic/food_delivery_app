@@ -43,3 +43,7 @@ class RestaurantItemNotInCart(ObjectDoesNotExist):
 
 class StripeTaxRateDoesNotExist(Exception):
     """The tax rate is not set"""
+
+
+class OrderDoesNotExist(ObjectDoesNotExist):
+    """The Order does not exist"""
