@@ -37,10 +37,10 @@ class MapsResponseResourcesDto:
         self.__address = MapsResponseAddressDto(
             formatted_address=address_information["formattedAddress"],
             address_line=address_information.get("addressLine", None),
-            district_1=address_information["adminDistrict"],
-            district_2=address_information["adminDistrict2"],
+            district_1=address_information.get("adminDistrict", ""),
+            district_2=address_information.get("adminDistrict2", ""),
             country_region=address_information["countryRegion"],
-            locality=address_information["locality"],
+            locality=address_information.get("locality", ""),
             postal_code=address_information.get("postalCode", None),
         )
 
