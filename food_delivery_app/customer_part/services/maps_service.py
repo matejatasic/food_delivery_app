@@ -23,8 +23,9 @@ class MapsService:
             raise InternalServerError
 
         resources = response.json()["resourceSets"][0]["resources"]
+
         resources_dtos: list[MapsResponseResourcesDto] = [
-            MapsResponseResourcesDto(resource["bbox"], resource["address"])
+            MapsResponseResourcesDto(resource["point"]["coordinates"], resource["address"])
             for resource in resources
         ]
 
