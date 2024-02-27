@@ -86,6 +86,7 @@ class Restaurant(BaseModel):
         "RestaurantCategory", on_delete=SET_NULL, null=True, related_name="restaurants"
     )
     image = ImageField(upload_to="restaurant_pictures")
+    address = ForeignKey(Address, on_delete=SET_NULL, null=True, related_name="restaurants")
     number_of_likes: int
 
     def __str__(self) -> str:
