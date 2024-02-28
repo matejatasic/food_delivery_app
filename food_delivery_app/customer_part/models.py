@@ -86,7 +86,9 @@ class Restaurant(BaseModel):
         "RestaurantCategory", on_delete=SET_NULL, null=True, related_name="restaurants"
     )
     image = ImageField(upload_to="restaurant_pictures")
-    address = ForeignKey(Address, on_delete=SET_NULL, null=True, related_name="restaurants")
+    address = ForeignKey(
+        Address, on_delete=SET_NULL, null=True, related_name="restaurants"
+    )
     number_of_likes: int
 
     def __str__(self) -> str:
@@ -158,7 +160,9 @@ class OrderStatus(TextChoices):
 class Order(BaseModel):
     buyer = ForeignKey(User, on_delete=CASCADE, related_name="orders")
     status = CharField(choices=OrderStatus.choices, default=OrderStatus.ORDERED)
-    driver = ForeignKey(User, on_delete=SET_NULL, null=True, default=None, related_name="driver")
+    driver = ForeignKey(
+        User, on_delete=SET_NULL, null=True, default=None, related_name="driver"
+    )
 
 
 class OrderItem(BaseModel):

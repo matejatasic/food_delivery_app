@@ -23,7 +23,7 @@ from .views import (
     create_order,
     pending_orders,
     driver,
-    assign_order
+    assign_order,
 )
 
 

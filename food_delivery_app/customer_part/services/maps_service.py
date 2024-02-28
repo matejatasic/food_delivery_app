@@ -25,7 +25,9 @@ class MapsService:
         resources = response.json()["resourceSets"][0]["resources"]
 
         resources_dtos: list[MapsResponseResourcesDto] = [
-            MapsResponseResourcesDto(resource["point"]["coordinates"], resource["address"])
+            MapsResponseResourcesDto(
+                resource["point"]["coordinates"], resource["address"]
+            )
             for resource in resources
         ]
 
