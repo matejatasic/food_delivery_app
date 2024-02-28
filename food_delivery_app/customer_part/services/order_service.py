@@ -5,10 +5,10 @@ from django.http import HttpRequest
 import logging
 from typing import cast
 
-from ..dtos import OrderShowDto, DriverOrderShowDto
+from ..dtos import OrderShowDto, PendingOrderShowDto, DriverOrderShowDto
 from ..exceptions import OrderDoesNotExist
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
-from ..models import Order, OrderItem, RestaurantItem, OrderStatus
+from ..models import Order, OrderItem, RestaurantItem, OrderStatus, Address
 from ..services.cart_service import CartService
 from ..services.restaurant_service import RestaurantService
 
@@ -32,13 +32,13 @@ class OrderService:
             for order in orders
         ]
 
-    def get_ordered(self) -> list[DriverOrderShowDto]:
+    def get_ordered(self) -> list[PendingOrderShowDto]:
         orders = Order.objects.select_related("buyer").filter(
             status=OrderStatus.ORDERED
         )
 
         return [
-            DriverOrderShowDto(
+            PendingOrderShowDto(
                 id=order.id,
                 user=order.buyer.username,
                 restaurant=order.items.select_related("item", "item__restaurant").first().item.restaurant.name,  # type: ignore
@@ -103,20 +103,48 @@ class OrderService:
         self.cart_service.clear_cart(request=request)
 
     def get_by_driver(self, user_id: str) -> list[DriverOrderShowDto]:
-        orders = Order.objects.filter(driver__id=user_id).prefetch_related("items")
+        orders = Order.objects.filter(driver__id=user_id).select_related("buyer").prefetch_related("items", "buyer__addresses")
 
         return [
-            DriverOrderShowDto(
-                id=order.id,
-                user=order.buyer.username,
-                restaurant=order.items.select_related("item", "item__restaurant").first().item.restaurant.name,  # type: ignore
-                date_ordered=order.created_at,
-                order_items=order.items.select_related("item"),
-                status=order.status,
-                address=order.buyer.addresses.first().raw,  # type: ignore
-            )
+            self.get_driver_dto(order)
             for order in orders
         ]
+
+    def get_driver_dto(self, order: Order) -> DriverOrderShowDto:
+        address: Address = cast(Address, order.buyer.addresses.first())
+        items_query = order.items.select_related("item", "item__restaurant").all()
+        items = order.items.select_related("item", "item__restaurant", "item__restaurant__address").all()
+        restaurant_names = []
+        restaurant_addresses = []
+        restaurant_coordinates = []
+
+        for order_item in items:
+            restaurant = order_item.item.restaurant
+            address = cast(Address, restaurant.address)
+
+            restaurant_names.append(restaurant.name)
+            restaurant_addresses.append(address.raw)
+            restaurant_coordinates.append((address.latitude, address.longitude))
+
+        restaurant_names = list(set(restaurant_names))
+        restaurant_addresses = list(set(restaurant_addresses))
+        restaurant_coordinates = list(set(restaurant_coordinates))
+        address = cast(Address, order.buyer.addresses.first())
+
+        return DriverOrderShowDto(
+            id=order.id,
+            user=order.buyer.username,
+            restaurant_names=restaurant_names,
+            restaurant_addresses=restaurant_addresses,
+            restaurant_coordinates=restaurant_coordinates,
+            customer_coordinates=(address.latitude, address.longitude),
+            date_ordered=order.created_at,
+            order_items=items_query,
+            status=order.status,
+            address=address.raw,
+            latitude=address.latitude,
+            longitude=address.longitude
+        )
 
     def assign_driver(self, order_id: str | None, user_id: int) -> None:
         if order_id == None:

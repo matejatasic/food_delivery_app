@@ -211,7 +211,7 @@ class OrderShowDto:
         )
 
 
-class DriverOrderShowDto(OrderShowDto):
+class PendingOrderShowDto(OrderShowDto):
     id: int
     user: str
     restaurant: str
@@ -231,4 +231,43 @@ class DriverOrderShowDto(OrderShowDto):
         self.user = user
         self.restaurant = restaurant
         self.address = address
+        super().__init__(date_ordered, order_items, status)
+
+
+class DriverOrderShowDto(OrderShowDto):
+    id: int
+    user: str
+    restaurant_names: list[str]
+    restaurant_addresses: list[str]
+    restaurant_coordinates: list[tuple[float, float]]
+    customer_coordinates: tuple[float, float]
+    address: str
+    latitude: float
+    longitude: float
+
+    def __init__(
+        self,
+        id: int,
+        user: str,
+        restaurant_names: list[str],
+        restaurant_addresses: list[str],
+        restaurant_coordinates: list[tuple[float, float]],
+        customer_coordinates: tuple[float, float],
+        address: str,
+        date_ordered: datetime,
+        order_items: QuerySet[OrderItem],
+        status: str,
+        latitude: float,
+        longitude: float
+    ) -> None:
+        self.id = id
+        self.user = user
+        self.restaurant_names = restaurant_names
+        self.restaurant_addresses = restaurant_addresses
+        self.restaurant_coordinates = restaurant_coordinates
+        self.customer_coordinates = customer_coordinates
+        self.address = address
+        self.latitude= latitude
+        self.longitude = longitude
+
         super().__init__(date_ordered, order_items, status)

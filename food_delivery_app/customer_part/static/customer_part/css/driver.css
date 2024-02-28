@@ -40,4 +40,13 @@ td {
     width: 80%;
 }
 
+#map {
+    height: 50vh;
+}
 
+.table-responsive td,
+.table-responsive th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
