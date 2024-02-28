@@ -103,17 +103,20 @@ class OrderService:
         self.cart_service.clear_cart(request=request)
 
     def get_by_driver(self, user_id: str) -> list[DriverOrderShowDto]:
-        orders = Order.objects.filter(driver__id=user_id).select_related("buyer").prefetch_related("items", "buyer__addresses")
+        orders = (
+            Order.objects.filter(driver__id=user_id)
+            .select_related("buyer")
+            .prefetch_related("items", "buyer__addresses")
+        )
 
-        return [
-            self.get_driver_dto(order)
-            for order in orders
-        ]
+        return [self.get_driver_dto(order) for order in orders]
 
     def get_driver_dto(self, order: Order) -> DriverOrderShowDto:
         address: Address = cast(Address, order.buyer.addresses.first())
         items_query = order.items.select_related("item", "item__restaurant").all()
-        items = order.items.select_related("item", "item__restaurant", "item__restaurant__address").all()
+        items = order.items.select_related(
+            "item", "item__restaurant", "item__restaurant__address"
+        ).all()
         restaurant_names = []
         restaurant_addresses = []
         restaurant_coordinates = []
@@ -143,7 +146,7 @@ class OrderService:
             status=order.status,
             address=address.raw,
             latitude=address.latitude,
-            longitude=address.longitude
+            longitude=address.longitude,
         )
 
     def assign_driver(self, order_id: str | None, user_id: int) -> None:

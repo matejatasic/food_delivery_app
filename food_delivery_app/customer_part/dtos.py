@@ -258,7 +258,7 @@ class DriverOrderShowDto(OrderShowDto):
         order_items: QuerySet[OrderItem],
         status: str,
         latitude: float,
-        longitude: float
+        longitude: float,
     ) -> None:
         self.id = id
         self.user = user
@@ -267,7 +267,7 @@ class DriverOrderShowDto(OrderShowDto):
         self.restaurant_coordinates = restaurant_coordinates
         self.customer_coordinates = customer_coordinates
         self.address = address
-        self.latitude= latitude
+        self.latitude = latitude
         self.longitude = longitude
 
         super().__init__(date_ordered, order_items, status)

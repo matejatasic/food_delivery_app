@@ -1,4 +1,5 @@
 {% load static %}
+{% load tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +55,10 @@
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="{% url 'cart' %}">Cart</a></li>
                                             <li><a class="dropdown-item" href="{% url 'orders' %}">Orders</a></li>
+                                            {% if request.user|has_group:"Driver" %}
+                                                <li><a class="dropdown-item" href="{% url 'pending_orders' %}">Pending Orders</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'driver' %}">Your Deliveries</a></li>
+                                            {% endif %}
                                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                                         </ul>
                                     </div>
