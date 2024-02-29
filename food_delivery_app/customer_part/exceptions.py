@@ -47,3 +47,6 @@ class StripeTaxRateDoesNotExist(Exception):
 
 class OrderDoesNotExist(ObjectDoesNotExist):
     """The Order does not exist"""
+
+class OrderStatusDoesNotExist(ObjectDoesNotExist):
+    """The Order status does not exist"""

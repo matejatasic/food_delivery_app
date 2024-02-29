@@ -73,6 +73,13 @@
                                             >
                                                 Map
                                             </button>
+                                            <form action="{% url 'update_order' %}" method="POST" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="id" value="{{ order.id }}">
+                                                <input type="hidden" name="status" value="{{ done_status }}">
+
+                                                <button type="submit" class="btn btn-success">Finish Delivery</button>
+                                            </form>
                                         </td>
                                     </tr>
                                     {{ order.restaurant_coordinates|restaurant_coordinates_json_script:order.id }}
