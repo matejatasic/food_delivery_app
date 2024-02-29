@@ -1,0 +1,101 @@
+{% extends "customer_part/layout.html" %}
+{% load static %}
+{% load tags %}
+
+{% block style %}
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link href="{% static 'customer_part/css/restaurant.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+    <div id="restaurant-header">
+        <div id="restaurant-header-text" class="row p-3">
+            <div class="col-12">
+                <h1>{{ restaurant.name }}</h1>
+            </div>
+            <div class="col-12">
+                <p>{{ restaurant.description }}</p>
+            </div>
+        </div>
+    </div>
+    <div id="restaurant-main" class="mt-3">
+        <div class="row">
+            <div id="categories" class="col-12 col-sm-3 ps-5">
+                <h2>Categories</h2>
+                <ul class="list-group">
+                    {% if restaurant.food_item_categories %}
+                        {% for category in restaurant.food_item_categories %}
+                            <li class="list-group-item clickable category-button" data-name="{{ category.name }}">{{ category.name }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <p>No categories to show</p>
+                    {% endif %}
+                  </ul>
+            </div>
+            <div class="col-12 col-sm-8">
+                {% if user.is_authenticated %}
+                    {% csrf_token %}
+                {% endif %}
+                <div class="row justify-content-center my-3">
+                    <div class="col-10 mb-3">
+                        <h2>All</h2>
+                    </div>
+                    <div class="col-10">
+                        <div id="items" class="row">
+                            {% if restaurant.food_items %}
+                                {% for item in restaurant.food_items %}
+                                    <div class="col-12">
+                                        <div class="row restaurant-item border">
+                                            <div class="col-8 col-sm-8 p-2">
+                                                <p class="restaurant-item-header">{{ item.name }}</p>
+                                                <p>{{ item.description }}</p>
+
+                                                {% if user.is_authenticated %}
+                                                    <button class="btn btn-link decrement-button" data-id="{{ item.id }}"><i class="bi bi-dash-square-fill"></i></button>
+                                                    <button class="btn btn-link increment-button" data-id="{{ item.id }}"><i class="bi bi-plus-square-fill"></i></button>
+                                                    {% if item.id|stringformat:"i" in cart.items %}
+                                                        <span class="item-quantity" data-id="{{ item.id }}">{{ cart.items|get_item_quantity:item.id }}</span>
+                                                    {% else %}
+                                                        <span class="item-quantity" data-id="{{ item.id }}"></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-4 col-sm-4">
+                                                <img src="{% get_media_prefix %}{{ item.image }}" alt="meal_image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-11">
+                                    <p>No items to show</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ cart|json_script:"cart" }}
+    <script nonce="{{request.csp_nonce}}">
+        document.addEventListener("DOMContentLoaded", () => {
+            const headerImageUrl = "{% get_media_prefix %}{{ restaurant.image }}";
+            const header = document.getElementById("restaurant-header");
+            header.style.backgroundImage = `url('${headerImageUrl}')`;
+        });
+
+        const mediaPrefix = "{% get_media_prefix %}";
+        const getRestaurantItemsByCategoryUrl = "{% url 'get_restaurant_items_by_category' %}";
+        const changeCartUrl = "{% url 'change_cart' %}";
+        const isUserAuthenticated = "{{ user.is_authenticated }}"
+        const getCartUrl = "{% url 'get_cart' %}"
+    </script>
+    <script type="module" src="{% static 'customer_part/js/filter_restaurant_items.js' %}"></script>
+    <script type="module" src="{% static 'customer_part/js/restaurant.js' %}"></script>
+{% endblock %}
