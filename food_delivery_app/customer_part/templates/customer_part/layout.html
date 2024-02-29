@@ -57,7 +57,8 @@
                                             <li><a class="dropdown-item" href="{% url 'orders' %}">Orders</a></li>
                                             {% if request.user|has_group:"Driver" %}
                                                 <li><a class="dropdown-item" href="{% url 'pending_orders' %}">Pending Orders</a></li>
-                                                <li><a class="dropdown-item" href="{% url 'driver' %}">Your Deliveries</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'current_deliveries' %}">Current Deliveries</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'finished_deliveries' %}">Finished Deliveries</a></li>
                                             {% endif %}
                                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                                         </ul>

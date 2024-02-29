@@ -22,8 +22,9 @@ from .views import (
     checkout_return,
     create_order,
     pending_orders,
-    driver,
+    current_deliveries,
     update_order,
+    finished_deliveries,
 )
 
 
@@ -43,7 +44,8 @@ urlpatterns = [
         create_checkout_session,
         name="create_checkout_session",
     ),
-    path("driver", driver, name="driver"),
+    path("current_deliveries", current_deliveries, name="current_deliveries"),
+    path("finished_deliveries", finished_deliveries, name="finished_deliveries"),
     path("pending_orders", pending_orders, name="pending_orders"),
     path("get_cart", get_cart, name="get_cart"),
     path(
@@ -68,7 +70,7 @@ urlpatterns = [
         stripe_session_status,
         name="stripe_session_status",
     ),
-    path("update_order", update_order, name="update_order")
+    path("update_order", update_order, name="update_order"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
