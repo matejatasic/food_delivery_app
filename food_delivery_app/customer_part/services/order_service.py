@@ -6,7 +6,7 @@ import logging
 from typing import cast
 
 from ..dtos import OrderShowDto, PendingOrderShowDto, DriverOrderShowDto
-from ..exceptions import OrderDoesNotExist
+from ..exceptions import OrderDoesNotExist, OrderStatusDoesNotExist
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
 from ..models import Order, OrderItem, RestaurantItem, OrderStatus, Address
 from ..services.cart_service import CartService
@@ -104,7 +104,7 @@ class OrderService:
 
     def get_by_driver(self, user_id: str) -> list[DriverOrderShowDto]:
         orders = (
-            Order.objects.filter(driver__id=user_id)
+            Order.objects.filter(driver__id=user_id, status=OrderStatus.BEING_TRANSPORTED)
             .select_related("buyer")
             .prefetch_related("items", "buyer__addresses")
         )
@@ -148,6 +148,21 @@ class OrderService:
             latitude=address.latitude,
             longitude=address.longitude,
         )
+
+    def update(self, id: str | None, status: str | None, user_id: int):
+        if id == None:
+            raise BadRequest("Order id is missing")
+
+        if not self.order_exists(id=cast(str, id)):
+            raise OrderDoesNotExist(f"The order with the id {id} does not exist")
+
+        if status not in OrderStatus:
+            raise OrderStatusDoesNotExist(f"The order status {status} does not exist")
+
+        order = Order.objects.get(id=cast(str, id))
+        order.driver = self.get_user(id=user_id)
+        order.status = cast(str, status)
+        order.save()
 
     def assign_driver(self, order_id: str | None, user_id: int) -> None:
         if order_id == None:

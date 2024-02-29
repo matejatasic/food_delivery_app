@@ -23,14 +23,13 @@ from .views import (
     create_order,
     pending_orders,
     driver,
-    assign_order,
+    update_order,
 )
 
 
 urlpatterns = [
     path("", index, name="home"),
     path("address", address, name="address"),
-    path("assign_order", assign_order, name="assign_order"),
     path("cart", cart, name="cart"),
     path("change_cart", change_cart, name="change_cart"),
     path(
@@ -69,6 +68,7 @@ urlpatterns = [
         stripe_session_status,
         name="stripe_session_status",
     ),
+    path("update_order", update_order, name="update_order")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

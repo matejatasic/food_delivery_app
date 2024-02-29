@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 from django.template import Library
-from django.utils.html import format_html
+from django.utils.html import format_html, escape
 from json import dumps
 
 register = Library()
@@ -21,7 +21,7 @@ def restaurant_coordinates_json_script(
     template = '<script id="{}" type="application/json">{}</script>'
 
     return format_html(
-        template, f"restaurant_coordinates_{order_id}", dumps(coordinates)
+        template, f"restaurant_coordinates_{order_id}", dumps(escape(coordinates))
     )
 
 

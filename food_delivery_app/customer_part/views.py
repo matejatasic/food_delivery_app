@@ -30,6 +30,7 @@ from .exceptions import (
     StripeTaxRateDoesNotExist,
     OrderDoesNotExist,
 )
+from .models import OrderStatus
 from .services.address_service import AddressService
 from .services.cart_service import CartService
 from .services.login_service import LoginService
@@ -192,7 +193,7 @@ def pending_orders(request: HttpRequest) -> HttpResponse:
     orders = order_service.get_ordered()
 
     return render(
-        request, "customer_part/drivers/pending_orders.html", {"orders": orders}
+        request, "customer_part/drivers/pending_orders.html", {"orders": orders, "pending_status": OrderStatus.BEING_TRANSPORTED}
     )
 
 
@@ -200,10 +201,9 @@ def driver(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
     orders = order_service.get_by_driver(cast(str, request.user.id))
 
-    return render(request, "customer_part/drivers/driver.html", {"orders": orders})
+    return render(request, "customer_part/drivers/driver.html", {"orders": orders, "done_status": OrderStatus.DELIVERED})
 
-
-def assign_order(request: HttpRequest) -> HttpResponse:
+def update_order(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
         return JsonResponse(
             {"error": "You are not authorized to perform this action"},
@@ -216,8 +216,8 @@ def assign_order(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
 
     try:
-        order_service.assign_driver(
-            order_id=request.POST.get("order_id"), user_id=cast(int, request.user.id)
+        order_service.update(
+            id=request.POST.get("id"), status=request.POST.get("status"), user_id=cast(int, request.user.id)
         )
 
         return redirect(reverse("driver"))
