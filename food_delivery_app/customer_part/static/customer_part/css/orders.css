@@ -1,0 +1,17 @@
+#orders-heading {
+    height: 30vh;
+    width: 100vw;
+    background-image: url('../images/orders-hero.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#main-part {
+    min-height: 50vh;
+}
+
+#no-orders {
+    font-size: 1.8rem;
+}
