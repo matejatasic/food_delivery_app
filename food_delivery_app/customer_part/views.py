@@ -193,15 +193,37 @@ def pending_orders(request: HttpRequest) -> HttpResponse:
     orders = order_service.get_ordered()
 
     return render(
-        request, "customer_part/drivers/pending_orders.html", {"orders": orders, "pending_status": OrderStatus.BEING_TRANSPORTED}
+        request,
+        "customer_part/drivers/pending_orders.html",
+        {"orders": orders, "pending_status": OrderStatus.BEING_TRANSPORTED},
     )
 
 
-def driver(request: HttpRequest) -> HttpResponse:
+def current_deliveries(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
-    orders = order_service.get_by_driver(cast(str, request.user.id))
+    orders = order_service.get_by_driver(
+        user_id=cast(str, request.user.id), status=OrderStatus.BEING_TRANSPORTED
+    )
 
-    return render(request, "customer_part/drivers/driver.html", {"orders": orders, "done_status": OrderStatus.DELIVERED})
+    return render(
+        request,
+        "customer_part/drivers/current_deliveries.html",
+        {"orders": orders, "done_status": OrderStatus.DELIVERED},
+    )
+
+
+def finished_deliveries(request: HttpRequest) -> HttpResponse:
+    order_service = OrderService()
+    orders = order_service.get_by_driver(
+        user_id=cast(str, request.user.id), status=OrderStatus.DELIVERED
+    )
+
+    return render(
+        request,
+        "customer_part/drivers/finished_deliveries.html",
+        {"orders": orders, "done_status": OrderStatus.DELIVERED},
+    )
+
 
 def update_order(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
@@ -217,7 +239,9 @@ def update_order(request: HttpRequest) -> HttpResponse:
 
     try:
         order_service.update(
-            id=request.POST.get("id"), status=request.POST.get("status"), user_id=cast(int, request.user.id)
+            id=request.POST.get("id"),
+            status=request.POST.get("status"),
+            user_id=cast(int, request.user.id),
         )
 
         return redirect(reverse("driver"))

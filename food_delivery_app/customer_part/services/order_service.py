@@ -102,9 +102,14 @@ class OrderService:
     def clear_cart(self, request: HttpRequest) -> None:
         self.cart_service.clear_cart(request=request)
 
-    def get_by_driver(self, user_id: str) -> list[DriverOrderShowDto]:
+    def get_by_driver(
+        self, user_id: str, status: str | None
+    ) -> list[DriverOrderShowDto]:
+        if status not in OrderStatus:
+            raise OrderStatusDoesNotExist(f"The order status {status} does not exist")
+
         orders = (
-            Order.objects.filter(driver__id=user_id, status=OrderStatus.BEING_TRANSPORTED)
+            Order.objects.filter(driver__id=user_id, status=cast(str, status))
             .select_related("buyer")
             .prefetch_related("items", "buyer__addresses")
         )
