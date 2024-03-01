@@ -233,7 +233,7 @@ def update_order(request: HttpRequest) -> HttpResponse:
             user_id=cast(int, request.user.id),
         )
 
-        return redirect(reverse("driver"))
+        return redirect(reverse("current_deliveries"))
     except BadRequest as e:
         return render(
             request,
