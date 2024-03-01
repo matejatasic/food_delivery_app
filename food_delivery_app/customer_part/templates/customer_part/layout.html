@@ -1,0 +1,116 @@
+{% load static %}
+{% load tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery App</title>
+
+    <!-- Global css -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {% block style %}{% endblock  %}
+</head>
+<body>
+    <!-- nav -->
+    <nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Food Delivery App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'restaurants' %}">Restaurants</a>
+                </li>
+            </ul>
+            <div>
+                {% if user.is_authenticated %}
+                    <div class="row me-3">
+                        <div class="col-0 col-sm-1 d-flex justify-content-end align-items-center pe-sm-3">
+
+                        </div>
+                        <div class="col-12 d-flex justify-content-center d-sm-block col-sm-11">
+                            <div class="row">
+                                <div class="col-4 col-sm-4 d-flex justify-content-end align-items-center"><i class="bi bi-cart d-inline-block me-1"></i><span id="cart-quantity">{% if request.session.cart.total_number_of_items %}{{ request.session.cart.total_number_of_items }}{% else %}0{% endif %}</span></div>
+                                <div class="col-8 col-sm-8">
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle d-flex flex-row justify-content-start justify-content-sm-start" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {% if user.profile.image %}
+                                                <img src="{% get_media_prefix %}{{ user.profile.image }}" class="rounded-circle" alt="user_image">
+                                            {% else %}
+                                                <img src="{% static 'customer_part/images/avatar.png' %}" class="rounded-circle" alt="user_image">
+                                            {% endif %}
+
+                                            <p class="ms-2 mt-2">{{ user.username }}</p>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="{% url 'cart' %}">Cart</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'orders' %}">Orders</a></li>
+                                            {% if request.user|has_group:"Driver" %}
+                                                <li><a class="dropdown-item" href="{% url 'pending_orders' %}">Pending Orders</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'current_deliveries' %}">Current Deliveries</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'finished_deliveries' %}">Finished Deliveries</a></li>
+                                            {% endif %}
+                                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="d-flex flex-column flex-sm-row">
+                        <p class="me-3 mb-sm-0"><a class="nav-link" href="{% url 'login' %}">Login</a></p>
+                        <p class="mb-sm-0"><a class="nav-link" href="{% url 'register' %}">Register</a></p>
+                    </div>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </nav>
+    <!-- !nav -->
+
+    {% block main %}{% endblock  %}
+
+    <!-- footer -->
+    <footer class="bg-info p-3 text-white d-flex d-sm-block flex-column flex-sm-row justify-content-center align-items-center">
+        <p id="footer-logo">Food Delivery App</p>
+        <div class="row">
+            <div class="col-12 col-sm-4 text-center my-3">
+                <p class="footer-header">Cooperation</p>
+                <p><a href="#">Careers</a></p>
+                <p><a href="#">For Partners</a></p>
+                <p><a href="#">For Couriers</a></p>
+            </div>
+            <div class="col-12 col-sm-4 text-center my-3">
+                <p class="footer-header">Company</p>
+                <p><a href="#">About us</a></p>
+                <p><a href="#">Contact</a></p>
+                <p><a href="#">Security</a></p>
+                <p><a href="#">Blog</a></p>
+            </div>
+            <div class="col-12 col-sm-4 text-center my-3">
+                <p class="footer-header">Social</p>
+                <p><a href="#">Facebook</a></p>
+                <p><a href="#">Twitter</a></p>
+                <p><a href="#">Instagram</a></p>
+            </div>
+        </div>
+    </footer>
+    <!-- !footer -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    {% block js %}{% endblock %}
+</body>
+</html>
