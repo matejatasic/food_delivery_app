@@ -29,11 +29,11 @@ class AddressOptionDto:
 
 
 class MapsResponseResourcesDto:
-    __bbox: list[int]
+    __point: list[int]
     __address: "MapsResponseAddressDto"
 
-    def __init__(self, bbox: list[int], address_information: dict) -> None:
-        self.__bbox = bbox
+    def __init__(self, point: list[int], address_information: dict) -> None:
+        self.__point = point
         self.__address = MapsResponseAddressDto(
             formatted_address=address_information["formattedAddress"],
             address_line=address_information.get("addressLine", None),
@@ -46,11 +46,11 @@ class MapsResponseResourcesDto:
 
     @property
     def latitude(self):
-        return self.__bbox[0]
+        return self.__point[0]
 
     @property
     def longitude(self):
-        return self.__bbox[1]
+        return self.__point[1]
 
     @property
     def formatted_address(self):

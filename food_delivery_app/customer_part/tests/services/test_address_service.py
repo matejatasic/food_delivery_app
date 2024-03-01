@@ -6,7 +6,7 @@ from ...dtos import MapsResponseResourcesDto
 from ...exceptions import Unauthorized, InternalServerError
 from ..factories import (
     MapsResponseAddressFactory,
-    MapsResponseBboxFactory,
+    MapsResponsePointFactory,
     AddressFactory,
 )
 from ...services.address_service import AddressService
@@ -17,14 +17,16 @@ class AddressServiceTests(TestCase):
     address_service = AddressService()
     query = "Some Address"
 
+    @patch.object(AddressService, "log_errors")
     @patch.object(MapsService, "get_location_by_query")
     def test_get_address_options_returns_list_of_options_successfully(
-        self, get_location_by_query_mock
+        self, get_location_by_query_mock, log_errors_mock
     ) -> None:
         """Asserts that the method for fetching address options successfully returns options"""
 
+        log_errors_mock.return_value = None
         maps_response_resources_dto = MapsResponseResourcesDto(
-            bbox=MapsResponseBboxFactory()["bbox"],
+            point=MapsResponsePointFactory()["point"]["coordinates"],
             address_information=MapsResponseAddressFactory(),
         )
 
