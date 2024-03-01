@@ -2,9 +2,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
+from .api import (
+    address,
+    like,
+    get_cart,
+    get_restaurants_by_category,
+    get_restaurant_items_by_category,
+    change_cart,
+    create_checkout_session,
+    create_order,
+    stripe_session_status,
+)
 from .views import (
     index,
-    address,
     login,
     register,
     logout_user,
@@ -12,15 +22,7 @@ from .views import (
     restaurants,
     cart,
     orders,
-    like,
-    get_cart,
-    get_restaurants_by_category,
-    get_restaurant_items_by_category,
-    change_cart,
-    create_checkout_session,
-    stripe_session_status,
     checkout_return,
-    create_order,
     pending_orders,
     current_deliveries,
     update_order,
