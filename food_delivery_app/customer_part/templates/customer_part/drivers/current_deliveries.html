@@ -111,37 +111,5 @@
 
 {% block js %}
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
-    <script nonce="{{request.csp_nonce}}">
-        const mapButtons = document.querySelectorAll(".map-button");
-        var map = L.map('map').setView([51.505, -0.09], 13);
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        mapButtons.forEach(button => {
-            button.addEventListener("click", (e) => {
-                const orderId = e.target.getAttribute("data-id");
-                const latitude = parseFloat(e.target.getAttribute("data-latitude"));
-                const longitude = parseFloat(e.target.getAttribute("data-longitude"));
-                const customer_coordinates = [latitude, longitude];
-                const restaurant_coordinates_json = document.getElementById(`restaurant_coordinates_${orderId}`).textContent;
-                const restaurant_coordinates = JSON.parse(restaurant_coordinates_json);
-                console.log(restaurant_coordinates, customer_coordinates)
-                L.marker(customer_coordinates).addTo(map);
-
-                restaurant_coordinates.forEach(coordinates => {
-                    let polyline = L.polyline([coordinates, customer_coordinates]).addTo(map);
-                    L.marker(coordinates).addTo(map);
-                });
-            })
-        });
-
-        $('#map-modal').on('shown.bs.modal', function(){
-            setTimeout(function() {
-                map.invalidateSize();
-            }, 10);
-        });
-    </script>
+    <script type="module" src="{% static 'customer_part/js/driver.js' %}"></script>
 {% endblock %}
