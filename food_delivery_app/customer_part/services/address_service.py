@@ -34,6 +34,7 @@ class AddressService:
                     locality=address.locality,
                     postal_code=address.postal_code,
                 )
+
                 address_dto = AddressOptionDto(address_instance)
 
                 addresses.append(address_dto.get_dict())

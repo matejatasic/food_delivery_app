@@ -76,10 +76,13 @@ def login(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
             GROUP_ROUTE_MAPPER = {
                 "Admin": reverse("admin:index"),
                 "Customer": reverse("home"),
-                "Driver": reverse("driver"),
+                "Driver": reverse("current_deliveries"),
             }
 
-            route = GROUP_ROUTE_MAPPER.get(request.user.groups.all()[0].name, reverse("home"))  # type: ignore
+            try:
+                route = GROUP_ROUTE_MAPPER.get(request.user.groups.all()[0].name, reverse("home"))  # type: ignore
+            except:
+                route = reverse("home")
 
             return redirect(route)
         except ValidationError:

@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
-from factory import Factory, SubFactory, LazyAttribute, DictFactory, Trait  # type: ignore
+from factory import Factory, SubFactory, LazyAttribute, DictFactory, Trait, RelatedFactoryList  # type: ignore
 from factory.django import DjangoModelFactory  # type: ignore
 from json import dumps
 
@@ -16,14 +16,30 @@ from ..models import (
 )
 
 
+class GroupFactory(DjangoModelFactory):
+    class Meta:
+        model = Group
+        django_get_or_create = ["name"]
+
+    name = "Customer"
+
+
+# popravi testovi
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
+
+    class Params:
+        group_name = "Customer"
+        # is_driver = Trait(
+        #     group_name="Driver"
+        # )
 
     id = LazyAttribute(lambda _: faker.random_number())
     username = LazyAttribute(lambda _: faker.profile(fields=["username"])["username"])
     password = LazyAttribute(lambda _: faker.pystr(max_chars=10))
     email = LazyAttribute(lambda _: faker.email())
+    groups = RelatedFactoryList(GroupFactory, name=Params.group_name, size=1)
 
 
 class AddressFactory(Factory):
@@ -86,8 +102,10 @@ class RestaurantItemFactory(DjangoModelFactory):
     category = SubFactory(RestaurantItemCategoryFactory)
 
 
-class MapsResponseBboxFactory(DictFactory):
-    bbox = LazyAttribute(lambda _: [float(faker.latitude()), float(faker.longitude())])
+class MapsResponsePointFactory(DictFactory):
+    point = LazyAttribute(
+        lambda _: {"coordinates": [float(faker.latitude()), float(faker.longitude())]}
+    )
 
 
 class MapsResponseAddressFactory(DictFactory):
@@ -107,7 +125,7 @@ class MapsResponseFactory(DictFactory):
                 {
                     "resources": [
                         {
-                            "bbox": MapsResponseBboxFactory()["bbox"],
+                            "point": MapsResponsePointFactory()["point"],
                             "address": MapsResponseAddressFactory(),
                         }
                     ]
