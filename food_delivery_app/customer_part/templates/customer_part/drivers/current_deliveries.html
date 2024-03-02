@@ -1,0 +1,115 @@
+{% extends "customer_part/layout.html" %}
+{% load static %}
+{% load tags %}
+
+{% block style %}
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link href="{% static 'customer_part/css/driver.css' %}" rel="stylesheet">
+
+    <!-- Leaflet JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock  %}
+
+{% block main %}
+    <div id="driver-header">
+        <div id="pending-orders-header-text" class="row p-3">
+            <div class="col-12">
+                <h1>Your Orders</h1>
+            </div>
+        </div>
+    </div>
+    <div id="driver-main">
+        <div class="col-11 mx-auto my-3">
+            <div class="table-responsive">
+                {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Restaurants</th>
+                                    <th>Restaurant Addresses</th>
+                                    <th>Items</th>
+                                    <th>Address</th>
+                                    <th>Date Ordered</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.user }}</td>
+                                        <td>
+                                            {% for restaurant_name in order.restaurant_names %}
+                                                <span>{{ restaurant_name }}{% if not forloop.last %}, {% endif %}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for restaurant_address in order.restaurant_addresses %}
+                                                <span>{{ restaurant_address }}{% if not forloop.last %}<br>{% endif %}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for item in order.order_items %}
+                                                <span>{{ item.name }} x {{ item.quantity }}{% if not forloop.last %}, {% endif %}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{ order.address }}</td>
+                                        <td>{{ order.date_ordered }}</td>
+                                        <td><span class="badge bg-primary">{{ order.status }}</span></td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-primary map-button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#map-modal"
+                                                data-latitude="{{ order.customer_coordinates.0 }}"
+                                                data-longitude="{{ order.customer_coordinates.1 }}"
+                                                data-id="{{ order.id }}"
+                                            >
+                                                Map
+                                            </button>
+                                            <form action="{% url 'update_order' %}" method="POST" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="id" value="{{ order.id }}">
+                                                <input type="hidden" name="status" value="{{ done_status }}">
+
+                                                <button type="submit" class="btn btn-success">Finish Delivery</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {{ order.restaurant_coordinates|restaurant_coordinates_json_script:order.id }}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p id="no-orders" class="text-center mt-2">No orders to show</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div id="map-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="map-modal">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div id="map"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+{% endblock %}
+
+{% block js %}
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script type="module" src="{% static 'customer_part/js/driver.js' %}"></script>
+{% endblock %}
