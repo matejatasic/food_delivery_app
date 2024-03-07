@@ -41,6 +41,7 @@ class Profile(BaseModel):
     image = ImageField(
         default="avatar.jpg", upload_to="profile_pictures", blank=True, null=True
     )
+    address = ForeignKey("Address", on_delete=SET_NULL, null=True, related_name="profiles")
 
     def __str__(self):
         return f"{self.user.username} profile"
@@ -56,7 +57,6 @@ class Address(BaseModel):
     country = CharField(max_length=60)
     locality = CharField(max_length=165)
     postal_code = IntegerField(null=True, blank=True)
-    user = ForeignKey(User, on_delete=CASCADE, related_name="addresses")
 
     def __str__(self) -> str:
         return self.raw
@@ -72,7 +72,6 @@ class Address(BaseModel):
             "country": self.country,
             "locality": self.locality,
             "postal_code": self.postal_code,
-            "user": self.user,
         }
 
     def get_mock(self) -> Mock:
