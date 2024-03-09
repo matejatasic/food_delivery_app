@@ -1,0 +1,17 @@
+#return-background {
+    height: 100vh;
+    width: 100vw;
+    background-image: url("../images/return.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#message {
+    font-size: 1.4rem;
+}
+
+.hidden {
+    visibility: hidden;
+}
