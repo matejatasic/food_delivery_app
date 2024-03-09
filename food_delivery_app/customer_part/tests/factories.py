@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User, Group
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from unittest.mock import Mock
 
 from factory import Factory, SubFactory, LazyAttribute, DictFactory, Trait, RelatedFactoryList  # type: ignore
 from factory.django import DjangoModelFactory  # type: ignore
@@ -24,16 +26,12 @@ class GroupFactory(DjangoModelFactory):
     name = "Customer"
 
 
-# popravi testovi
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
     class Params:
         group_name = "Customer"
-        # is_driver = Trait(
-        #     group_name="Driver"
-        # )
 
     id = LazyAttribute(lambda _: faker.random_number())
     username = LazyAttribute(lambda _: faker.profile(fields=["username"])["username"])
@@ -55,7 +53,6 @@ class AddressFactory(Factory):
     country = LazyAttribute(lambda _: faker.country())
     locality = LazyAttribute(lambda _: faker.city())
     postal_code = LazyAttribute(lambda _: faker.postcode())
-    user = SubFactory(UserFactory)
 
 
 class RestaurantCategoryFactory(DjangoModelFactory):
@@ -189,4 +186,9 @@ class UserServiceCreateParametersFactory(DictFactory):
     first_name = LazyAttribute(lambda _: faker.first_name())
     last_name = LazyAttribute(lambda _: faker.last_name())
     email = LazyAttribute(lambda _: faker.email())
+
+
+class ProfileServiceCreateParametersFactory(DictFactory):
+    user = LazyAttribute(lambda _: UserFactory())
+    image = LazyAttribute(lambda _: Mock(spec=InMemoryUploadedFile))
     address = LazyAttribute(lambda _: AddressFieldsFactory())

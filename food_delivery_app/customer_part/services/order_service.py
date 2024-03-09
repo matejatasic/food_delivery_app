@@ -117,7 +117,7 @@ class OrderService:
         return [self.get_driver_dto(order) for order in orders]
 
     def get_driver_dto(self, order: Order) -> DriverOrderShowDto:
-        address: Address = cast(Address, order.buyer.addresses.first())
+        address: Address = cast(Address, order.buyer.profile.address)
         items_query = order.items.select_related("item", "item__restaurant").all()
         items = order.items.select_related(
             "item", "item__restaurant", "item__restaurant__address"
@@ -137,7 +137,7 @@ class OrderService:
         restaurant_names = list(set(restaurant_names))
         restaurant_addresses = list(set(restaurant_addresses))
         restaurant_coordinates = list(set(restaurant_coordinates))
-        address = cast(Address, order.buyer.addresses.first())
+        address = cast(Address, order.buyer.profile.address)
 
         return DriverOrderShowDto(
             id=order.id,

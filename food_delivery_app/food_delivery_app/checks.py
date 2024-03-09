@@ -17,7 +17,7 @@ class MyPyErrorLocation:
 
 @register()
 def mypy(app_configs, **kwargs) -> List:
-    print("Performing mypy checks...\n")
+    print("\nPerforming mypy checks...\n")
 
     mypy_args = [str(settings.BASE_DIR)]
     results = api.run(mypy_args)

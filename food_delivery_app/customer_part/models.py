@@ -41,7 +41,9 @@ class Profile(BaseModel):
     image = ImageField(
         default="avatar.jpg", upload_to="profile_pictures", blank=True, null=True
     )
-    address = ForeignKey("Address", on_delete=SET_NULL, null=True, related_name="profiles")
+    address = ForeignKey(
+        "Address", on_delete=SET_NULL, null=True, related_name="profiles"
+    )
 
     def __str__(self):
         return f"{self.user.username} profile"
