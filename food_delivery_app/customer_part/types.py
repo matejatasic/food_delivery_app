@@ -32,3 +32,19 @@ MostOrderedRestaurantItemsDict = TypedDict(
     "MostOrderedRestaurantItemsDict",
     {"image": str, "quantity": int, "restaurant_id": int},
 )
+
+
+AddressDictionary = TypedDict(
+    "AddressDictionary",
+    {
+        "latitude": int,
+        "longitude": int,
+        "raw": str,
+        "address_line": str | None,
+        "district_1": str,
+        "district_2": str,
+        "country": str,
+        "locality": str,
+        "postal_code": str | None,
+    },
+)

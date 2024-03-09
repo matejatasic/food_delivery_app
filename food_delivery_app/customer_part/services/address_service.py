@@ -5,7 +5,7 @@ from ..dtos import AddressOptionDto
 from ..exceptions import Unauthorized, InternalServerError
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
 from ..dtos import MapsResponseResourcesDto
-from ..models import Address, User
+from ..models import Address
 from ..services.maps_service import MapsService
 
 
@@ -71,7 +71,6 @@ class AddressService:
         country: str,
         locality: str,
         postal_code: str | None,
-        user: User,
     ) -> Address:
         address = self.get_model_instance(
             latitude=latitude,
@@ -83,7 +82,6 @@ class AddressService:
             country=country,
             locality=locality,
             postal_code=postal_code,
-            user=user,
         )
         address.full_clean()
         address.save()
@@ -101,7 +99,6 @@ class AddressService:
         country: str,
         locality: str,
         postal_code: str | None,
-        user: User,
     ) -> Address:
         return Address(
             latitude=latitude,
@@ -113,5 +110,4 @@ class AddressService:
             country=country,
             locality=locality,
             postal_code=postal_code,
-            user=user,
         )
