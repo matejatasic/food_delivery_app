@@ -11,6 +11,9 @@ food_delivery_app/media/profile_pictures/*
 
 /.vagrant
 
+# mkcert
+mkcert-v1.4.4-linux-amd64
+
 # Media folder
 food_delivery_app/media
 

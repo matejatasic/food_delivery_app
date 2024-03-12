@@ -165,6 +165,9 @@ class Order(BaseModel):
         User, on_delete=SET_NULL, null=True, default=None, related_name="driver"
     )
 
+    def __str__(self):
+        return f"Order by {self.buyer.username}"
+
 
 class OrderItem(BaseModel):
     order = ForeignKey(Order, on_delete=CASCADE, related_name="items")
@@ -173,3 +176,6 @@ class OrderItem(BaseModel):
 
     class Meta:
         unique_together = ("order", "item")
+
+    def __str__(self) -> str:
+        return f"{self.item.name} x {self.quantity}"

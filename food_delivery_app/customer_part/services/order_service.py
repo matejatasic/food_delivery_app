@@ -45,7 +45,7 @@ class OrderService:
                 date_ordered=order.created_at,
                 order_items=order.items.select_related("item"),
                 status=order.status,
-                address=order.buyer.addresses.first().raw,  # type: ignore
+                address=order.buyer.profile.address.raw,  # type: ignore
             )
             for order in orders
         ]
@@ -111,7 +111,7 @@ class OrderService:
         orders = (
             Order.objects.filter(driver__id=user_id, status=cast(str, status))
             .select_related("buyer")
-            .prefetch_related("items", "buyer__addresses")
+            .prefetch_related("items")
         )
 
         return [self.get_driver_dto(order) for order in orders]

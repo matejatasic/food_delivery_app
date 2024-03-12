@@ -41,4 +41,7 @@ pip3 install --upgrade pip
 pip3 install -r /vagrant/food_delivery_app/requirements.txt
 
 # run migrations
-python3 manage.py migrate
+make migrate
+
+# seed the data
+make seed
