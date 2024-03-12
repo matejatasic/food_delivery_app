@@ -56,7 +56,7 @@ function getRestaurantRow(restaurant, restaurantsLikedByUser) {
                     </span><span>${restaurant.number_of_likes}</span>
                 </div>
                 <div class="col-4 col-sm-4">
-                    <img src="${mediaPrefix}${restaurant.image} " alt="restaurant_image">
+                    <img src="${mediaPrefix}restaurant_pictures/${restaurant.image} " alt="restaurant_image">
                 </div>
             </div>
         </div>

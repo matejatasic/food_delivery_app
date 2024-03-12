@@ -63,7 +63,7 @@
                                                 {% endif %}
                                             </div>
                                             <div class="col-4 col-sm-4">
-                                                <img src="{% get_media_prefix %}{{ item.image }}" alt="meal_image">
+                                                <img src="{% get_media_prefix %}restaurant_items/{{ item.image }}" alt="meal_image">
                                             </div>
                                         </div>
                                     </div>
@@ -85,7 +85,7 @@
     {{ cart|json_script:"cart" }}
     <script nonce="{{request.csp_nonce}}">
         document.addEventListener("DOMContentLoaded", () => {
-            const headerImageUrl = "{% get_media_prefix %}{{ restaurant.image }}";
+            const headerImageUrl = "{% get_media_prefix %}restaurant_pictures/{{ restaurant.image }}";
             const header = document.getElementById("restaurant-header");
             header.style.backgroundImage = `url('${headerImageUrl}')`;
         });

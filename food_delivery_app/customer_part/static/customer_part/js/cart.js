@@ -60,7 +60,7 @@ function updateItemsListInHtml(itemId, cart) {
                 <button class="btn btn-link decrement-button" data-id="${item.id}"><i class="bi bi-file-minus-fill"></i></button>
             </div>
             <div class="col-4 col-sm-4">
-                <img src="${mediaPrefix}${item.image}" alt="meal_image">
+                <img src="${mediaPrefix}restaurant_items/${item.image}" alt="meal_image">
             </div>
         </div>
     `);
