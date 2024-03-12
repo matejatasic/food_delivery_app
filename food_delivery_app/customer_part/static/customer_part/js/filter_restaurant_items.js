@@ -53,7 +53,7 @@ function getItemRow(item) {
                     ${changeCartButtons}
                 </div>
                 <div class="col-4 col-sm-4">
-                    <img src="${mediaPrefix}${item.image}" alt="meal_image">
+                    <img src="${mediaPrefix}restaurant_items/${item.image}" alt="meal_image">
                 </div>
             </div>
         </div>
