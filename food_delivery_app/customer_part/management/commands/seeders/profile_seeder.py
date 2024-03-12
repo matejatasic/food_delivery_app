@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from os.path import isfile
+from os import mkdir
+from os.path import isfile, isdir
 from shutil import copy
 from sys import stdout
 
@@ -49,10 +50,14 @@ class ProfileSeeder(BaseSeeder):
             profile = Profile(user=user, address=address)
 
             if profile_data.get("image"):
-                SOURCE_FILE_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/profile_images/{profile_data['image']}"
-                TARGET_FILE_PATH = (
-                    f"{MEDIA_ROOT}profile_pictures/{profile_data['image']}"
-                )
+                SOURCE_FOLDER_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/profile_images/"
+                TARGET_FOLDER_PATH = f"{MEDIA_ROOT}profile_pictures/"
+
+                if not isdir(TARGET_FOLDER_PATH):
+                    mkdir(TARGET_FOLDER_PATH)
+
+                SOURCE_FILE_PATH = f"{SOURCE_FOLDER_PATH}{profile_data['image']}"
+                TARGET_FILE_PATH = f"{TARGET_FOLDER_PATH}{profile_data['image']}"
 
                 if not isfile(TARGET_FILE_PATH):
                     try:
@@ -67,5 +72,5 @@ class ProfileSeeder(BaseSeeder):
                 profile.image = profile_data["image"]
 
             profile.save()
-            print(profile.image)
+
             print(f"Profile for user {user} created.")

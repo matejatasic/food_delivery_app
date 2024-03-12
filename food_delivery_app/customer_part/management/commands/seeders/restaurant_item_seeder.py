@@ -1,4 +1,5 @@
-from os.path import isfile
+from os import mkdir
+from os.path import isfile, isdir
 from shutil import copy
 from sys import stdout
 from typing import cast
@@ -70,8 +71,16 @@ class RestaurantItemSeeder(BaseSeeder):
             restaurant = Restaurant.objects.get(name=item_data["restaurant"])
             category = RestaurantItemCategory.objects.get(name=item_data["category"])
 
-            SOURCE_FILE_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/item_images/{item_data['image']}"
-            TARGET_FILE_PATH = f"{MEDIA_ROOT}restaurant_items/{item_data['image']}"
+            SOURCE_FOLDER_PATH = (
+                f"{BASE_DIR}/customer_part/static/customer_part/images/item_images/"
+            )
+            TARGET_FOLDER_PATH = f"{MEDIA_ROOT}restaurant_items/"
+
+            if not isdir(TARGET_FOLDER_PATH):
+                mkdir(TARGET_FOLDER_PATH)
+
+            SOURCE_FILE_PATH = f"{SOURCE_FOLDER_PATH}{item_data['image']}"
+            TARGET_FILE_PATH = f"{TARGET_FOLDER_PATH}{item_data['image']}"
 
             if not isfile(TARGET_FILE_PATH):
                 try:
