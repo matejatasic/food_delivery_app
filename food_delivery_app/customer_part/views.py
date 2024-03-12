@@ -95,7 +95,7 @@ def register(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     return render(request, "customer_part/register.html", {"form": RegisterForm()})
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def logout_user(request: HttpRequest) -> HttpResponseRedirect:
     logout(request)
 
@@ -143,7 +143,7 @@ def restaurants(request: HttpRequest) -> HttpResponse:
     )
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def cart(request: HttpRequest) -> HttpResponse:
     cart_service = CartService()
 
@@ -165,7 +165,7 @@ def cart(request: HttpRequest) -> HttpResponse:
     )
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def orders(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
     orders = cache.get(f"orders-{request.user.id}")
@@ -177,7 +177,7 @@ def orders(request: HttpRequest) -> HttpResponse:
     return render(request, "customer_part/orders.html", {"orders": orders})
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def pending_orders(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
     orders = order_service.get_ordered()
@@ -189,7 +189,7 @@ def pending_orders(request: HttpRequest) -> HttpResponse:
     )
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def current_deliveries(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
     orders = order_service.get_by_driver(
@@ -203,7 +203,7 @@ def current_deliveries(request: HttpRequest) -> HttpResponse:
     )
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def finished_deliveries(request: HttpRequest) -> HttpResponse:
     order_service = OrderService()
     orders = order_service.get_by_driver(
@@ -251,7 +251,7 @@ def update_order(request: HttpRequest) -> HttpResponse:
         )
 
 
-@login_required(login_url="/login") # type: ignore
+@login_required(login_url="/login")  # type: ignore
 def checkout_return(request: HttpRequest):
     return render(
         request,
