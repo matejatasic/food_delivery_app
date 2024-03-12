@@ -1,4 +1,5 @@
-from os.path import isfile
+from os import mkdir
+from os.path import isfile, isdir
 from shutil import copy
 from sys import stdout
 
@@ -69,10 +70,14 @@ class RestaurantSeeder(BaseSeeder):
         ]
 
         for restaurant_data in data:
-            SOURCE_FILE_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/restaurant_images/{restaurant_data['image']}"
-            TARGET_FILE_PATH = (
-                f"{MEDIA_ROOT}restaurant_pictures/{restaurant_data['image']}"
-            )
+            SOURCE_FOLDER_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/restaurant_images/"
+            TARGET_FOLDER_PATH = f"{MEDIA_ROOT}restaurant_pictures/"
+
+            SOURCE_FILE_PATH = f"{SOURCE_FOLDER_PATH}{restaurant_data['image']}"
+            TARGET_FILE_PATH = f"{TARGET_FOLDER_PATH}{restaurant_data['image']}"
+
+            if not isdir(TARGET_FOLDER_PATH):
+                mkdir(TARGET_FOLDER_PATH)
 
             if not isfile(TARGET_FILE_PATH):
                 try:
