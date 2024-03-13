@@ -43,6 +43,22 @@ class ProfileSeeder(BaseSeeder):
             {"user": "mark", "address": "Moscow, Russia"},
         ]
 
+        SOURCE_FOLDER_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/profile_images/"
+        TARGET_FOLDER_PATH = f"{MEDIA_ROOT}profile_pictures/"
+
+        if not isdir(TARGET_FOLDER_PATH):
+            mkdir(TARGET_FOLDER_PATH)
+
+        try:
+            copy(src=f"{BASE_DIR}/customer_part/static/customer_part/images/avatar.png", dst=f"{TARGET_FOLDER_PATH}avatar.png")
+            print("Copied the default avatar image")
+        except PermissionError:
+            print(
+                f"You do not have the permissions to copy avatar.png"
+            )
+        except:
+            print(f"There was while copying the avatar.png")
+
         for profile_data in data:
             user = User.objects.get(username=profile_data["user"])
 
@@ -50,9 +66,6 @@ class ProfileSeeder(BaseSeeder):
             profile = Profile(user=user, address=address)
 
             if profile_data.get("image"):
-                SOURCE_FOLDER_PATH = f"{BASE_DIR}/customer_part/static/customer_part/images/profile_images/"
-                TARGET_FOLDER_PATH = f"{MEDIA_ROOT}profile_pictures/"
-
                 if not isdir(TARGET_FOLDER_PATH):
                     mkdir(TARGET_FOLDER_PATH)
 
