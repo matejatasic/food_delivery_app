@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 import logging
+from typing import cast
 
 from ..exceptions import AddressValidationError
 from food_delivery_app.settings import DJANGO_ERROR_LOGGER
@@ -55,7 +56,12 @@ class ProfileService:
     def get_model_instance(
         self, user: User, image: InMemoryUploadedFile | None, address: Address
     ) -> Profile:
-        return Profile(user=user, image=image, address=address)
+        if image is None:
+            image_str = "avatar.png"
+        else:
+            image_str = cast(str, image.name)
+
+        return Profile(user=user, image=image_str, address=address)
 
     def create_address(
         self,
