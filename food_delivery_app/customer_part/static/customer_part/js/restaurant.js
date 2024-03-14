@@ -15,7 +15,6 @@ function onSuccessCallback(itemId) {
     })
     .then(response => {
         const data = JSON.parse(response.data);
-
         updateHtml(itemId, data);
 
     })
@@ -52,3 +51,5 @@ function updateItemQuantityInHtml(itemId, quantity) {
 
     quantitySpan.textContent = quantity;
 }
+
+export {onSuccessCallback}
