@@ -1,0 +1,51 @@
+#driver-header,
+#pending-orders-header {
+    background-image: url("../images/driver-hero-image.jpg");
+    height: 30vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#driver-header-text, #pending-orders-header-text {
+    position: absolute;
+    bottom: 0;
+    color: white;
+}
+
+#driver-header-text h1,
+#pending-orders-header-text h1 {
+    font-size: 2.2rem;
+}
+
+#driver-main {
+    min-height: 70vh;
+}
+
+#no-orders {
+    font-size: 1.8rem;
+}
+
+td {
+    min-height: 5rem;
+}
+
+.badge {
+    height: 20%;
+}
+
+.btn {
+    width: 80%;
+}
+
+#map {
+    height: 50vh;
+}
+
+.table-responsive td,
+.table-responsive th {
+    white-space: nowrap;
+    text-overflow: clip;
+}
