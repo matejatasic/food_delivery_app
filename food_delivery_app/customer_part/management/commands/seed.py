@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.management.base import BaseCommand
 
 from .seeders.address_seeder import AddressSeeder
@@ -40,6 +41,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options) -> None:
         self.stdout.write("Started seeding the data...")
         self.run_seed(options["mode"])
+        cache.clear()
         self.stdout.write("\nFinished seeding.\n")
 
     def run_seed(self, mode) -> None:
