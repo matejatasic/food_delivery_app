@@ -251,7 +251,6 @@ def update_order(request: HttpRequest) -> HttpResponse:
         )
 
 
-@login_required(login_url="/login")  # type: ignore
 def checkout_return(request: HttpRequest):
     return render(
         request,
