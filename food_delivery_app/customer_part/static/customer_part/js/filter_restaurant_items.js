@@ -1,4 +1,5 @@
 import { addEventListenersToChangeCartButtons } from "./add_item.js";
+import { onSuccessCallback } from "./restaurant.js";
 
 const categoryButtons = document.querySelectorAll(".category-button");
 
@@ -18,6 +19,7 @@ function handleCategoryButtonClick(e) {
     .then(response => response.json())
     .then(response => {
         const data = JSON.parse(response.data);
+
         showFilteredRestaurants(data);
     })
 }
@@ -27,13 +29,33 @@ function showFilteredRestaurants(data) {
 
     restaurantsDiv.innerHTML = "";
 
-    data.forEach(item => {
-        restaurantsDiv.innerHTML += getItemRow(item);
+    fetch(getCartUrl, {
+        method: "GET",
     })
-    addEventListenersToChangeCartButtons()
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`HTTP status: ${response.status}`);
+        }
+
+        return response.json()
+    })
+    .then(response => {
+        const cartData = JSON.parse(response.data);
+        console.log(cartData);
+        data.forEach(item => {
+            const quantity = cartData.cart.items[item.id] ? cartData.cart.items[item.id].quantity : 0;
+
+            restaurantsDiv.innerHTML += getItemRow(item, quantity);
+        })
+
+        addEventListenersToChangeCartButtons(onSuccessCallback)
+    })
+    .catch(error => {
+        console.log(error);
+    });
 }
 
-function getItemRow(item) {
+function getItemRow(item, quantity) {
     let changeCartButtons = "";
 
     if (isUserAuthenticated === "True") {
@@ -51,6 +73,7 @@ function getItemRow(item) {
                     <p>${item.description}</p>
 
                     ${changeCartButtons}
+                    <span class="item-quantity" data-id="${item.id}">${quantity !== 0 ? quantity : null}</span>
                 </div>
                 <div class="col-4 col-sm-4">
                     <img src="${mediaPrefix}restaurant_items/${item.image}" alt="meal_image">

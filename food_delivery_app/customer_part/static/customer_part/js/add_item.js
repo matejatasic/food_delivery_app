@@ -1,8 +1,6 @@
 const INCREMENT = "increment";
 const DECREMENT = "decrement";
 
-addEventListenersToChangeCartButtons();
-
 function addEventListenersToChangeCartButtons(onSuccessCallback=null) {
     const incrementButtons = document.querySelectorAll(".increment-button");
     const decrementButtons = document.querySelectorAll(".decrement-button");
