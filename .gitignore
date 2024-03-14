@@ -1,0 +1,22 @@
+/env
+.env
+
+__pycache__/
+
+
+error.log
+
+food_delivery_app/.coverage
+food_delivery_app/media/profile_pictures/*
+
+/.vagrant
+
+# mkcert
+mkcert-v1.4.4-linux-amd64
+
+# Media folder
+food_delivery_app/media
+
+# SSL keys
+cert.pem
+key.pem
