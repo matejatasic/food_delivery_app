@@ -73,7 +73,7 @@ function getItemRow(item, quantity) {
                     <p>${item.description}</p>
 
                     ${changeCartButtons}
-                    <span class="item-quantity" data-id="${item.id}">${quantity !== 0 ? quantity : null}</span>
+                    <span class="item-quantity" data-id="${item.id}">${quantity !== 0 ? quantity : ''}</span>
                 </div>
                 <div class="col-4 col-sm-4">
                     <img src="${mediaPrefix}restaurant_items/${item.image}" alt="meal_image">
