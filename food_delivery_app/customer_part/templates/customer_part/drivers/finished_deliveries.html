@@ -1,0 +1,85 @@
+{% extends "customer_part/layout.html" %}
+{% load static %}
+{% load tags %}
+
+{% block style %}
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link href="{% static 'customer_part/css/driver.css' %}" rel="stylesheet">
+{% endblock  %}
+
+{% block main %}
+    <div id="driver-header">
+        <div id="pending-orders-header-text" class="row p-3">
+            <div class="col-12">
+                <h1>Finished Orders</h1>
+            </div>
+        </div>
+    </div>
+    <div id="driver-main">
+        <div class="col-11 mx-auto my-3">
+            <div class="table-responsive">
+                {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Restaurants</th>
+                                    <th>Restaurant Addresses</th>
+                                    <th>Items</th>
+                                    <th>Address</th>
+                                    <th>Date Ordered</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.user }}</td>
+                                        <td>
+                                            {% for restaurant_name in order.restaurant_names %}
+                                                <span>{{ restaurant_name }}{% if not forloop.last %}, {% endif %}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for restaurant_address in order.restaurant_addresses %}
+                                                <span>{{ restaurant_address }}{% if not forloop.last %}<br>{% endif %}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for item in order.order_items %}
+                                                <span>{{ item.name }} x {{ item.quantity }}{% if not forloop.last %}, {% endif %}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{ order.address }}</td>
+                                        <td>{{ order.date_ordered }}</td>
+                                        <td><span class="badge bg-primary">{{ order.status }}</span></td>
+                                    </tr>
+                                    {{ order.restaurant_coordinates|restaurant_coordinates_json_script:order.id }}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p id="no-orders" class="text-center mt-2">No orders to show</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div id="map-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="map-modal">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div id="map"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+{% endblock %}
