@@ -22,6 +22,12 @@ sudo su vagrant
 cd /vagrant/food_delivery_app
 echo -e "\nDB_NAME=$DATABASE\nDB_USER=$USER\nDB_PASSWORD=$PASSWORD" >> .env
 
+# write site domain and redis to .env
+SITE_DOMAIN_NAME="https://192.168.56.10:8000"
+REDIS_LOCATION="redis://127.0.0.1:6379/"
+
+echo -e "\nSITE_DOMAIN=\"$SITE_DOMAIN_NAME\"\nREDIS_LOCATION=$REDIS_LOCATION" >> .env
+
 # install redis and start it
 sudo apt -y install redis-server
 sudo systemctl restart redis-server
